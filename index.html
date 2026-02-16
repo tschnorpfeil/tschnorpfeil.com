@@ -36,7 +36,7 @@
             --card-hover: #FAFAFA;
             --tag-bg: #F5F5F7;
             --tag-text: #6E6E73;
-            --overlay: rgba(255,255,255,0.88);
+            --overlay: rgba(255,255,255,0.92);
             --glow: rgba(0,0,0,0.03);
             --grain-opacity: 0.03;
         }
@@ -54,7 +54,7 @@
             --card-hover: #161616;
             --tag-bg: #1D1D1F;
             --tag-text: #98989D;
-            --overlay: rgba(10,10,10,0.88);
+            --overlay: rgba(10,10,10,0.92);
             --glow: rgba(255,255,255,0.03);
             --grain-opacity: 0.04;
         }
@@ -107,11 +107,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
             background: var(--overlay);
             border-bottom: 0.5px solid var(--border);
             transition: all var(--transition);
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
         }
 
         .nav-name {
@@ -216,27 +218,7 @@
         .hero-word:nth-child(1) { animation-delay: 0.1s; }
         .hero-word:nth-child(2) { animation-delay: 0.2s; }
 
-        /* Shimmer effect on hero name */
-        .hero-name-shimmer {
-            background: linear-gradient(
-                120deg,
-                var(--text) 0%,
-                var(--text) 40%,
-                var(--text-2) 50%,
-                var(--text) 60%,
-                var(--text) 100%
-            );
-            background-size: 200% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: wordUp 0.8s var(--ease) forwards, shimmer 3s ease-in-out 1.2s 1;
-        }
 
-        @keyframes shimmer {
-            0% { background-position: 100% 0; }
-            100% { background-position: -100% 0; }
-        }
 
         .hero-desc {
             font-size: 1.0625rem;
@@ -731,7 +713,7 @@
         <div class="wrap">
             <div class="hero-inner">
                 <h1>
-                    <span class="hero-word">Tobias</span>&nbsp;<span class="hero-word hero-name-shimmer">Schnorpfeil</span>
+                    <span class="hero-word">Tobias</span>&nbsp;<span class="hero-word">Schnorpfeil</span>
                 </h1>
                 <p class="hero-desc">
                     <span data-en>Civil Engineer, entrepreneur, and creative. Building the future in a leading German construction company — after years of filmmaking, founding a tech startup, and creating digital art.</span>
