@@ -6,16 +6,27 @@
     <title>Tobias Schnorpfeil</title>
     <meta name="description" content="Engineer, Entrepreneur & Creative">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <!-- Google Fonts: DM Sans (Hauptschrift) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+
+    <!-- ==========================================
+         STYLES
+         ========================================== -->
     <style>
+
+        /* ------------------------------------------
+           CSS-Variablen (Farben, Schrift, Animationen)
+           ------------------------------------------ */
         :root {
             --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
             --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
+        /* Light-Theme Farben */
         [data-theme="light"] {
             --bg: #FFFFFF;
             --bg-subtle: #F7F7F5;
@@ -30,6 +41,7 @@
             --overlay: rgba(255,255,255,0.88);
         }
 
+        /* Dark-Theme Farben */
         [data-theme="dark"] {
             --bg: #0A0A0A;
             --bg-subtle: #111111;
@@ -44,6 +56,9 @@
             --overlay: rgba(10,10,10,0.88);
         }
 
+        /* ------------------------------------------
+           Reset & Basis
+           ------------------------------------------ */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         html {
@@ -64,7 +79,9 @@
         ::selection { background: var(--text); color: var(--bg); }
         a { color: inherit; text-decoration: none; }
 
-        /* NAV */
+        /* ------------------------------------------
+           Navigation (fixiert oben)
+           ------------------------------------------ */
         .nav {
             position: fixed;
             top: 0; left: 0; right: 0;
@@ -106,6 +123,7 @@
 
         .nav-link:hover { color: var(--text); }
 
+        /* Vertikaler Trennstrich in der Nav */
         .nav-sep {
             width: 1px;
             height: 16px;
@@ -113,6 +131,7 @@
             margin: 0 0.375rem;
         }
 
+        /* Icon-Buttons (Theme-Toggle, Sprach-Toggle) */
         .btn-icon {
             width: 32px; height: 32px;
             border: none;
@@ -138,14 +157,18 @@
             text-transform: uppercase;
         }
 
-        /* CONTAINER */
+        /* ------------------------------------------
+           Layout-Container (max-width: 640px)
+           ------------------------------------------ */
         .wrap {
             max-width: 640px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
-        /* HERO */
+        /* ------------------------------------------
+           Hero-Bereich (Startseite / Begruessung)
+           ------------------------------------------ */
         .hero {
             min-height: 100svh;
             display: flex;
@@ -176,6 +199,7 @@
             animation: up 0.7s var(--ease) 0.3s forwards;
         }
 
+        /* Social-Links im Hero */
         .hero-social {
             display: flex;
             gap: 0.5rem;
@@ -203,15 +227,19 @@
 
         .social-link svg { width: 13px; height: 13px; }
 
-        /* SECTIONS */
+        /* ------------------------------------------
+           Allgemeine Sections
+           ------------------------------------------ */
         section { padding: 4.5rem 0; }
 
+        /* Horizontale Trennlinie zwischen Sections */
         .section-line {
             height: 0.5px;
             background: var(--border);
             border: none;
         }
 
+        /* Section-Ueberschrift (z.B. "Werdegang", "Arbeiten", "Kontakt") */
         .section-label {
             font-size: 0.6875rem;
             font-weight: 500;
@@ -221,7 +249,9 @@
             margin-bottom: 2.5rem;
         }
 
-        /* TIMELINE */
+        /* ------------------------------------------
+           Timeline / Werdegang
+           ------------------------------------------ */
         .tl { display: flex; flex-direction: column; gap: 2.75rem; }
 
         .tl-item {
@@ -230,6 +260,7 @@
             gap: 2rem;
         }
 
+        /* Zeitangabe links (z.B. "2021 — Heute") */
         .tl-time {
             font-size: 0.75rem;
             font-weight: 400;
@@ -260,6 +291,7 @@
             color: var(--text-2);
         }
 
+        /* Tags unterhalb eines Timeline-Eintrags */
         .tl-tags {
             display: flex;
             gap: 0.3rem;
@@ -277,7 +309,9 @@
             color: var(--tag-text);
         }
 
-        /* PROJECTS */
+        /* ------------------------------------------
+           Projekte / Selected Work
+           ------------------------------------------ */
         .projects { display: flex; flex-direction: column; }
 
         .proj {
@@ -292,6 +326,7 @@
         .proj:first-child { padding-top: 0; }
         .proj:last-child { border-bottom: none; padding-bottom: 0; }
 
+        /* Projekt-Kategorie (z.B. "Film", "Startup") */
         .proj-type {
             font-size: 0.625rem;
             font-weight: 500;
@@ -316,6 +351,7 @@
             max-width: 420px;
         }
 
+        /* Jahreszahl rechts neben dem Projekt */
         .proj-year {
             font-size: 0.75rem;
             color: var(--text-3);
@@ -323,6 +359,7 @@
             white-space: nowrap;
         }
 
+        /* Externer Link (z.B. Behance) */
         .proj-link {
             display: inline-flex;
             align-items: center;
@@ -338,7 +375,9 @@
         .proj-link svg { width: 10px; height: 10px; transition: transform 0.2s ease; }
         .proj-link:hover svg { transform: translate(1.5px, -1.5px); }
 
-        /* CONTACT */
+        /* ------------------------------------------
+           Kontakt-Bereich
+           ------------------------------------------ */
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -378,7 +417,9 @@
             font-weight: 300;
         }
 
-        /* FOOTER */
+        /* ------------------------------------------
+           Footer
+           ------------------------------------------ */
         .footer { padding: 2rem 0; margin-top: 2rem; }
 
         .footer-inner {
@@ -394,12 +435,17 @@
         .footer-links a { color: var(--text-3); transition: color 0.2s ease; font-weight: 400; }
         .footer-links a:hover { color: var(--text); }
 
-        /* ANIMATIONS */
+        /* ------------------------------------------
+           Animationen
+           ------------------------------------------ */
+
+        /* Einblende-Animation von unten (fuer Hero-Elemente) */
         @keyframes up {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Scroll-Reveal: Elemente werden beim Scrollen sichtbar */
         .reveal {
             opacity: 0;
             transform: translateY(14px);
@@ -407,11 +453,17 @@
         }
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
-        /* LANGUAGE */
+        /* ------------------------------------------
+           Sprachumschaltung (EN/DE)
+           Im EN-Modus werden data-de Elemente versteckt,
+           im DE-Modus werden data-en Elemente versteckt.
+           ------------------------------------------ */
         [data-lang="en"] [data-de],
         [data-lang="de"] [data-en] { display: none; }
 
-        /* RESPONSIVE */
+        /* ------------------------------------------
+           Responsive (Mobile < 600px)
+           ------------------------------------------ */
         @media (max-width: 600px) {
             .nav { padding: 0 1.25rem; }
             .nav-link, .nav-sep { display: none; }
@@ -435,6 +487,11 @@
 </head>
 <body>
 
+    <!-- ==========================================
+         NAVIGATION (fixiert, mit Blur-Hintergrund)
+         - Links: Name
+         - Rechts: Sektions-Links, Sprach-Toggle (DE/EN), Theme-Toggle (Hell/Dunkel)
+         ========================================== -->
     <nav class="nav">
         <span class="nav-name">Tobias Schnorpfeil</span>
         <div class="nav-right">
@@ -442,7 +499,9 @@
             <a href="#work" class="nav-link"><span data-en>Work</span><span data-de>Arbeiten</span></a>
             <a href="#contact" class="nav-link"><span data-en>Contact</span><span data-de>Kontakt</span></a>
             <div class="nav-sep"></div>
+            <!-- Sprach-Toggle: wechselt zwischen DE und EN -->
             <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span data-en>DE</span><span data-de>EN</span></button>
+            <!-- Theme-Toggle: wechselt zwischen Hell und Dunkel -->
             <button class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
                 <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -450,6 +509,10 @@
         </div>
     </nav>
 
+    <!-- ==========================================
+         HERO — Hauptbereich mit Name, Beschreibung, Social-Links
+         Nimmt die volle Bildschirmhoehe ein.
+         ========================================== -->
     <section class="hero">
         <div class="wrap">
             <div class="hero-inner">
@@ -458,6 +521,7 @@
                     <span data-en>Civil Engineer, entrepreneur, and creative. Building the future in a leading German construction company — after years of filmmaking, founding a tech startup, and creating digital art.</span>
                     <span data-de>Bauingenieur, Unternehmer und Kreativer. Ich gestalte die Zukunft eines führenden deutschen Bauunternehmens — nach Jahren als Filmemacher, der Gründung eines Tech-Startups und als Digitalkünstler.</span>
                 </p>
+                <!-- Social-Links: LinkedIn, YouTube, Behance, Instagram -->
                 <div class="hero-social">
                     <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" class="social-link">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -480,12 +544,19 @@
         </div>
     </section>
 
+    <!-- Trennlinie -->
     <div class="wrap"><hr class="section-line"></div>
 
+    <!-- ==========================================
+         WERDEGANG / JOURNEY — Timeline mit Karriere-Stationen
+         Reihenfolge: chronologisch absteigend (neueste zuerst)
+         ========================================== -->
     <section id="journey">
         <div class="wrap">
             <p class="section-label reveal"><span data-en>Journey</span><span data-de>Werdegang</span></p>
             <div class="tl">
+
+                <!-- Heinz Schnorpfeil Bau GmbH (2021 — Heute) -->
                 <div class="tl-item reveal">
                     <span class="tl-time"><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
                     <div class="tl-content">
@@ -502,6 +573,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- HomeToGo (2021 — 2023) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2021 — 2023</span>
                     <div class="tl-content">
@@ -518,6 +591,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Mapify (2017 — 2023) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2017 — 2023</span>
                     <div class="tl-content">
@@ -534,6 +609,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Film, Fotografie, Motion Graphics & 3D (2014 — 2021) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2014 — 2021</span>
                     <div class="tl-content">
@@ -551,6 +628,8 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Studium: TUM (2016) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2016</span>
                     <div class="tl-content">
@@ -558,16 +637,24 @@
                         <p class="tl-sub"><span data-en>Technical University of Munich</span><span data-de>Technische Universität München</span></p>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 
+    <!-- Trennlinie -->
     <div class="wrap"><hr class="section-line"></div>
 
+    <!-- ==========================================
+         AUSGEWAEHLTE ARBEITEN / SELECTED WORK
+         Projekt-Karten mit Kategorie, Titel, Beschreibung und Link
+         ========================================== -->
     <section id="work">
         <div class="wrap">
             <p class="section-label reveal"><span data-en>Selected Work</span><span data-de>Ausgewählte Arbeiten</span></p>
             <div class="projects reveal">
+
+                <!-- Projekt: Unreal Pieces (3D / Digital Art) -->
                 <div class="proj">
                     <div>
                         <p class="proj-type">3D / Digital Art</p>
@@ -580,6 +667,8 @@
                     </div>
                     <span class="proj-year">2020</span>
                 </div>
+
+                <!-- Projekt: 78° North — Svalbard Kurzfilm -->
                 <div class="proj">
                     <div>
                         <p class="proj-type">Film</p>
@@ -592,6 +681,8 @@
                     </div>
                     <span class="proj-year">2017</span>
                 </div>
+
+                <!-- Projekt: Mapify (Startup) -->
                 <div class="proj">
                     <div>
                         <p class="proj-type">Startup</p>
@@ -603,6 +694,8 @@
                     </div>
                     <span class="proj-year">2017</span>
                 </div>
+
+                <!-- Projekt: Kommerzielle Arbeiten (Brand Films) -->
                 <div class="proj">
                     <div>
                         <p class="proj-type"><span data-en>Brand Films</span><span data-de>Markenfilme</span></p>
@@ -615,21 +708,29 @@
                     </div>
                     <span class="proj-year">2015 – 20</span>
                 </div>
+
             </div>
         </div>
     </section>
 
+    <!-- Trennlinie -->
     <div class="wrap"><hr class="section-line"></div>
 
+    <!-- ==========================================
+         KONTAKT — Geschaeftlich & Privat
+         Zwei Spalten mit E-Mail-Adressen
+         ========================================== -->
     <section id="contact">
         <div class="wrap">
             <p class="section-label reveal"><span data-en>Contact</span><span data-de>Kontakt</span></p>
             <div class="contact-grid reveal">
+                <!-- Geschaeftliche Kontaktdaten -->
                 <div class="contact-item">
                     <p class="contact-label"><span data-en>Business</span><span data-de>Geschäftlich</span></p>
                     <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
                     <p class="contact-note">Heinz Schnorpfeil Bau GmbH</p>
                 </div>
+                <!-- Private Kontaktdaten -->
                 <div class="contact-item">
                     <p class="contact-label"><span data-en>Personal</span><span data-de>Privat</span></p>
                     <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
@@ -639,6 +740,9 @@
         </div>
     </section>
 
+    <!-- ==========================================
+         FOOTER — Copyright & Social-Links
+         ========================================== -->
     <footer class="footer">
         <div class="wrap">
             <div class="footer-inner">
@@ -653,7 +757,16 @@
         </div>
     </footer>
 
+    <!-- ==========================================
+         JAVASCRIPT
+         - toggleTheme(): Wechselt zwischen Hell/Dunkel, speichert in localStorage
+         - updateIcon(): Zeigt Sonnen- oder Mond-Icon je nach Theme
+         - toggleLang(): Wechselt zwischen EN/DE, speichert in localStorage
+         - Smooth-Scroll fuer Nav-Links
+         - Initialisierung: Theme, Sprache, Scroll-Reveal (IntersectionObserver)
+         ========================================== -->
     <script>
+        /* Theme umschalten (Hell <-> Dunkel) */
         function toggleTheme() {
             var h = document.documentElement;
             var next = h.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -662,11 +775,13 @@
             updateIcon(next);
         }
 
+        /* Theme-Icon aktualisieren (Sonne/Mond) */
         function updateIcon(t) {
             document.querySelector('[data-icon="sun"]').style.display = t === 'dark' ? 'none' : 'block';
             document.querySelector('[data-icon="moon"]').style.display = t === 'dark' ? 'block' : 'none';
         }
 
+        /* Sprache umschalten (EN <-> DE) */
         function toggleLang() {
             var h = document.documentElement;
             var next = h.getAttribute('data-lang') === 'en' ? 'de' : 'en';
@@ -675,6 +790,7 @@
             localStorage.setItem('lang', next);
         }
 
+        /* Smooth-Scroll fuer Nav-Links */
         document.querySelectorAll('.nav-link').forEach(function(l) {
             l.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -683,12 +799,15 @@
             });
         });
 
+        /* Initialisierung beim Laden der Seite */
         (function() {
+            /* Theme: aus localStorage oder System-Praeferenz */
             var t = localStorage.getItem('theme') ||
                 (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', t);
             updateIcon(t);
 
+            /* Sprache: aus localStorage oder Browser-Sprache */
             var l = localStorage.getItem('lang');
             if (l) { document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l; }
             else if ((navigator.language || '').startsWith('de')) {
@@ -696,6 +815,7 @@
                 document.documentElement.lang = 'de';
             }
 
+            /* Scroll-Reveal: Elemente einblenden wenn sie ins Viewport kommen */
             var obs = new IntersectionObserver(function(entries) {
                 entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
             }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
