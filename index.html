@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light" data-lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tobias Schnorpfeil</title>
     <meta name="description" content="Engineer, Entrepreneur & Creative">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -66,6 +66,7 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px));
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -102,8 +103,8 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 100;
-            padding: 0 2.5rem;
-            height: 56px;
+            padding: env(safe-area-inset-top, 0px) max(2.5rem, env(safe-area-inset-right, 0px)) 0 max(2.5rem, env(safe-area-inset-left, 0px));
+            height: calc(56px + env(safe-area-inset-top, 0px));
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -193,7 +194,7 @@
             min-height: 100svh;
             display: flex;
             align-items: center;
-            padding-top: 56px;
+            padding-top: calc(56px + env(safe-area-inset-top, 0px));
         }
 
         .hero-inner { width: 100%; padding: 4rem 0; }
@@ -663,7 +664,7 @@
            Responsive (Mobile < 600px)
            ------------------------------------------ */
         @media (max-width: 600px) {
-            .nav { padding: 0 1.25rem; }
+            .nav { padding: env(safe-area-inset-top, 0px) max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px)); }
             .nav-link, .nav-sep { display: none; }
             .wrap { padding: 0 1.25rem; }
             section { padding: 3.5rem 0; }
