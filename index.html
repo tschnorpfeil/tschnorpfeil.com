@@ -7,18 +7,15 @@
     <meta name="description" content="Engineer, Entrepreneur & Creative">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-    <!-- Google Fonts: DM Sans (Hauptschrift) -->
+    <!-- Google Fonts: DM Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
 
-    <!-- ==========================================
-         STYLES
-         ========================================== -->
     <style>
 
         /* ------------------------------------------
-           CSS-Variablen (Farben, Schrift, Animationen)
+           CSS Variables
            ------------------------------------------ */
         :root {
             --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -26,7 +23,7 @@
             --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* Light-Theme Farben */
+        /* Light Theme */
         [data-theme="light"] {
             --bg: #FFFFFF;
             --bg-subtle: #F7F7F5;
@@ -36,12 +33,15 @@
             --border: #E8E8ED;
             --border-h: #D2D2D7;
             --card: #FFFFFF;
+            --card-hover: #FAFAFA;
             --tag-bg: #F5F5F7;
             --tag-text: #6E6E73;
             --overlay: rgba(255,255,255,0.88);
+            --glow: rgba(0,0,0,0.03);
+            --grain-opacity: 0.03;
         }
 
-        /* Dark-Theme Farben */
+        /* Dark Theme */
         [data-theme="dark"] {
             --bg: #0A0A0A;
             --bg-subtle: #111111;
@@ -51,13 +51,16 @@
             --border: #1D1D1F;
             --border-h: #2C2C2E;
             --card: #111111;
+            --card-hover: #161616;
             --tag-bg: #1D1D1F;
             --tag-text: #98989D;
             --overlay: rgba(10,10,10,0.88);
+            --glow: rgba(255,255,255,0.03);
+            --grain-opacity: 0.04;
         }
 
         /* ------------------------------------------
-           Reset & Basis
+           Reset & Base
            ------------------------------------------ */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -76,11 +79,24 @@
             overflow-x: hidden;
         }
 
+        /* Grain texture overlay */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: var(--grain-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
         ::selection { background: var(--text); color: var(--bg); }
         a { color: inherit; text-decoration: none; }
 
         /* ------------------------------------------
-           Navigation (fixiert oben)
+           Navigation
            ------------------------------------------ */
         .nav {
             position: fixed;
@@ -123,7 +139,6 @@
 
         .nav-link:hover { color: var(--text); }
 
-        /* Vertikaler Trennstrich in der Nav */
         .nav-sep {
             width: 1px;
             height: 16px;
@@ -131,7 +146,6 @@
             margin: 0 0.375rem;
         }
 
-        /* Icon-Buttons (Theme-Toggle, Sprach-Toggle) */
         .btn-icon {
             width: 32px; height: 32px;
             border: none;
@@ -158,16 +172,20 @@
         }
 
         /* ------------------------------------------
-           Layout-Container (max-width: 640px)
+           Layout Container (wider, responsive)
            ------------------------------------------ */
         .wrap {
-            max-width: 640px;
+            max-width: 960px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
+        .wrap--narrow {
+            max-width: 640px;
+        }
+
         /* ------------------------------------------
-           Hero-Bereich (Startseite / Begruessung)
+           Hero
            ------------------------------------------ */
         .hero {
             min-height: 100svh;
@@ -179,32 +197,64 @@
         .hero-inner { width: 100%; padding: 4rem 0; }
 
         .hero h1 {
-            font-size: clamp(2.25rem, 6vw, 3.25rem);
+            font-size: clamp(2.5rem, 7vw, 4rem);
             font-weight: 500;
-            letter-spacing: -0.025em;
-            line-height: 1.1;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
             margin-bottom: 1.75rem;
+            overflow: hidden;
+        }
+
+        /* Animated typography: each word slides up */
+        .hero-word {
+            display: inline-block;
             opacity: 0;
-            animation: up 0.7s var(--ease) 0.15s forwards;
+            transform: translateY(100%);
+            animation: wordUp 0.8s var(--ease) forwards;
+        }
+
+        .hero-word:nth-child(1) { animation-delay: 0.1s; }
+        .hero-word:nth-child(2) { animation-delay: 0.2s; }
+
+        /* Shimmer effect on hero name */
+        .hero-name-shimmer {
+            background: linear-gradient(
+                120deg,
+                var(--text) 0%,
+                var(--text) 40%,
+                var(--text-2) 50%,
+                var(--text) 60%,
+                var(--text) 100%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: wordUp 0.8s var(--ease) forwards, shimmer 3s ease-in-out 1.2s 1;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: 100% 0; }
+            100% { background-position: -100% 0; }
         }
 
         .hero-desc {
             font-size: 1.0625rem;
             line-height: 1.65;
             color: var(--text-2);
-            max-width: 480px;
+            max-width: 560px;
             font-weight: 300;
             margin-bottom: 2.5rem;
             opacity: 0;
-            animation: up 0.7s var(--ease) 0.3s forwards;
+            animation: up 0.7s var(--ease) 0.4s forwards;
         }
 
-        /* Social-Links im Hero */
         .hero-social {
             display: flex;
             gap: 0.5rem;
+            flex-wrap: wrap;
             opacity: 0;
-            animation: up 0.7s var(--ease) 0.45s forwards;
+            animation: up 0.7s var(--ease) 0.55s forwards;
         }
 
         .social-link {
@@ -228,18 +278,16 @@
         .social-link svg { width: 13px; height: 13px; }
 
         /* ------------------------------------------
-           Allgemeine Sections
+           Sections
            ------------------------------------------ */
         section { padding: 4.5rem 0; }
 
-        /* Horizontale Trennlinie zwischen Sections */
         .section-line {
             height: 0.5px;
             background: var(--border);
             border: none;
         }
 
-        /* Section-Ueberschrift (z.B. "Werdegang", "Arbeiten", "Kontakt") */
         .section-label {
             font-size: 0.6875rem;
             font-weight: 500;
@@ -250,7 +298,7 @@
         }
 
         /* ------------------------------------------
-           Timeline / Werdegang
+           Timeline / Journey
            ------------------------------------------ */
         .tl { display: flex; flex-direction: column; gap: 2.75rem; }
 
@@ -260,7 +308,6 @@
             gap: 2rem;
         }
 
-        /* Zeitangabe links (z.B. "2021 — Heute") */
         .tl-time {
             font-size: 0.75rem;
             font-weight: 400;
@@ -291,7 +338,6 @@
             color: var(--text-2);
         }
 
-        /* Tags unterhalb eines Timeline-Eintrags */
         .tl-tags {
             display: flex;
             gap: 0.3rem;
@@ -310,24 +356,164 @@
         }
 
         /* ------------------------------------------
-           Projekte / Selected Work
+           Projects / Selected Work — Visual Cards
            ------------------------------------------ */
-        .projects { display: flex; flex-direction: column; }
-
-        .proj {
-            padding: 1.5rem 0;
-            border-bottom: 0.5px solid var(--border);
+        .projects-grid {
             display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 1.5rem;
-            align-items: start;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.25rem;
         }
 
-        .proj:first-child { padding-top: 0; }
-        .proj:last-child { border-bottom: none; padding-bottom: 0; }
+        .card {
+            position: relative;
+            border-radius: 12px;
+            border: 0.5px solid var(--border);
+            background: var(--card);
+            overflow: hidden;
+            transition: transform 0.4s var(--ease), border-color 0.3s ease, box-shadow 0.4s ease;
+            cursor: default;
+        }
 
-        /* Projekt-Kategorie (z.B. "Film", "Startup") */
-        .proj-type {
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-h);
+            box-shadow: 0 12px 40px var(--glow), 0 4px 12px var(--glow);
+        }
+
+        /* Gradient border glow on hover */
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 13px;
+            padding: 1px;
+            background: linear-gradient(135deg, transparent 0%, var(--border-h) 50%, transparent 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* Full-width card variant (spans 2 columns) */
+        .card--wide {
+            grid-column: 1 / -1;
+        }
+
+        /* Card with image thumbnail */
+        .card-media {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: var(--bg-subtle);
+        }
+
+        .card-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease);
+        }
+
+        .card:hover .card-media img {
+            transform: scale(1.03);
+        }
+
+        /* Gradient placeholder for cards without images */
+        .card-media--gradient {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
+            position: relative;
+        }
+
+        [data-theme="light"] .card-media--gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+        }
+
+        /* YouTube video embed container */
+        .card-video {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+        }
+
+        .card-video img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.6s var(--ease), opacity 0.3s ease;
+        }
+
+        .card:hover .card-video img {
+            transform: scale(1.03);
+        }
+
+        /* Play button overlay */
+        .card-play {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .card-play-btn {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s var(--ease), background 0.3s ease;
+        }
+
+        .card:hover .card-play-btn {
+            transform: scale(1.08);
+            background: rgba(0,0,0,0.85);
+        }
+
+        .card-play-btn svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+            margin-left: 2px;
+        }
+
+        /* Card with active iframe */
+        .card-video.playing img,
+        .card-video.playing .card-play {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .card-video iframe {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+            z-index: 0;
+        }
+
+        /* Card body */
+        .card-body {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+
+        .card-type {
             font-size: 0.625rem;
             font-weight: 500;
             letter-spacing: 0.06em;
@@ -336,47 +522,43 @@
             margin-bottom: 0.25rem;
         }
 
-        .proj-title {
+        .card-title {
             font-size: 0.9375rem;
             font-weight: 500;
             letter-spacing: -0.005em;
             margin-bottom: 0.3rem;
         }
 
-        .proj-desc {
+        .card-desc {
             font-size: 0.8125rem;
             font-weight: 300;
             line-height: 1.6;
             color: var(--text-2);
-            max-width: 420px;
         }
 
-        /* Jahreszahl rechts neben dem Projekt */
-        .proj-year {
-            font-size: 0.75rem;
-            color: var(--text-3);
-            font-variant-numeric: tabular-nums;
-            white-space: nowrap;
+        .card-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 0.625rem;
+            flex-wrap: wrap;
         }
 
-        /* Externer Link (z.B. Behance) */
-        .proj-link {
+        .card-link {
             display: inline-flex;
             align-items: center;
             gap: 0.25rem;
             font-size: 0.75rem;
             font-weight: 400;
             color: var(--text-2);
-            margin-top: 0.5rem;
             transition: color 0.2s ease;
         }
 
-        .proj-link:hover { color: var(--text); }
-        .proj-link svg { width: 10px; height: 10px; transition: transform 0.2s ease; }
-        .proj-link:hover svg { transform: translate(1.5px, -1.5px); }
+        .card-link:hover { color: var(--text); }
+        .card-link svg { width: 10px; height: 10px; transition: transform 0.2s ease; }
+        .card-link:hover svg { transform: translate(1.5px, -1.5px); }
 
         /* ------------------------------------------
-           Kontakt-Bereich
+           Contact
            ------------------------------------------ */
         .contact-grid {
             display: grid;
@@ -436,16 +618,18 @@
         .footer-links a:hover { color: var(--text); }
 
         /* ------------------------------------------
-           Animationen
+           Animations
            ------------------------------------------ */
-
-        /* Einblende-Animation von unten (fuer Hero-Elemente) */
         @keyframes up {
             from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Scroll-Reveal: Elemente werden beim Scrollen sichtbar */
+        @keyframes wordUp {
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         .reveal {
             opacity: 0;
             transform: translateY(14px);
@@ -454,9 +638,7 @@
         .reveal.visible { opacity: 1; transform: translateY(0); }
 
         /* ------------------------------------------
-           Sprachumschaltung (EN/DE)
-           Im EN-Modus werden data-de Elemente versteckt,
-           im DE-Modus werden data-en Elemente versteckt.
+           Language Toggle
            ------------------------------------------ */
         [data-lang="en"] [data-de],
         [data-lang="de"] [data-en] { display: none; }
@@ -470,9 +652,10 @@
             .wrap { padding: 0 1.25rem; }
             section { padding: 3.5rem 0; }
             .hero { min-height: 88svh; }
+            .hero h1 { font-size: clamp(2rem, 9vw, 2.75rem); }
             .tl-item { grid-template-columns: 1fr; gap: 0.25rem; }
-            .proj { grid-template-columns: 1fr; gap: 0.25rem; }
-            .proj-year { order: -1; }
+            .projects-grid { grid-template-columns: 1fr; }
+            .card--wide { grid-column: auto; }
             .contact-grid { grid-template-columns: 1fr; }
             .contact-item:first-child {
                 border-right: none;
@@ -483,15 +666,17 @@
             .contact-item:last-child { padding-left: 0; padding-top: 1.25rem; }
             .footer-inner { flex-direction: column; gap: 0.75rem; }
         }
+
+        /* Medium screens */
+        @media (min-width: 601px) and (max-width: 800px) {
+            .projects-grid { grid-template-columns: 1fr; }
+            .card--wide { grid-column: auto; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- ==========================================
-         NAVIGATION (fixiert, mit Blur-Hintergrund)
-         - Links: Name
-         - Rechts: Sektions-Links, Sprach-Toggle (DE/EN), Theme-Toggle (Hell/Dunkel)
-         ========================================== -->
+    <!-- NAVIGATION -->
     <nav class="nav">
         <span class="nav-name">Tobias Schnorpfeil</span>
         <div class="nav-right">
@@ -499,9 +684,7 @@
             <a href="#work" class="nav-link"><span data-en>Work</span><span data-de>Arbeiten</span></a>
             <a href="#contact" class="nav-link"><span data-en>Contact</span><span data-de>Kontakt</span></a>
             <div class="nav-sep"></div>
-            <!-- Sprach-Toggle: wechselt zwischen DE und EN -->
             <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span data-en>DE</span><span data-de>EN</span></button>
-            <!-- Theme-Toggle: wechselt zwischen Hell und Dunkel -->
             <button class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
                 <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
                 <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
@@ -509,19 +692,17 @@
         </div>
     </nav>
 
-    <!-- ==========================================
-         HERO — Hauptbereich mit Name, Beschreibung, Social-Links
-         Nimmt die volle Bildschirmhoehe ein.
-         ========================================== -->
+    <!-- HERO -->
     <section class="hero">
         <div class="wrap">
             <div class="hero-inner">
-                <h1>Tobias Schnorpfeil</h1>
+                <h1>
+                    <span class="hero-word">Tobias</span>&nbsp;<span class="hero-word hero-name-shimmer">Schnorpfeil</span>
+                </h1>
                 <p class="hero-desc">
                     <span data-en>Civil Engineer, entrepreneur, and creative. Building the future in a leading German construction company — after years of filmmaking, founding a tech startup, and creating digital art.</span>
                     <span data-de>Bauingenieur, Unternehmer und Kreativer. Ich gestalte die Zukunft eines führenden deutschen Bauunternehmens — nach Jahren als Filmemacher, der Gründung eines Tech-Startups und als Digitalkünstler.</span>
                 </p>
-                <!-- Social-Links: LinkedIn, YouTube, Behance, Instagram -->
                 <div class="hero-social">
                     <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" class="social-link">
                         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -544,19 +725,14 @@
         </div>
     </section>
 
-    <!-- Trennlinie -->
     <div class="wrap"><hr class="section-line"></div>
 
-    <!-- ==========================================
-         WERDEGANG / JOURNEY — Timeline mit Karriere-Stationen
-         Reihenfolge: chronologisch absteigend (neueste zuerst)
-         ========================================== -->
+    <!-- JOURNEY -->
     <section id="journey">
         <div class="wrap">
             <p class="section-label reveal"><span data-en>Journey</span><span data-de>Werdegang</span></p>
             <div class="tl">
 
-                <!-- Heinz Schnorpfeil Bau GmbH (2021 — Heute) -->
                 <div class="tl-item reveal">
                     <span class="tl-time"><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
                     <div class="tl-content">
@@ -574,7 +750,6 @@
                     </div>
                 </div>
 
-                <!-- HomeToGo (2021 — 2023) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2021 — 2023</span>
                     <div class="tl-content">
@@ -592,7 +767,6 @@
                     </div>
                 </div>
 
-                <!-- Mapify (2017 — 2023) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2017 — 2023</span>
                     <div class="tl-content">
@@ -610,7 +784,6 @@
                     </div>
                 </div>
 
-                <!-- Film, Fotografie, Motion Graphics & 3D (2014 — 2021) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2014 — 2021</span>
                     <div class="tl-content">
@@ -629,7 +802,6 @@
                     </div>
                 </div>
 
-                <!-- Studium: TUM (2016) -->
                 <div class="tl-item reveal">
                     <span class="tl-time">2016</span>
                     <div class="tl-content">
@@ -642,95 +814,126 @@
         </div>
     </section>
 
-    <!-- Trennlinie -->
     <div class="wrap"><hr class="section-line"></div>
 
-    <!-- ==========================================
-         AUSGEWAEHLTE ARBEITEN / SELECTED WORK
-         Projekt-Karten mit Kategorie, Titel, Beschreibung und Link
-         ========================================== -->
+    <!-- SELECTED WORK -->
     <section id="work">
         <div class="wrap">
             <p class="section-label reveal"><span data-en>Selected Work</span><span data-de>Ausgewählte Arbeiten</span></p>
-            <div class="projects reveal">
+            <div class="projects-grid">
 
-                <!-- Projekt: Unreal Pieces (3D / Digital Art) -->
-                <div class="proj">
-                    <div>
-                        <p class="proj-type">3D / Digital Art</p>
-                        <p class="proj-title">Unreal Pieces</p>
-                        <p class="proj-desc">
-                            <span data-en>Surreal 3D landscapes where data dictates form. Floating beds, reflected rock formations, trees emerging from seascapes. Featured in Aesthetica Magazine.</span>
-                            <span data-de>Surrealistische 3D-Landschaften, in denen Daten die Form bestimmen. Schwebende Betten, gespiegelte Felsformationen, Bäume aus Meereslandschaften. Vorgestellt in Aesthetica Magazine.</span>
-                        </p>
-                        <a href="https://www.behance.net/tschnorpfeil" target="_blank" class="proj-link">Behance <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+                <!-- Video Card: 78° North — Svalbard -->
+                <div class="card reveal">
+                    <div class="card-video" data-video-id="Aogpku8g-PM">
+                        <img src="https://img.youtube.com/vi/Aogpku8g-PM/maxresdefault.jpg" alt="78° North — A Tale of Svalbard" loading="lazy">
+                        <div class="card-play">
+                            <div class="card-play-btn">
+                                <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                            </div>
+                        </div>
                     </div>
-                    <span class="proj-year">2020</span>
-                </div>
-
-                <!-- Projekt: 78° North — Svalbard Kurzfilm -->
-                <div class="proj">
-                    <div>
-                        <p class="proj-type">Film</p>
-                        <p class="proj-title">78° North — A Tale of Svalbard</p>
-                        <p class="proj-desc">
+                    <div class="card-body">
+                        <p class="card-type">Film</p>
+                        <p class="card-title">78° North — A Tale of Svalbard</p>
+                        <p class="card-desc">
                             <span data-en>Cinematic short film capturing the arctic beauty of Svalbard. One of the most recognized pieces on Behance.</span>
                             <span data-de>Cineastischer Kurzfilm über die arktische Schönheit Svalbards. Eines der meistbeachteten Werke auf Behance.</span>
                         </p>
-                        <a href="https://www.behance.net/tschnorpfeil" target="_blank" class="proj-link">Behance <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
                     </div>
-                    <span class="proj-year">2017</span>
                 </div>
 
-                <!-- Projekt: Mapify (Startup) -->
-                <div class="proj">
-                    <div>
-                        <p class="proj-type">Startup</p>
-                        <p class="proj-title">Mapify</p>
-                        <p class="proj-desc">
-                            <span data-en>Travel-tech platform combining visual storytelling with maps. Backed by the MIT Innovation Fund.</span>
-                            <span data-de>Travel-Tech-Plattform, die visuelles Storytelling mit Karten verbindet. Gefördert durch den MIT Innovation Fund.</span>
-                        </p>
+                <!-- Video Card: Second video -->
+                <div class="card reveal">
+                    <div class="card-video" data-video-id="UUTV-BNikzE">
+                        <img src="https://img.youtube.com/vi/UUTV-BNikzE/maxresdefault.jpg" alt="Film Work" loading="lazy">
+                        <div class="card-play">
+                            <div class="card-play-btn">
+                                <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                            </div>
+                        </div>
                     </div>
-                    <span class="proj-year">2017</span>
-                </div>
-
-                <!-- Projekt: Kommerzielle Arbeiten (Brand Films) -->
-                <div class="proj">
-                    <div>
-                        <p class="proj-type"><span data-en>Brand Films</span><span data-de>Markenfilme</span></p>
-                        <p class="proj-title"><span data-en>Commercial Work</span><span data-de>Kommerzielle Arbeiten</span></p>
-                        <p class="proj-desc">
+                    <div class="card-body">
+                        <p class="card-type"><span data-en>Brand Films</span><span data-de>Markenfilme</span></p>
+                        <p class="card-title"><span data-en>Commercial Work</span><span data-de>Kommerzielle Arbeiten</span></p>
+                        <p class="card-desc">
                             <span data-en>Cinematic brand films and photography for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others.</span>
                             <span data-de>Cineastische Markenfilme und Fotografie für Porsche, Adidas, Jack Wolfskin, München Tourismus und weitere.</span>
                         </p>
-                        <a href="https://www.behance.net/tschnorpfeil" target="_blank" class="proj-link">Behance <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
                     </div>
-                    <span class="proj-year">2015 – 20</span>
+                </div>
+
+                <!-- Video Card: Third video -->
+                <div class="card reveal">
+                    <div class="card-video" data-video-id="_stKu_f_7NQ">
+                        <img src="https://img.youtube.com/vi/_stKu_f_7NQ/maxresdefault.jpg" alt="Creative Film" loading="lazy">
+                        <div class="card-play">
+                            <div class="card-play-btn">
+                                <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-type">Film</p>
+                        <p class="card-title"><span data-en>Creative Direction</span><span data-de>Creative Direction</span></p>
+                        <p class="card-desc">
+                            <span data-en>Visual storytelling through cinematic filmmaking — from concept to final cut.</span>
+                            <span data-de>Visuelles Storytelling durch cineastisches Filmemachen — vom Konzept bis zum Final Cut.</span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mapify Card -->
+                <div class="card reveal">
+                    <div class="card-media">
+                        <img src="images/mapify-illustration.jpg" alt="Mapify" loading="lazy">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-type">Startup</p>
+                        <p class="card-title">Mapify</p>
+                        <p class="card-desc">
+                            <span data-en>Travel-tech platform combining visual storytelling with maps. 250K+ users across 190+ countries. Backed by Lakestar Ventures, acquired by HomeToGo.</span>
+                            <span data-de>Travel-Tech-Plattform, die visuelles Storytelling mit Karten verbindet. 250K+ Nutzer in über 190 Ländern. Gefördert von Lakestar Ventures, übernommen von HomeToGo.</span>
+                        </p>
+                        <div class="card-links">
+                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank" class="card-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/" target="_blank" class="card-link">Business Insider <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Unreal Pieces Card (wide) -->
+                <div class="card card--wide reveal">
+                    <div class="card-media card-media--gradient">
+                    </div>
+                    <div class="card-body">
+                        <p class="card-type">3D / Digital Art</p>
+                        <p class="card-title">Unreal Pieces</p>
+                        <p class="card-desc">
+                            <span data-en>Surreal 3D landscapes where data dictates form. Floating beds, reflected rock formations, trees emerging from seascapes. Featured in Aesthetica Magazine.</span>
+                            <span data-de>Surrealistische 3D-Landschaften, in denen Daten die Form bestimmen. Schwebende Betten, gespiegelte Felsformationen, Bäume aus Meereslandschaften. Vorgestellt in Aesthetica Magazine.</span>
+                        </p>
+                        <div class="card-links">
+                            <a href="https://www.behance.net/tschnorpfeil" target="_blank" class="card-link">Behance <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+                        </div>
+                    </div>
                 </div>
 
             </div>
         </div>
     </section>
 
-    <!-- Trennlinie -->
     <div class="wrap"><hr class="section-line"></div>
 
-    <!-- ==========================================
-         KONTAKT — Geschaeftlich & Privat
-         Zwei Spalten mit E-Mail-Adressen
-         ========================================== -->
+    <!-- CONTACT -->
     <section id="contact">
         <div class="wrap">
             <p class="section-label reveal"><span data-en>Contact</span><span data-de>Kontakt</span></p>
             <div class="contact-grid reveal">
-                <!-- Geschaeftliche Kontaktdaten -->
                 <div class="contact-item">
                     <p class="contact-label"><span data-en>Business</span><span data-de>Geschäftlich</span></p>
                     <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
                     <p class="contact-note">Heinz Schnorpfeil Bau GmbH</p>
                 </div>
-                <!-- Private Kontaktdaten -->
                 <div class="contact-item">
                     <p class="contact-label"><span data-en>Personal</span><span data-de>Privat</span></p>
                     <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
@@ -740,9 +943,7 @@
         </div>
     </section>
 
-    <!-- ==========================================
-         FOOTER — Copyright & Social-Links
-         ========================================== -->
+    <!-- FOOTER -->
     <footer class="footer">
         <div class="wrap">
             <div class="footer-inner">
@@ -757,16 +958,8 @@
         </div>
     </footer>
 
-    <!-- ==========================================
-         JAVASCRIPT
-         - toggleTheme(): Wechselt zwischen Hell/Dunkel, speichert in localStorage
-         - updateIcon(): Zeigt Sonnen- oder Mond-Icon je nach Theme
-         - toggleLang(): Wechselt zwischen EN/DE, speichert in localStorage
-         - Smooth-Scroll fuer Nav-Links
-         - Initialisierung: Theme, Sprache, Scroll-Reveal (IntersectionObserver)
-         ========================================== -->
     <script>
-        /* Theme umschalten (Hell <-> Dunkel) */
+        /* Theme toggle */
         function toggleTheme() {
             var h = document.documentElement;
             var next = h.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
@@ -775,13 +968,12 @@
             updateIcon(next);
         }
 
-        /* Theme-Icon aktualisieren (Sonne/Mond) */
         function updateIcon(t) {
             document.querySelector('[data-icon="sun"]').style.display = t === 'dark' ? 'none' : 'block';
             document.querySelector('[data-icon="moon"]').style.display = t === 'dark' ? 'block' : 'none';
         }
 
-        /* Sprache umschalten (EN <-> DE) */
+        /* Language toggle */
         function toggleLang() {
             var h = document.documentElement;
             var next = h.getAttribute('data-lang') === 'en' ? 'de' : 'en';
@@ -790,7 +982,7 @@
             localStorage.setItem('lang', next);
         }
 
-        /* Smooth-Scroll fuer Nav-Links */
+        /* Smooth scroll for nav links */
         document.querySelectorAll('.nav-link').forEach(function(l) {
             l.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -799,15 +991,29 @@
             });
         });
 
-        /* Initialisierung beim Laden der Seite */
+        /* YouTube video click-to-play */
+        document.querySelectorAll('.card-video').forEach(function(el) {
+            el.addEventListener('click', function() {
+                var videoId = el.getAttribute('data-video-id');
+                if (!videoId || el.classList.contains('playing')) return;
+                var iframe = document.createElement('iframe');
+                iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
+                iframe.allow = 'autoplay; encrypted-media';
+                iframe.allowFullscreen = true;
+                el.insertBefore(iframe, el.firstChild);
+                el.classList.add('playing');
+            });
+        });
+
+        /* Initialization */
         (function() {
-            /* Theme: aus localStorage oder System-Praeferenz */
+            /* Theme */
             var t = localStorage.getItem('theme') ||
                 (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
             document.documentElement.setAttribute('data-theme', t);
             updateIcon(t);
 
-            /* Sprache: aus localStorage oder Browser-Sprache */
+            /* Language */
             var l = localStorage.getItem('lang');
             if (l) { document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l; }
             else if ((navigator.language || '').startsWith('de')) {
@@ -815,7 +1021,7 @@
                 document.documentElement.lang = 'de';
             }
 
-            /* Scroll-Reveal: Elemente einblenden wenn sie ins Viewport kommen */
+            /* Scroll reveal with IntersectionObserver */
             var obs = new IntersectionObserver(function(entries) {
                 entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
             }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
