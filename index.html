@@ -2,7 +2,7 @@
 <html lang="en" data-theme="light" data-lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tobias Schnorpfeil</title>
     <meta name="description" content="Engineer, Entrepreneur & Creative">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -36,7 +36,7 @@
             --card-hover: #FAFAFA;
             --tag-bg: #F5F5F7;
             --tag-text: #6E6E73;
-            --overlay: rgba(255,255,255,0.92);
+            --overlay: rgba(255,255,255,0.98);
             --glow: rgba(0,0,0,0.03);
             --grain-opacity: 0.03;
         }
@@ -54,7 +54,7 @@
             --card-hover: #161616;
             --tag-bg: #1D1D1F;
             --tag-text: #98989D;
-            --overlay: rgba(10,10,10,0.92);
+            --overlay: rgba(10,10,10,0.98);
             --glow: rgba(255,255,255,0.03);
             --grain-opacity: 0.04;
         }
@@ -66,6 +66,7 @@
 
         html {
             scroll-behavior: smooth;
+            scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px));
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
@@ -102,8 +103,8 @@
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 100;
-            padding: 0 2.5rem;
-            height: 56px;
+            padding: env(safe-area-inset-top, 0px) max(2.5rem, env(safe-area-inset-right, 0px)) 0 max(2.5rem, env(safe-area-inset-left, 0px));
+            height: calc(56px + env(safe-area-inset-top, 0px));
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -193,7 +194,7 @@
             min-height: 100svh;
             display: flex;
             align-items: center;
-            padding-top: 56px;
+            padding-top: calc(56px + env(safe-area-inset-top, 0px));
         }
 
         .hero-inner { width: 100%; padding: 4rem 0; }
@@ -663,7 +664,7 @@
            Responsive (Mobile < 600px)
            ------------------------------------------ */
         @media (max-width: 600px) {
-            .nav { padding: 0 1.25rem; }
+            .nav { padding: env(safe-area-inset-top, 0px) max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px)); }
             .nav-link, .nav-sep { display: none; }
             .wrap { padding: 0 1.25rem; }
             section { padding: 3.5rem 0; }
@@ -716,8 +717,8 @@
                     <span class="hero-word">Tobias</span>&nbsp;<span class="hero-word">Schnorpfeil</span>
                 </h1>
                 <p class="hero-desc">
-                    <span data-en>Civil Engineer, entrepreneur, and creative. Building the future in a leading German construction company — after years of filmmaking, founding a tech startup, and creating digital art.</span>
-                    <span data-de>Bauingenieur, Unternehmer und Kreativer. Ich gestalte die Zukunft eines führenden deutschen Bauunternehmens — nach Jahren als Filmemacher, der Gründung eines Tech-Startups und als Digitalkünstler.</span>
+                    <span data-en>Civil Engineer, entrepreneur, and creative. Since 2021, I've been channeling my experience in engineering, media & marketing, tech, and digitalization into our family business.</span>
+                    <span data-de>Bauingenieur, Unternehmer und Kreativer. Seit 2021 bringe ich meine Erfahrungen aus Ingenieurwesen, Media & Marketing, Tech und Digitalisierung in unser Familienunternehmen ein.</span>
                 </p>
                 <div class="hero-social">
                     <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" class="social-link">
