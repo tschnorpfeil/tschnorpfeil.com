@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light" data-lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -10,10 +11,11 @@
     <!-- Google Fonts: DM Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap"
+        rel="stylesheet">
 
     <style>
-
         /* ------------------------------------------
            CSS Variables
            ------------------------------------------ */
@@ -36,8 +38,8 @@
             --card-hover: #FAFAFA;
             --tag-bg: #F5F5F7;
             --tag-text: #6E6E73;
-            --overlay: rgba(255,255,255,0.98);
-            --glow: rgba(0,0,0,0.03);
+            --overlay: rgba(255, 255, 255, 0.98);
+            --glow: rgba(0, 0, 0, 0.03);
             --grain-opacity: 0.03;
         }
 
@@ -54,15 +56,22 @@
             --card-hover: #161616;
             --tag-bg: #1D1D1F;
             --tag-text: #98989D;
-            --overlay: rgba(10,10,10,0.98);
-            --glow: rgba(255,255,255,0.03);
+            --overlay: rgba(10, 10, 10, 0.98);
+            --glow: rgba(255, 255, 255, 0.03);
             --grain-opacity: 0.04;
         }
 
         /* ------------------------------------------
            Reset & Base
            ------------------------------------------ */
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.4s ease, color 0.3s ease, border-color 0.3s ease;
+        }
 
         html {
             scroll-behavior: smooth;
@@ -84,7 +93,10 @@
         body::after {
             content: '';
             position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             pointer-events: none;
             z-index: 9999;
             opacity: var(--grain-opacity);
@@ -93,28 +105,44 @@
             background-size: 256px 256px;
         }
 
-        ::selection { background: var(--text); color: var(--bg); }
-        a { color: inherit; text-decoration: none; }
+        ::selection {
+            background: var(--text);
+            color: var(--bg);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
         /* ------------------------------------------
            Navigation
            ------------------------------------------ */
         .nav {
             position: fixed;
-            top: 0; left: 0; right: 0;
+            top: 0;
+            left: 0;
+            right: 0;
             z-index: 100;
             padding: env(safe-area-inset-top, 0px) max(2.5rem, env(safe-area-inset-right, 0px)) 0 max(2.5rem, env(safe-area-inset-left, 0px));
             height: calc(56px + env(safe-area-inset-top, 0px));
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: saturate(180%) blur(24px);
-            -webkit-backdrop-filter: saturate(180%) blur(24px);
-            background: var(--overlay);
-            border-bottom: 0.5px solid var(--border);
+            backdrop-filter: blur(0);
+            -webkit-backdrop-filter: blur(0);
+            background: transparent;
+            border-bottom: 0.5px solid transparent;
             transition: all var(--transition);
             -webkit-transform: translateZ(0);
             transform: translateZ(0);
+        }
+
+        .nav.scrolled {
+            backdrop-filter: saturate(180%) blur(24px);
+            -webkit-backdrop-filter: saturate(180%) blur(24px);
+            background: var(--overlay);
+            border-bottom-color: var(--border);
         }
 
         .nav-name {
@@ -140,7 +168,9 @@
             letter-spacing: 0.005em;
         }
 
-        .nav-link:hover { color: var(--text); }
+        .nav-link:hover {
+            color: var(--text);
+        }
 
         .nav-sep {
             width: 1px;
@@ -150,7 +180,8 @@
         }
 
         .btn-icon {
-            width: 32px; height: 32px;
+            width: 32px;
+            height: 32px;
             border: none;
             border-radius: 6px;
             background: transparent;
@@ -166,7 +197,10 @@
             letter-spacing: 0.04em;
         }
 
-        .btn-icon:hover { color: var(--text); background: var(--tag-bg); }
+        .btn-icon:hover {
+            color: var(--text);
+            background: var(--tag-bg);
+        }
 
         .btn-lang {
             width: auto;
@@ -197,7 +231,10 @@
             padding-top: calc(56px + env(safe-area-inset-top, 0px));
         }
 
-        .hero-inner { width: 100%; padding: 4rem 0; }
+        .hero-inner {
+            width: 100%;
+            padding: 4rem 0;
+        }
 
         .hero h1 {
             font-size: clamp(2.5rem, 7vw, 4rem);
@@ -216,8 +253,13 @@
             animation: wordUp 0.8s var(--ease) forwards;
         }
 
-        .hero-word:nth-child(1) { animation-delay: 0.1s; }
-        .hero-word:nth-child(2) { animation-delay: 0.2s; }
+        .hero-word:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .hero-word:nth-child(2) {
+            animation-delay: 0.2s;
+        }
 
 
 
@@ -258,12 +300,17 @@
             border-color: var(--border-h);
         }
 
-        .social-link svg { width: 13px; height: 13px; }
+        .social-link svg {
+            width: 13px;
+            height: 13px;
+        }
 
         /* ------------------------------------------
            Sections
            ------------------------------------------ */
-        section { padding: 4.5rem 0; }
+        section {
+            padding: 4.5rem 0;
+        }
 
         .section-line {
             height: 0.5px;
@@ -283,7 +330,11 @@
         /* ------------------------------------------
            Timeline / Journey
            ------------------------------------------ */
-        .tl { display: flex; flex-direction: column; gap: 2.75rem; }
+        .tl {
+            display: flex;
+            flex-direction: column;
+            gap: 2.75rem;
+        }
 
         .tl-item {
             display: grid;
@@ -353,6 +404,7 @@
             border: 0.5px solid var(--border);
             background: var(--card);
             overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
             transition: transform 0.4s var(--ease), border-color 0.3s ease, box-shadow 0.4s ease;
             cursor: default;
         }
@@ -360,7 +412,7 @@
         .card:hover {
             transform: translateY(-4px);
             border-color: var(--border-h);
-            box-shadow: 0 12px 40px var(--glow), 0 4px 12px var(--glow);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
         }
 
         /* Gradient border glow on hover */
@@ -402,11 +454,12 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform 0.6s var(--ease);
+            transition: transform 0.6s var(--ease), filter 0.4s ease;
         }
 
         .card:hover .card-media img {
-            transform: scale(1.03);
+            transform: scale(1.04);
+            filter: brightness(1.05);
         }
 
         /* Gradient placeholder for cards without images */
@@ -446,11 +499,16 @@
         }
 
         @media (max-width: 600px) {
-            .card-collage { height: 140px; grid-template-columns: repeat(5, 1fr); }
+            .card-collage {
+                height: 140px;
+                grid-template-columns: repeat(5, 1fr);
+            }
         }
 
         @media (min-width: 601px) and (max-width: 800px) {
-            .card-collage { height: 180px; }
+            .card-collage {
+                height: 180px;
+            }
         }
 
         /* YouTube video embed container */
@@ -489,7 +547,7 @@
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
@@ -499,7 +557,7 @@
 
         .card:hover .card-play-btn {
             transform: scale(1.08);
-            background: rgba(0,0,0,0.85);
+            background: rgba(0, 0, 0, 0.85);
         }
 
         .card-play-btn svg {
@@ -570,9 +628,21 @@
             transition: color 0.2s ease;
         }
 
-        .card-link:hover { color: var(--text); }
-        .card-link svg { width: 10px; height: 10px; transition: transform 0.2s ease; }
-        .card-link:hover svg { transform: translate(1.5px, -1.5px); }
+        .card-link:hover {
+            color: var(--text);
+        }
+
+        .card-link svg {
+            width: 10px;
+            height: 10px;
+            opacity: 0.5;
+            transition: transform 0.25s var(--ease), opacity 0.2s ease;
+        }
+
+        .card-link:hover svg {
+            transform: translate(3px, -3px);
+            opacity: 1;
+        }
 
         /* ------------------------------------------
            Contact
@@ -582,14 +652,18 @@
             grid-template-columns: 1fr 1fr;
         }
 
-        .contact-item { padding: 1.25rem 0; }
+        .contact-item {
+            padding: 1.25rem 0;
+        }
 
         .contact-item:first-child {
             border-right: 0.5px solid var(--border);
             padding-right: 2rem;
         }
 
-        .contact-item:last-child { padding-left: 2rem; }
+        .contact-item:last-child {
+            padding-left: 2rem;
+        }
 
         .contact-label {
             font-size: 0.625rem;
@@ -607,7 +681,9 @@
             transition: color 0.2s ease;
         }
 
-        .contact-email:hover { color: var(--text-2); }
+        .contact-email:hover {
+            color: var(--text-2);
+        }
 
         .contact-note {
             font-size: 0.6875rem;
@@ -619,7 +695,10 @@
         /* ------------------------------------------
            Footer
            ------------------------------------------ */
-        .footer { padding: 2rem 0; margin-top: 2rem; }
+        .footer {
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
 
         .footer-inner {
             display: flex;
@@ -630,67 +709,145 @@
             font-weight: 300;
         }
 
-        .footer-links { display: flex; gap: 1rem; }
-        .footer-links a { color: var(--text-3); transition: color 0.2s ease; font-weight: 400; }
-        .footer-links a:hover { color: var(--text); }
+        .footer-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .footer-links a {
+            color: var(--text-3);
+            transition: color 0.2s ease;
+            font-weight: 400;
+        }
+
+        .footer-links a:hover {
+            color: var(--text);
+        }
 
         /* ------------------------------------------
            Animations
            ------------------------------------------ */
         @keyframes up {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes wordUp {
-            from { opacity: 0; transform: translateY(100%); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(100%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .reveal {
             opacity: 0;
             transform: translateY(14px);
             transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+            transition-delay: calc(var(--reveal-i, 0) * 0.07s);
         }
-        .reveal.visible { opacity: 1; transform: translateY(0); }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* ------------------------------------------
            Language Toggle
            ------------------------------------------ */
         [data-lang="en"] [data-de],
-        [data-lang="de"] [data-en] { display: none; }
+        [data-lang="de"] [data-en] {
+            display: none;
+        }
 
         /* ------------------------------------------
            Responsive (Mobile < 600px)
            ------------------------------------------ */
         @media (max-width: 600px) {
-            .nav { padding: env(safe-area-inset-top, 0px) max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px)); }
-            .nav-link, .nav-sep { display: none; }
-            .wrap { padding: 0 1.25rem; }
-            section { padding: 3.5rem 0; }
-            .hero { min-height: 88svh; }
-            .hero h1 { font-size: clamp(2rem, 9vw, 2.75rem); }
-            .tl-item { grid-template-columns: 1fr; gap: 0.25rem; }
-            .projects-grid { grid-template-columns: 1fr; }
-            .card--wide { grid-column: auto; }
-            .contact-grid { grid-template-columns: 1fr; }
+            .nav {
+                padding: env(safe-area-inset-top, 0px) max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px));
+            }
+
+            .nav-link,
+            .nav-sep {
+                display: none;
+            }
+
+            .wrap {
+                padding: 0 1.25rem;
+            }
+
+            section {
+                padding: 3.5rem 0;
+            }
+
+            .hero {
+                min-height: 88svh;
+            }
+
+            .hero h1 {
+                font-size: clamp(2rem, 9vw, 2.75rem);
+            }
+
+            .tl-item {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card--wide {
+                grid-column: auto;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
             .contact-item:first-child {
                 border-right: none;
                 border-bottom: 0.5px solid var(--border);
                 padding-right: 0;
                 padding-bottom: 1.25rem;
             }
-            .contact-item:last-child { padding-left: 0; padding-top: 1.25rem; }
-            .footer-inner { flex-direction: column; gap: 0.75rem; }
+
+            .contact-item:last-child {
+                padding-left: 0;
+                padding-top: 1.25rem;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
         }
 
         /* Medium screens */
         @media (min-width: 601px) and (max-width: 800px) {
-            .projects-grid { grid-template-columns: 1fr; }
-            .card--wide { grid-column: auto; }
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card--wide {
+                grid-column: auto;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- NAVIGATION -->
@@ -701,10 +858,25 @@
             <a href="#work" class="nav-link"><span data-en>Work</span><span data-de>Arbeiten</span></a>
             <a href="#contact" class="nav-link"><span data-en>Contact</span><span data-de>Kontakt</span></a>
             <div class="nav-sep"></div>
-            <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span data-en>DE</span><span data-de>EN</span></button>
+            <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span
+                    data-en>DE</span><span data-de>EN</span></button>
             <button class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
-                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" />
+                    <line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" />
+                    <line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" style="display:none">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
             </button>
         </div>
     </nav>
@@ -717,24 +889,41 @@
                     <span class="hero-word">Tobias</span>&nbsp;<span class="hero-word">Schnorpfeil</span>
                 </h1>
                 <p class="hero-desc">
-                    <span data-en>Civil Engineer, entrepreneur, and creative. Since 2021, I've been channeling my experience in engineering, media & marketing, tech, and digitalization into our family business.</span>
-                    <span data-de>Bauingenieur, Unternehmer und Kreativer. Seit 2021 bringe ich meine Erfahrungen aus Ingenieurwesen, Media & Marketing, Tech und Digitalisierung in unser Familienunternehmen ein.</span>
+                    <span data-en>Civil Engineer, entrepreneur, and creative. Since 2021, I've been channeling my
+                        experience in engineering, media & marketing, tech, and digitalization into our family
+                        business.</span>
+                    <span data-de>Bauingenieur, Unternehmer und Kreativer. Seit 2021 bringe ich meine Erfahrungen aus
+                        Ingenieurwesen, Media & Marketing, Tech und Digitalisierung in unser Familienunternehmen
+                        ein.</span>
                 </p>
                 <div class="hero-social">
-                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank"
+                        class="social-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                        </svg>
                         LinkedIn
                     </a>
                     <a href="https://www.youtube.com/user/TSchnorpfeil" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                        </svg>
                         YouTube
                     </a>
                     <a href="https://www.behance.net/tschnorpfeil" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.55-.67 1-1.16 1.35-.48.35-1.05.6-1.67.77-.66.16-1.32.25-2.01.25H0V4.51h6.938v-.007zM6.545 10.16c.6 0 1.096-.16 1.486-.48.39-.32.59-.81.59-1.48 0-.36-.06-.66-.18-.9-.12-.24-.29-.43-.5-.57-.21-.14-.46-.24-.74-.3-.28-.06-.6-.09-.93-.09H3.523v3.82h3.022zm.2 5.57c.36 0 .7-.04 1.01-.12.31-.08.58-.21.81-.39.23-.18.41-.42.54-.73.13-.3.2-.67.2-1.1 0-.87-.24-1.49-.72-1.88-.48-.38-1.1-.58-1.86-.58H3.523v4.8h3.222zM15.834 4.14h6.06v1.67h-6.06V4.14z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.55-.67 1-1.16 1.35-.48.35-1.05.6-1.67.77-.66.16-1.32.25-2.01.25H0V4.51h6.938v-.007zM6.545 10.16c.6 0 1.096-.16 1.486-.48.39-.32.59-.81.59-1.48 0-.36-.06-.66-.18-.9-.12-.24-.29-.43-.5-.57-.21-.14-.46-.24-.74-.3-.28-.06-.6-.09-.93-.09H3.523v3.82h3.022zm.2 5.57c.36 0 .7-.04 1.01-.12.31-.08.58-.21.81-.39.23-.18.41-.42.54-.73.13-.3.2-.67.2-1.1 0-.87-.24-1.49-.72-1.88-.48-.38-1.1-.58-1.86-.58H3.523v4.8h3.222zM15.834 4.14h6.06v1.67h-6.06V4.14z" />
+                        </svg>
                         Behance
                     </a>
                     <a href="https://www.instagram.com/tschnorpfeil/" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                        </svg>
                         Instagram
                     </a>
                 </div>
@@ -742,7 +931,9 @@
         </div>
     </section>
 
-    <div class="wrap"><hr class="section-line"></div>
+    <div class="wrap">
+        <hr class="section-line">
+    </div>
 
     <!-- JOURNEY -->
     <section id="journey">
@@ -754,14 +945,21 @@
                     <span class="tl-time"><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
                     <div class="tl-content">
                         <p class="tl-title">Heinz Schnorpfeil Bau GmbH</p>
-                        <p class="tl-sub"><span data-en>Shareholder 3rd Generation</span><span data-de>Gesellschafter 3. Generation</span></p>
+                        <p class="tl-sub"><span data-en>Shareholder 3rd Generation</span><span data-de>Gesellschafter 3.
+                                Generation</span></p>
                         <p class="tl-desc">
-                            <span data-en>Started on-site — four years as a construction manager in road and bridge building to understand the core of the business from the ground up. Now focused on management, digitalization, and group-wide initiatives.</span>
-                            <span data-de>Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management, Digitalisierung und gruppenweite Themen.</span>
+                            <span data-en>Started on-site — four years as a construction manager in road and bridge
+                                building to understand the core of the business from the ground up. Now focused on
+                                management, digitalization, and group-wide initiatives.</span>
+                            <span data-de>Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und
+                                Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management,
+                                Digitalisierung und gruppenweite Themen.</span>
                         </p>
                         <div class="tl-tags">
-                            <span class="tag"><span data-en>Infrastructure</span><span data-de>Infrastruktur</span></span>
-                            <span class="tag"><span data-en>Digitalization</span><span data-de>Digitalisierung</span></span>
+                            <span class="tag"><span data-en>Infrastructure</span><span
+                                    data-de>Infrastruktur</span></span>
+                            <span class="tag"><span data-en>Digitalization</span><span
+                                    data-de>Digitalisierung</span></span>
                             <span class="tag">Management</span>
                         </div>
                     </div>
@@ -773,11 +971,16 @@
                         <p class="tl-title">HomeToGo</p>
                         <p class="tl-sub">Product & Community Advisor</p>
                         <p class="tl-desc">
-                            <span data-en>Following Mapify's acquisition, advised HomeToGo on product strategy and community growth — helping scale the platform's social reach and user engagement across international markets.</span>
-                            <span data-de>Nach der Übernahme von Mapify Beratung von HomeToGo in Produktstrategie und Community-Aufbau — Skalierung der Social-Media-Reichweite und Nutzerinteraktion auf internationalen Märkten.</span>
+                            <span data-en>Following Mapify's acquisition, advised HomeToGo on product strategy and
+                                community growth — helping scale the platform's social reach and user engagement across
+                                international markets.</span>
+                            <span data-de>Nach der Übernahme von Mapify Beratung von HomeToGo in Produktstrategie und
+                                Community-Aufbau — Skalierung der Social-Media-Reichweite und Nutzerinteraktion auf
+                                internationalen Märkten.</span>
                         </p>
                         <div class="tl-tags">
-                            <span class="tag"><span data-en>Product Strategy</span><span data-de>Produktstrategie</span></span>
+                            <span class="tag"><span data-en>Product Strategy</span><span
+                                    data-de>Produktstrategie</span></span>
                             <span class="tag">Community</span>
                             <span class="tag">Travel-Tech</span>
                         </div>
@@ -790,8 +993,13 @@
                         <p class="tl-title">Mapify</p>
                         <p class="tl-sub"><span data-en>Co-Founder</span><span data-de>Mitgründer</span></p>
                         <p class="tl-desc">
-                            <span data-en>Travel-tech startup combining visual storytelling with interactive maps — building a global community of 250,000+ travelers in over 190 countries. Backed by Lakestar Ventures and Atlantic Labs, ultimately acquired by HomeToGo.</span>
-                            <span data-de>Travel-Tech-Startup, das visuelles Storytelling mit interaktiven Karten verband — Aufbau einer globalen Community von über 250.000 Reisenden in mehr als 190 Ländern. Unterstützt von Lakestar Ventures und Atlantic Labs, letztlich an HomeToGo verkauft.</span>
+                            <span data-en>Travel-tech startup combining visual storytelling with interactive maps —
+                                building a global community of 250,000+ travelers in over 190 countries. Backed by
+                                Lakestar Ventures and Atlantic Labs, ultimately acquired by HomeToGo.</span>
+                            <span data-de>Travel-Tech-Startup, das visuelles Storytelling mit interaktiven Karten
+                                verband — Aufbau einer globalen Community von über 250.000 Reisenden in mehr als 190
+                                Ländern. Unterstützt von Lakestar Ventures und Atlantic Labs, letztlich an HomeToGo
+                                verkauft.</span>
                         </p>
                         <div class="tl-tags">
                             <span class="tag">Startup</span>
@@ -804,11 +1012,18 @@
                 <div class="tl-item reveal">
                     <span class="tl-time">2014 — 2021</span>
                     <div class="tl-content">
-                        <p class="tl-title"><span data-en>Film, Photography, Motion Graphics & 3D</span><span data-de>Film, Fotografie, Motion Graphics & 3D</span></p>
-                        <p class="tl-sub"><span data-en>Freelance & Personal Work</span><span data-de>Freelance & persönliche Arbeiten</span></p>
+                        <p class="tl-title"><span data-en>Film, Photography, Motion Graphics & 3D</span><span
+                                data-de>Film, Fotografie, Motion Graphics & 3D</span></p>
+                        <p class="tl-sub"><span data-en>Freelance & Personal Work</span><span data-de>Freelance &
+                                persönliche Arbeiten</span></p>
                         <p class="tl-desc">
-                            <span data-en>Cinematic work for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others. From the arctic of Svalbard to the coasts of Thailand. Complemented by surreal 3D renders and motion graphics — featured in Aesthetica Magazine.</span>
-                            <span data-de>Cineastische Arbeiten für Porsche, Adidas, Jack Wolfskin, München Tourismus und weitere. Von der Arktis Svalbards bis zu den Küsten Thailands. Ergänzt durch surrealistische 3D-Renders und Motion Graphics — vorgestellt in Aesthetica Magazine.</span>
+                            <span data-en>Cinematic work for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others.
+                                From the arctic of Svalbard to the coasts of Thailand. Complemented by surreal 3D
+                                renders and motion graphics — featured in Aesthetica Magazine.</span>
+                            <span data-de>Cineastische Arbeiten für Porsche, Adidas, Jack Wolfskin, München Tourismus
+                                und weitere. Von der Arktis Svalbards bis zu den Küsten Thailands. Ergänzt durch
+                                surrealistische 3D-Renders und Motion Graphics — vorgestellt in Aesthetica
+                                Magazine.</span>
                         </p>
                         <div class="tl-tags">
                             <span class="tag">Film</span>
@@ -822,8 +1037,10 @@
                 <div class="tl-item reveal">
                     <span class="tl-time">2016</span>
                     <div class="tl-content">
-                        <p class="tl-title">B.Sc. <span data-en>Civil Engineering</span><span data-de>Bauingenieurwesen</span></p>
-                        <p class="tl-sub"><span data-en>Technical University of Munich</span><span data-de>Technische Universität München</span></p>
+                        <p class="tl-title">B.Sc. <span data-en>Civil Engineering</span><span
+                                data-de>Bauingenieurwesen</span></p>
+                        <p class="tl-sub"><span data-en>Technical University of Munich</span><span data-de>Technische
+                                Universität München</span></p>
                     </div>
                 </div>
 
@@ -831,21 +1048,27 @@
         </div>
     </section>
 
-    <div class="wrap"><hr class="section-line"></div>
+    <div class="wrap">
+        <hr class="section-line">
+    </div>
 
     <!-- SELECTED WORK -->
     <section id="work">
         <div class="wrap">
-            <p class="section-label reveal"><span data-en>Selected Work</span><span data-de>Ausgewählte Arbeiten</span></p>
+            <p class="section-label reveal"><span data-en>Selected Work</span><span data-de>Ausgewählte Arbeiten</span>
+            </p>
             <div class="projects-grid">
 
                 <!-- Video Card: 78° North — Olympus/OM SYSTEM -->
                 <div class="card reveal">
                     <div class="card-video" data-video-id="Aogpku8g-PM">
-                        <img src="https://img.youtube.com/vi/Aogpku8g-PM/maxresdefault.jpg" alt="78° North — Olympus/OM SYSTEM Cameras" loading="lazy">
+                        <img src="https://img.youtube.com/vi/Aogpku8g-PM/maxresdefault.jpg"
+                            alt="78° North — Olympus/OM SYSTEM Cameras" loading="lazy">
                         <div class="card-play">
                             <div class="card-play-btn">
-                                <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="6,3 20,12 6,21" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -853,8 +1076,12 @@
                         <p class="card-type">Film / Olympus</p>
                         <p class="card-title">78° North — Olympus/OM SYSTEM Cameras</p>
                         <p class="card-desc">
-                            <span data-en>A cinematic journey through the arctic wilderness of Svalbard at 78° North, shot entirely on Olympus/OM SYSTEM cameras. Capturing raw polar landscapes in extreme conditions.</span>
-                            <span data-de>Eine cineastische Reise durch die arktische Wildnis Svalbards auf 78° Nord, komplett auf Olympus/OM SYSTEM Kameras gedreht. Aufnahmen polarer Landschaften unter extremen Bedingungen.</span>
+                            <span data-en>A cinematic journey through the arctic wilderness of Svalbard at 78° North,
+                                shot entirely on Olympus/OM SYSTEM cameras. Capturing raw polar landscapes in extreme
+                                conditions.</span>
+                            <span data-de>Eine cineastische Reise durch die arktische Wildnis Svalbards auf 78° Nord,
+                                komplett auf Olympus/OM SYSTEM Kameras gedreht. Aufnahmen polarer Landschaften unter
+                                extremen Bedingungen.</span>
                         </p>
                     </div>
                 </div>
@@ -862,10 +1089,13 @@
                 <!-- Video Card: Adidas TERREX -->
                 <div class="card reveal">
                     <div class="card-video" data-video-id="UUTV-BNikzE">
-                        <img src="https://img.youtube.com/vi/UUTV-BNikzE/hqdefault.jpg" alt="Adidas TERREX" loading="lazy">
+                        <img src="https://img.youtube.com/vi/UUTV-BNikzE/hqdefault.jpg" alt="Adidas TERREX"
+                            loading="lazy">
                         <div class="card-play">
                             <div class="card-play-btn">
-                                <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="6,3 20,12 6,21" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -873,8 +1103,11 @@
                         <p class="card-type">Film / Adidas</p>
                         <p class="card-title">Adidas TERREX</p>
                         <p class="card-desc">
-                            <span data-en>Brand film for Adidas TERREX — pushing the boundaries between outdoor performance and cinematic storytelling. Shot on location in rugged alpine terrain.</span>
-                            <span data-de>Markenfilm für Adidas TERREX — an der Grenze zwischen Outdoor-Performance und cineastischem Storytelling. Gedreht on location in alpinem Gelände.</span>
+                            <span data-en>Brand film for Adidas TERREX — pushing the boundaries between outdoor
+                                performance and cinematic storytelling. Shot on location in rugged alpine
+                                terrain.</span>
+                            <span data-de>Markenfilm für Adidas TERREX — an der Grenze zwischen Outdoor-Performance und
+                                cineastischem Storytelling. Gedreht on location in alpinem Gelände.</span>
                         </p>
                     </div>
                 </div>
@@ -882,10 +1115,13 @@
                 <!-- Video Card: Olympus Peru & Bolivia -->
                 <div class="card reveal">
                     <div class="card-video" data-video-id="_stKu_f_7NQ">
-                        <img src="https://img.youtube.com/vi/_stKu_f_7NQ/maxresdefault.jpg" alt="Olympus/OM SYSTEM — Peru & Bolivia" loading="lazy">
+                        <img src="https://img.youtube.com/vi/_stKu_f_7NQ/maxresdefault.jpg"
+                            alt="Olympus/OM SYSTEM — Peru & Bolivia" loading="lazy">
                         <div class="card-play">
                             <div class="card-play-btn">
-                                <svg viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21"/></svg>
+                                <svg viewBox="0 0 24 24">
+                                    <polygon points="6,3 20,12 6,21" />
+                                </svg>
                             </div>
                         </div>
                     </div>
@@ -893,8 +1129,12 @@
                         <p class="card-type">Film / Olympus</p>
                         <p class="card-title">Olympus/OM SYSTEM — Peru & Bolivia</p>
                         <p class="card-desc">
-                            <span data-en>Commercial production for Olympus/OM SYSTEM across Peru and Bolivia — from the salt flats of Uyuni to the peaks of the Andes. A visual journey through South America's most dramatic landscapes.</span>
-                            <span data-de>Kommerzielle Produktion für Olympus/OM SYSTEM in Peru und Bolivien — von den Salzwüsten Uyunis bis zu den Gipfeln der Anden. Eine visuelle Reise durch Südamerikas dramatischste Landschaften.</span>
+                            <span data-en>Commercial production for Olympus/OM SYSTEM across Peru and Bolivia — from the
+                                salt flats of Uyuni to the peaks of the Andes. A visual journey through South America's
+                                most dramatic landscapes.</span>
+                            <span data-de>Kommerzielle Produktion für Olympus/OM SYSTEM in Peru und Bolivien — von den
+                                Salzwüsten Uyunis bis zu den Gipfeln der Anden. Eine visuelle Reise durch Südamerikas
+                                dramatischste Landschaften.</span>
                         </p>
                     </div>
                 </div>
@@ -908,12 +1148,25 @@
                         <p class="card-type">Startup</p>
                         <p class="card-title">Mapify</p>
                         <p class="card-desc">
-                            <span data-en>Travel-tech platform combining visual storytelling with maps. 250K+ users across 190+ countries. Backed by Lakestar Ventures, acquired by HomeToGo.</span>
-                            <span data-de>Travel-Tech-Plattform, die visuelles Storytelling mit Karten verbindet. 250K+ Nutzer in über 190 Ländern. Gefördert von Lakestar Ventures, übernommen von HomeToGo.</span>
+                            <span data-en>Travel-tech platform combining visual storytelling with maps. 250K+ users
+                                across 190+ countries. Backed by Lakestar Ventures, acquired by HomeToGo.</span>
+                            <span data-de>Travel-Tech-Plattform, die visuelles Storytelling mit Karten verbindet. 250K+
+                                Nutzer in über 190 Ländern. Gefördert von Lakestar Ventures, übernommen von
+                                HomeToGo.</span>
                         </p>
                         <div class="card-links">
-                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank" class="card-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
-                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/" target="_blank" class="card-link">Business Insider <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank"
+                                class="card-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round">
+                                    <line x1="7" y1="17" x2="17" y2="7" />
+                                    <polyline points="7 7 17 7 17 17" />
+                                </svg></a>
+                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/"
+                                target="_blank" class="card-link">Business Insider <svg viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                                    <line x1="7" y1="17" x2="17" y2="7" />
+                                    <polyline points="7 7 17 7 17 17" />
+                                </svg></a>
                         </div>
                     </div>
                 </div>
@@ -931,11 +1184,19 @@
                         <p class="card-type">3D / Digital Art</p>
                         <p class="card-title">Unreal Pieces</p>
                         <p class="card-desc">
-                            <span data-en>Surreal 3D landscapes where data dictates form. Floating beds, reflected rock formations, trees emerging from seascapes. Featured in Aesthetica Magazine.</span>
-                            <span data-de>Surrealistische 3D-Landschaften, in denen Daten die Form bestimmen. Schwebende Betten, gespiegelte Felsformationen, Bäume aus Meereslandschaften. Vorgestellt in Aesthetica Magazine.</span>
+                            <span data-en>Surreal 3D landscapes where data dictates form. Floating beds, reflected rock
+                                formations, trees emerging from seascapes. Featured in Aesthetica Magazine.</span>
+                            <span data-de>Surrealistische 3D-Landschaften, in denen Daten die Form bestimmen. Schwebende
+                                Betten, gespiegelte Felsformationen, Bäume aus Meereslandschaften. Vorgestellt in
+                                Aesthetica Magazine.</span>
                         </p>
                         <div class="card-links">
-                            <a href="https://www.instagram.com/tschnorpfeil/" target="_blank" class="card-link">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+                            <a href="https://www.instagram.com/tschnorpfeil/" target="_blank"
+                                class="card-link">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round">
+                                    <line x1="7" y1="17" x2="17" y2="7" />
+                                    <polyline points="7 7 17 7 17 17" />
+                                </svg></a>
                         </div>
                     </div>
                 </div>
@@ -944,7 +1205,9 @@
         </div>
     </section>
 
-    <div class="wrap"><hr class="section-line"></div>
+    <div class="wrap">
+        <hr class="section-line">
+    </div>
 
     <!-- CONTACT -->
     <section id="contact">
@@ -1005,8 +1268,8 @@
         }
 
         /* Smooth scroll for nav links */
-        document.querySelectorAll('.nav-link').forEach(function(l) {
-            l.addEventListener('click', function(e) {
+        document.querySelectorAll('.nav-link').forEach(function (l) {
+            l.addEventListener('click', function (e) {
                 e.preventDefault();
                 var target = document.querySelector(l.getAttribute('href'));
                 if (target) target.scrollIntoView({ behavior: 'smooth' });
@@ -1014,8 +1277,8 @@
         });
 
         /* YouTube thumbnail fallback: maxresdefault -> hqdefault */
-        document.querySelectorAll('.card-video img').forEach(function(img) {
-            img.addEventListener('error', function() {
+        document.querySelectorAll('.card-video img').forEach(function (img) {
+            img.addEventListener('error', function () {
                 var src = img.src;
                 if (src.indexOf('maxresdefault') !== -1) {
                     img.src = src.replace('maxresdefault', 'hqdefault');
@@ -1024,8 +1287,8 @@
         });
 
         /* YouTube video click-to-play */
-        document.querySelectorAll('.card-video').forEach(function(el) {
-            el.addEventListener('click', function() {
+        document.querySelectorAll('.card-video').forEach(function (el) {
+            el.addEventListener('click', function () {
                 var videoId = el.getAttribute('data-video-id');
                 if (!videoId || el.classList.contains('playing')) return;
                 var iframe = document.createElement('iframe');
@@ -1038,7 +1301,7 @@
         });
 
         /* Initialization */
-        (function() {
+        (function () {
             /* Theme */
             var t = localStorage.getItem('theme') ||
                 (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
@@ -1053,12 +1316,30 @@
                 document.documentElement.lang = 'de';
             }
 
-            /* Scroll reveal with IntersectionObserver */
-            var obs = new IntersectionObserver(function(entries) {
-                entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+            /* Nav blur reveal on scroll */
+            var nav = document.querySelector('.nav');
+            var hero = document.querySelector('.hero');
+            if (nav && hero) {
+                var navObs = new IntersectionObserver(function (entries) {
+                    nav.classList.toggle('scrolled', !entries[0].isIntersecting);
+                }, { threshold: 0, rootMargin: '-56px 0px 0px 0px' });
+                navObs.observe(hero);
+            }
+
+            /* Scroll reveal with staggered timing */
+            var revealIndex = 0;
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting) {
+                        e.target.style.setProperty('--reveal-i', revealIndex++);
+                        e.target.classList.add('visible');
+                        obs.unobserve(e.target);
+                    }
+                });
             }, { threshold: 0.1, rootMargin: '0px 0px -30px 0px' });
-            document.querySelectorAll('.reveal').forEach(function(el) { obs.observe(el); });
+            document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
         })();
     </script>
 </body>
+
 </html>
