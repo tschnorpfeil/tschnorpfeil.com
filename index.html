@@ -7,15 +7,51 @@
     <title>Tobias Schnorpfeil</title>
     <meta name="description" content="Engineer, Entrepreneur & Creative">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
-    <!-- Google Fonts: DM Sans -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap"
-        rel="stylesheet">
+    <!-- SEO / GEO -->
+    <link rel="canonical" href="https://tschnorpfeil.com">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Tobias Schnorpfeil">
+    <meta name="geo.region" content="DE-RP">
+    <meta name="geo.placename" content="Trier">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://tschnorpfeil.com">
+    <meta property="og:title" content="Tobias Schnorpfeil">
+    <meta property="og:description" content="Engineer, Entrepreneur & Creative">
+    <meta property="og:image" content="https://tschnorpfeil.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tobias Schnorpfeil">
+    <meta name="twitter:description" content="Engineer, Entrepreneur & Creative">
+    <meta name="twitter:image" content="https://tschnorpfeil.com/og-image.png">
 
     <style>
+        /* ------------------------------------------
+           Self-hosted DM Sans (GDPR compliant)
+           ------------------------------------------ */
+        @font-face {
+            font-family: 'DM Sans';
+            src: url('fonts/DMSans-Normal.woff2') format('woff2');
+            font-weight: 300 500;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'DM Sans';
+            src: url('fonts/DMSans-Italic.woff2') format('woff2');
+            font-weight: 300 400;
+            font-style: italic;
+            font-display: swap;
+        }
+
         /* ------------------------------------------
            CSS Variables
            ------------------------------------------ */
@@ -31,7 +67,7 @@
             --bg-subtle: #F7F7F5;
             --text: #1D1D1F;
             --text-2: #86868B;
-            --text-3: #AEAEB2;
+            --text-3: #6E6E73;
             --border: #E8E8ED;
             --border-h: #D2D2D7;
             --card: #FFFFFF;
@@ -434,6 +470,7 @@
             padding: 1px;
             background: linear-gradient(135deg, transparent 0%, var(--border-h) 50%, transparent 100%);
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
             mask-composite: exclude;
             opacity: 0;
@@ -492,6 +529,10 @@
             background: var(--border);
         }
 
+        .card-collage picture {
+            display: contents;
+        }
+
         .card-collage img {
             width: 100%;
             height: 100%;
@@ -510,8 +551,30 @@
 
         @media (max-width: 600px) {
             .card-collage {
-                height: 140px;
-                grid-template-columns: repeat(5, 1fr);
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                grid-auto-rows: auto;
+                height: auto;
+                gap: 2px;
+            }
+
+            .card-collage picture:first-child {
+                grid-column: 1 / -1;
+            }
+
+            .card-collage picture {
+                display: block;
+            }
+
+            .card-collage img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                aspect-ratio: 1 / 1;
+            }
+
+            .card-collage picture:first-child img {
+                aspect-ratio: 16 / 9;
             }
         }
 
@@ -529,6 +592,11 @@
             overflow: hidden;
             background: #000;
             cursor: pointer;
+        }
+
+        .card-video picture,
+        .card-media picture {
+            display: contents;
         }
 
         .card-video img {
@@ -1081,8 +1149,10 @@
                 <!-- Video Card: 78° North — Olympus/OM SYSTEM -->
                 <div class="card reveal">
                     <div class="card-video" data-video-id="Aogpku8g-PM">
-                        <img src="https://img.youtube.com/vi/Aogpku8g-PM/maxresdefault.jpg"
-                            alt="78° North — Olympus/OM SYSTEM Cameras" loading="lazy">
+                        <picture>
+                            <source srcset="images/yt-78north.webp" type="image/webp">
+                            <img src="images/yt-78north.jpg" alt="78° North — Olympus/OM SYSTEM Cameras" loading="lazy">
+                        </picture>
                         <div class="card-play">
                             <div class="card-play-btn">
                                 <svg viewBox="0 0 24 24">
@@ -1108,8 +1178,10 @@
                 <!-- Video Card: Adidas TERREX -->
                 <div class="card reveal">
                     <div class="card-video" data-video-id="UUTV-BNikzE">
-                        <img src="https://img.youtube.com/vi/UUTV-BNikzE/hqdefault.jpg" alt="Adidas TERREX"
-                            loading="lazy">
+                        <picture>
+                            <source srcset="images/yt-adidas-terrex.webp" type="image/webp">
+                            <img src="images/yt-adidas-terrex.jpg" alt="Adidas TERREX" loading="lazy">
+                        </picture>
                         <div class="card-play">
                             <div class="card-play-btn">
                                 <svg viewBox="0 0 24 24">
@@ -1134,8 +1206,11 @@
                 <!-- Video Card: Olympus Peru & Bolivia -->
                 <div class="card reveal">
                     <div class="card-video" data-video-id="_stKu_f_7NQ">
-                        <img src="https://img.youtube.com/vi/_stKu_f_7NQ/maxresdefault.jpg"
-                            alt="Olympus/OM SYSTEM — Peru & Bolivia" loading="lazy">
+                        <picture>
+                            <source srcset="images/yt-olympus-peru.webp" type="image/webp">
+                            <img src="images/yt-olympus-peru.jpg" alt="Olympus/OM SYSTEM — Peru &amp; Bolivia"
+                                loading="lazy">
+                        </picture>
                         <div class="card-play">
                             <div class="card-play-btn">
                                 <svg viewBox="0 0 24 24">
@@ -1161,7 +1236,10 @@
                 <!-- Mapify Card -->
                 <div class="card reveal">
                     <div class="card-media">
-                        <img src="images/mapify-illustration.jpg" alt="Mapify" loading="lazy">
+                        <picture>
+                            <source srcset="images/mapify-illustration.webp" type="image/webp">
+                            <img src="images/mapify-illustration.jpg" alt="Mapify" loading="lazy">
+                        </picture>
                     </div>
                     <div class="card-body">
                         <p class="card-type">Startup</p>
@@ -1193,11 +1271,26 @@
                 <!-- Unreal Pieces Card (wide) -->
                 <div class="card card--wide reveal">
                     <div class="card-collage">
-                        <img src="images/render-bed-ocean.jpg" alt="Floating bed on ocean" loading="lazy">
-                        <img src="images/render-tree-moon.jpg" alt="Tree and moon reflected in water" loading="lazy">
-                        <img src="images/render-birds.jpg" alt="Birds against blue sky" loading="lazy">
-                        <img src="images/render-cloud-tree.jpg" alt="Cloud-crowned tree in water" loading="lazy">
-                        <img src="images/render-golden-sun.jpg" alt="Silhouette in golden light" loading="lazy">
+                        <picture>
+                            <source srcset="images/render-bed-ocean.webp" type="image/webp"><img
+                                src="images/render-bed-ocean.jpg" alt="Floating bed on ocean" loading="lazy">
+                        </picture>
+                        <picture>
+                            <source srcset="images/render-tree-moon.webp" type="image/webp"><img
+                                src="images/render-tree-moon.jpg" alt="Tree and moon reflected in water" loading="lazy">
+                        </picture>
+                        <picture>
+                            <source srcset="images/render-birds.webp" type="image/webp"><img
+                                src="images/render-birds.jpg" alt="Birds against blue sky" loading="lazy">
+                        </picture>
+                        <picture>
+                            <source srcset="images/render-cloud-tree.webp" type="image/webp"><img
+                                src="images/render-cloud-tree.jpg" alt="Cloud-crowned tree in water" loading="lazy">
+                        </picture>
+                        <picture>
+                            <source srcset="images/render-golden-sun.webp" type="image/webp"><img
+                                src="images/render-golden-sun.jpg" alt="Silhouette in golden light" loading="lazy">
+                        </picture>
                     </div>
                     <div class="card-body">
                         <p class="card-type">3D / Digital Art</p>
@@ -1295,15 +1388,6 @@
             });
         });
 
-        /* YouTube thumbnail fallback: maxresdefault -> hqdefault */
-        document.querySelectorAll('.card-video img').forEach(function (img) {
-            img.addEventListener('error', function () {
-                var src = img.src;
-                if (src.indexOf('maxresdefault') !== -1) {
-                    img.src = src.replace('maxresdefault', 'hqdefault');
-                }
-            });
-        });
 
         /* YouTube video click-to-play */
         document.querySelectorAll('.card-video').forEach(function (el) {
