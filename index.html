@@ -1494,38 +1494,40 @@
             /* ── Scalar field: multi-peak landscape ── */
             function field(x, y) {
                 var t = curScrollY / pageH;
-                var dim = Math.max(W, H);
+                /* Normalized coordinates for resolution-independent harmonics */
+                var nx = x / W, ny = y / H;
 
-                /* Three peaks — scroll drifts them for evolving topology */
-                var p1x = W * (0.30 + t * 0.15), p1y = H * (0.32 + t * 0.10);
-                var p2x = W * (0.72 - t * 0.10), p2y = H * (0.65 + t * 0.08);
-                var p3x = W * (0.55 + t * 0.20), p3y = H * (0.18 - t * 0.05);
+                /* Three peaks — large enough to fill viewport, drift with scroll */
+                var p1x = W * (0.25 + t * 0.12), p1y = H * (0.30 + t * 0.10);
+                var p2x = W * (0.78 - t * 0.08), p2y = H * (0.70 + t * 0.06);
+                var p3x = W * (0.52 + t * 0.18), p3y = H * (0.10 - t * 0.04);
 
-                var s1 = dim * 0.32, s2 = dim * 0.26, s3 = dim * 0.22;
+                var s1 = W * 0.55, s2 = W * 0.40, s3 = W * 0.35;
 
                 var d1x = x - p1x, d1y = y - p1y;
                 var d2x = x - p2x, d2y = y - p2y;
                 var d3x = x - p3x, d3y = y - p3y;
 
                 var base = Math.exp(-(d1x * d1x + d1y * d1y) / (2 * s1 * s1))
-                         + 0.75 * Math.exp(-(d2x * d2x + d2y * d2y) / (2 * s2 * s2))
-                         + 0.5 * Math.exp(-(d3x * d3x + d3y * d3y) / (2 * s3 * s3));
+                         + 0.8 * Math.exp(-(d2x * d2x + d2y * d2y) / (2 * s2 * s2))
+                         + 0.55 * Math.exp(-(d3x * d3x + d3y * d3y) / (2 * s3 * s3));
 
-                /* Harmonics — stronger distortion for non-circular shapes */
-                var r = Math.sqrt(d1x * d1x + d1y * d1y);
+                /* Strong harmonics for non-trivial shapes */
+                var r = Math.sqrt(d1x * d1x + d1y * d1y) / W;
                 var theta = Math.atan2(d1y, d1x);
-                var h1 = Math.sin((3 + t * 0.8) * theta + r * 0.009 + t * 2.0);
-                var h2 = Math.sin(5.17 * theta - r * (0.006 + t * 0.003) + 1.3);
-                var h3 = Math.cos((2.31 - t * 0.5) * theta + r * 0.013 - 0.7 + t * 1.5);
-                var h4 = Math.sin(7.43 * theta + r * 0.004 + 2.1 + t * 3.0);
-                var amp = 0.10 + t * 0.06;
-                var distortion = (h1 * 0.38 + h2 * 0.25 + h3 * 0.27 + h4 * 0.10) * amp;
+                var h1 = Math.sin((3 + t * 1.2) * theta + r * 12 + t * 2.5);
+                var h2 = Math.sin(5.17 * theta - r * (8 + t * 4) + 1.3);
+                var h3 = Math.cos((2.31 - t * 0.6) * theta + r * 16 - 0.7 + t * 1.8);
+                var h4 = Math.sin(7.43 * theta + r * 5 + 2.1 + t * 3.5);
+                /* Large amplitude — creates ridges and valleys, not gentle bumps */
+                var amp = 0.15 + t * 0.08;
+                var distortion = (h1 * 0.35 + h2 * 0.28 + h3 * 0.25 + h4 * 0.12) * amp;
 
                 /* Mouse deformation */
                 var bump = 0;
                 if (smoothMX > -998) {
                     var mdx = x - smoothMX, mdy = y - smoothMY;
-                    bump = 0.25 * Math.exp(-(mdx * mdx + mdy * mdy) / 28800);
+                    bump = 0.3 * Math.exp(-(mdx * mdx + mdy * mdy) / 28800);
                 }
 
                 /* Ripples */
@@ -1537,8 +1539,8 @@
                     var rdx = x - p.x, rdy = y - p.y;
                     var dist = Math.sqrt(rdx * rdx + rdy * rdy);
                     var front = Math.abs(dist - age * 280);
-                    if (front < 50) {
-                        rip += 0.15 * Math.exp(-age * 2) * (1 - front / 50);
+                    if (front < 60) {
+                        rip += 0.20 * Math.exp(-age * 1.8) * (1 - front / 60);
                     }
                 }
 
@@ -1639,7 +1641,7 @@
                At amount=1 → fully grid-snapped, collinear points removed → angular/rectilinear. */
             function digitizePath(pts, amount) {
                 if (amount < 0.01 || pts.length < 2) return pts;
-                var gs = 18 + amount * 30; /* grid coarsens as velocity increases */
+                var gs = 16 + amount * 40; /* grid coarsens as velocity increases */
                 var out = [];
                 var px = -99999, py = -99999;
                 for (var i = 0; i < pts.length; i++) {
@@ -1670,14 +1672,14 @@
             /* ── Mouse proximity [0,1] ── */
             function mouseHi(pts) {
                 if (smoothMX < -998) return 0;
-                var best = Infinity, R = 160;
+                var best = Infinity, R = 200;
                 for (var i = 0; i < pts.length; i += 3) {
                     var dx = pts[i][0] - smoothMX, dy = pts[i][1] - smoothMY;
                     var d = dx * dx + dy * dy;
                     if (d < best) best = d;
                 }
                 best = Math.sqrt(best);
-                return best < R ? Math.pow(1 - best / R, 1.8) : 0;
+                return best < R ? Math.pow(1 - best / R, 1.6) : 0;
             }
 
             /* ── Draw one polyline ── */
@@ -1692,8 +1694,8 @@
                 ctx.setLineDash([len, len + 2]);
                 ctx.lineDashOffset = len * (1 - Math.min(1, progress));
                 ctx.strokeStyle = color;
-                ctx.globalAlpha = Math.min(1, alpha + hi * 0.45);
-                ctx.lineWidth = lw + hi * 1.0;
+                ctx.globalAlpha = Math.min(1, alpha + hi * 0.55);
+                ctx.lineWidth = lw + hi * 1.4;
                 ctx.lineCap = angular ? 'square' : 'round';
                 ctx.lineJoin = angular ? 'miter' : 'round';
                 ctx.stroke();
@@ -1704,16 +1706,16 @@
             var LEVELS = [];
             function buildLevels() {
                 LEVELS = [];
-                var count = 28;
+                var count = 30;
                 for (var i = 1; i <= count; i++) {
                     var v = i / (count + 1);
                     var idx = (i % 5 === 0);
                     LEVELS.push({
-                        value: v * 1.6, /* field peaks above 1 with multi-peak, scale levels up */
-                        a: idx ? 0.18 + (1 - v) * 0.14 : 0.07 + (1 - v) * 0.13,
-                        w: idx ? 1.0 + (1 - v) * 0.8 : 0.5 + (1 - v) * 0.5,
-                        delay: i * 0.12,
-                        dur: 0.8 + v * 1.2
+                        value: v * 1.8,
+                        a: idx ? 0.28 + (1 - v) * 0.18 : 0.10 + (1 - v) * 0.16,
+                        w: idx ? 1.3 + (1 - v) * 1.0 : 0.5 + (1 - v) * 0.6,
+                        delay: i * 0.07,     /* fast stagger: all visible within ~2s */
+                        dur: 0.6 + v * 0.8
                     });
                 }
             }
@@ -1730,9 +1732,9 @@
                 } else { smoothMX = -9999; smoothMY = -9999; }
 
                 /* Scroll velocity → digitize with spring decay */
-                var target = Math.min(1, scrollVel / 30);
-                digitize += (target - digitize) * 0.10;
-                scrollVel *= 0.88;
+                var target = Math.min(1, scrollVel / 20);
+                digitize += (target - digitize) * 0.14;
+                scrollVel *= 0.85;
                 if (digitize < 0.005) digitize = 0;
 
                 /* Clean expired ripples */
