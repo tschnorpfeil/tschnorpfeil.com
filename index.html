@@ -269,12 +269,13 @@
         }
 
         #topo {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
             pointer-events: none;
-            z-index: 0;
+            z-index: -1;
         }
 
         .hero .wrap {
@@ -1476,9 +1477,10 @@
             var ctx = canvas.getContext('2d');
             var dpr = Math.min(window.devicePixelRatio || 1, 2);
             var W, H, cols, rows;
-            var cellSize = 8; /* small cells = smooth contour curves */
+            var cellSize = 8;
             var time = 0;
             var mouseX = -9999, mouseY = -9999;
+            var scrollDrift = 0;
             var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var running = true;
 
@@ -1498,12 +1500,12 @@
             })();
 
             function noise2d(x, y) {
-                var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
-                var s = (x + y) * F2;
-                var i = Math.floor(x + s), j = Math.floor(y + s);
-                var t = (i + j) * G2;
-                var x0 = x-(i-t), y0 = y-(j-t);
-                var i1 = x0>y0?1:0, j1 = x0>y0?0:1;
+                var F2 = 0.5*(Math.sqrt(3)-1), G2 = (3-Math.sqrt(3))/6;
+                var s = (x+y)*F2;
+                var i = Math.floor(x+s), j = Math.floor(y+s);
+                var t = (i+j)*G2;
+                var x0=x-(i-t), y0=y-(j-t);
+                var i1=x0>y0?1:0, j1=x0>y0?0:1;
                 var x1=x0-i1+G2, y1=y0-j1+G2, x2=x0-1+2*G2, y2=y0-1+2*G2;
                 var ii=i&255, jj=j&255, n0=0, n1=0, n2=0;
                 var t0=0.5-x0*x0-y0*y0; if(t0>0){t0*=t0; var g=grad[perm[ii+perm[jj]]%8]; n0=t0*t0*(g[0]*x0+g[1]*y0);}
@@ -1513,8 +1515,7 @@
             }
 
             function resize() {
-                var rect = canvas.parentElement.getBoundingClientRect();
-                W = rect.width; H = rect.height;
+                W = window.innerWidth; H = window.innerHeight;
                 canvas.width = W*dpr; canvas.height = H*dpr;
                 canvas.style.width = W+'px'; canvas.style.height = H+'px';
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1526,65 +1527,58 @@
                 return getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#6E6E73';
             }
 
-            /* Marching squares: lookup table */
             var segTable = {
                 1:[[3,0]], 2:[[0,1]], 3:[[3,1]], 4:[[1,2]], 5:[[3,0],[1,2]],
                 6:[[0,2]], 7:[[3,2]], 8:[[2,3]], 9:[[2,0]], 10:[[0,1],[2,3]],
                 11:[[2,1]], 12:[[1,3]], 13:[[1,0]], 14:[[0,3]]
             };
 
-            /* Linearly-interpolated edge position — produces smooth contours */
+            function clamp(v) { return v<0?0:v>1?1:v; }
+
             function edgePos(edge, cx, cy, vTL, vTR, vBR, vBL, thresh) {
-                var s = cellSize, t;
+                var s=cellSize, t;
                 switch(edge) {
-                    case 0: t=clamp((thresh-vTL)/(vTR-vTL)); return [cx+t*s, cy];
-                    case 1: t=clamp((thresh-vTR)/(vBR-vTR)); return [cx+s, cy+t*s];
-                    case 2: t=clamp((thresh-vBL)/(vBR-vBL)); return [cx+t*s, cy+s];
-                    case 3: t=clamp((thresh-vTL)/(vBL-vTL)); return [cx, cy+t*s];
+                    case 0: t=clamp((thresh-vTL)/(vTR-vTL||1e-9)); return [cx+t*s, cy];
+                    case 1: t=clamp((thresh-vTR)/(vBR-vTR||1e-9)); return [cx+s, cy+t*s];
+                    case 2: t=clamp((thresh-vBL)/(vBR-vBL||1e-9)); return [cx+t*s, cy+s];
+                    case 3: t=clamp((thresh-vTL)/(vBL-vTL||1e-9)); return [cx, cy+t*s];
                 }
             }
-            function clamp(v) { return v<0?0:v>1?1:v; }
 
             function draw() {
                 ctx.clearRect(0,0,W,H);
                 var color = getColor();
-                /* Low frequency = large rolling terrain features */
-                var freq = 0.0028, freq2 = 0.0014;
-                var numLevels = 12;
-
-                /* Build scalar field */
+                var freq=0.0028, freq2=0.0014, numLevels=12;
                 var stride = cols+1;
                 var field = new Float32Array(stride*(rows+1));
+
                 for (var r=0; r<=rows; r++) {
                     for (var c=0; c<=cols; c++) {
                         var px=c*cellSize, py=r*cellSize;
-                        var v = noise2d(px*freq + time*0.18, py*freq + time*0.09);
-                        v += 0.45*noise2d(px*freq2+17+time*0.07, py*freq2+5-time*0.05);
-                        /* Mouse: push contours away from cursor */
+                        /* scrollDrift shifts the terrain vertically as you scroll */
+                        var v = noise2d(px*freq + time*0.18, py*freq + scrollDrift + time*0.09);
+                        v += 0.45*noise2d(px*freq2+17+time*0.07, py*freq2+scrollDrift*0.6+5-time*0.05);
+                        /* Mouse: push contours toward cursor peak */
                         if (mouseX > -999) {
                             var dx=px-mouseX, dy=py-mouseY;
-                            var d2=dx*dx+dy*dy, r2=240*240;
-                            if (d2<r2) {
-                                var inf=(1-d2/r2); inf=inf*inf;
-                                v += inf*1.4;
-                            }
+                            var d2=dx*dx+dy*dy, r2=260*260;
+                            if (d2<r2) { var inf=(1-d2/r2); v += inf*inf*1.6; }
                         }
                         field[r*stride+c] = v;
                     }
                 }
 
-                /* Draw one path per contour level */
+                /* Contour lines */
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
                 for (var lv=0; lv<numLevels; lv++) {
-                    var thresh = -0.9 + (1.8/numLevels)*(lv+0.5);
-                    /* Outer levels subtler, mid-levels slightly bolder */
+                    var thresh = -0.9+(1.8/numLevels)*(lv+0.5);
                     var mid = (lv+0.5)/numLevels - 0.5;
-                    var alpha = 0.13 + 0.11*(1-4*mid*mid);
-
+                    var alpha = 0.13+0.11*(1-4*mid*mid);
                     ctx.beginPath();
                     ctx.strokeStyle = color;
                     ctx.globalAlpha = alpha;
-                    ctx.lineWidth = 0.75;
-
+                    ctx.lineWidth = 0.8;
                     for (var r=0; r<rows; r++) {
                         for (var c=0; c<cols; c++) {
                             var vTL=field[r*stride+c], vTR=field[r*stride+c+1];
@@ -1602,6 +1596,33 @@
                     }
                     ctx.stroke();
                 }
+
+                /* Elevation labels — scattered along contour lines */
+                ctx.font = '600 6.5px DM Sans, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.letterSpacing = '0.06em';
+                /* Sample every ~200px horizontally, staggered per level */
+                var labelStep = Math.ceil(200/cellSize);
+                for (var lv=0; lv<numLevels; lv++) {
+                    var thresh = -0.9+(1.8/numLevels)*(lv+0.5);
+                    var elevM = ((lv+1)*80)+'m';
+                    var cOffset = (lv*3) % labelStep; /* stagger so labels don't stack */
+                    for (var r=2; r<rows-2; r++) {
+                        for (var c=cOffset+2; c<cols-2; c+=labelStep) {
+                            var v = field[r*stride+c];
+                            /* Check if field value is near this contour threshold */
+                            if (Math.abs(v-thresh) > 0.06) continue;
+                            var px=c*cellSize, py=r*cellSize;
+                            /* Skip the center-left zone where hero text lives */
+                            if (px > W*0.2 && px < W*0.75 && py > H*0.25 && py < H*0.75) continue;
+                            ctx.globalAlpha = 0.22;
+                            ctx.fillStyle = color;
+                            ctx.fillText(elevM, px, py);
+                        }
+                    }
+                }
+
                 ctx.globalAlpha = 1;
             }
 
@@ -1615,14 +1636,21 @@
                 requestAnimationFrame(loop);
             }
 
-            /* Mouse tracking — always enabled, canvas has pointer-events:none so hero section receives events */
+            /* Mouse tracking */
             document.addEventListener('mousemove', function(e) {
-                var rect = canvas.getBoundingClientRect();
-                /* Only track while cursor is over the hero */
-                if (e.clientY > rect.bottom) { mouseX = -9999; mouseY = -9999; return; }
-                mouseX = e.clientX - rect.left;
-                mouseY = e.clientY - rect.top;
+                if (e.clientY > H) { mouseX=-9999; mouseY=-9999; return; }
+                mouseX = e.clientX;
+                mouseY = e.clientY;
             });
+
+            /* Scroll: terrain drifts + canvas fades */
+            var hero = document.querySelector('.hero');
+            window.addEventListener('scroll', function() {
+                var heroH = hero ? hero.offsetHeight : H;
+                var progress = Math.min(window.scrollY / heroH, 1);
+                scrollDrift = progress * 3.0;
+                canvas.style.opacity = String(Math.max(0, 1 - progress * 1.15));
+            }, { passive: true });
 
             document.addEventListener('visibilitychange', function() {
                 if (document.hidden) { running=false; }
