@@ -1468,10 +1468,10 @@
         })();
 
         /* ── Living Topography ──
-           Real-time contour lines from a mathematical scalar field.
-           Mouse deforms terrain. Scroll velocity snaps organic curves
-           to a rectilinear grid (analog→digital). Touch creates ripples.
-           Contours settle into a new landscape at each scroll position. */
+           Parametric contour rings that morph from organic displaced
+           circles into precise geometric superellipses as you scroll.
+           Mouse pushes contour points outward. Touch creates ripples.
+           Inner rings rotate subtly with scroll for depth. */
         (function () {
             var canvas = document.getElementById('topo');
             if (!canvas) return;
@@ -1482,181 +1482,122 @@
             var running = true;
             var startTime = Date.now();
 
-            /* ── Input state ── */
             var mouseX = -9999, mouseY = -9999;
             var smoothMX = -9999, smoothMY = -9999;
-            var curScrollY = 0, lastScrollY = 0;
-            var scrollVel = 0;       /* instantaneous scroll speed */
-            var digitize = 0;        /* 0 = organic curves, 1 = full grid-snap */
+            var curScrollY = 0;
             var pageH = 1;
-            var ripples = [];        /* [{x, y, time}] */
+            var ripples = [];
 
-            /* ── Scalar field: multi-peak landscape ── */
-            function field(x, y) {
-                var t = curScrollY / pageH;
-                /* Normalized coordinates for resolution-independent harmonics */
-                var nx = x / W, ny = y / H;
+            /* ── Superellipse point at angle theta ──
+               n=2 → circle, n=6+ → rounded rect, n→∞ → square */
+            function superPt(theta, rx, ry, n) {
+                var ct = Math.cos(theta), st = Math.sin(theta);
+                var e = 2 / n;
+                return [
+                    Math.sign(ct) * Math.pow(Math.abs(ct), e) * rx,
+                    Math.sign(st) * Math.pow(Math.abs(st), e) * ry
+                ];
+            }
 
-                /* Three peaks — large enough to fill viewport, drift with scroll */
-                var p1x = W * (0.25 + t * 0.12), p1y = H * (0.30 + t * 0.10);
-                var p2x = W * (0.78 - t * 0.08), p2y = H * (0.70 + t * 0.06);
-                var p3x = W * (0.52 + t * 0.18), p3y = H * (0.10 - t * 0.04);
+            /* ── Harmonic displacement (organic wobble) ── */
+            function displace(theta, r, t) {
+                return Math.sin((3 + t * 1.2) * theta + r * 0.009 + t * 2.5) * r * 0.14
+                     + Math.sin(5.17 * theta - r * 0.007 + 1.3 + t * 0.8) * r * 0.09
+                     + Math.cos((2.31 - t * 0.5) * theta + r * 0.014 - 0.7 + t * 1.8) * r * 0.11
+                     + Math.sin(7.43 * theta + r * 0.004 + 2.1 + t * 3.2) * r * 0.05;
+            }
 
-                var s1 = W * 0.55, s2 = W * 0.40, s3 = W * 0.35;
-
-                var d1x = x - p1x, d1y = y - p1y;
-                var d2x = x - p2x, d2y = y - p2y;
-                var d3x = x - p3x, d3y = y - p3y;
-
-                var base = Math.exp(-(d1x * d1x + d1y * d1y) / (2 * s1 * s1))
-                         + 0.8 * Math.exp(-(d2x * d2x + d2y * d2y) / (2 * s2 * s2))
-                         + 0.55 * Math.exp(-(d3x * d3x + d3y * d3y) / (2 * s3 * s3));
-
-                /* Strong harmonics for non-trivial shapes */
-                var r = Math.sqrt(d1x * d1x + d1y * d1y) / W;
-                var theta = Math.atan2(d1y, d1x);
-                var h1 = Math.sin((3 + t * 1.2) * theta + r * 12 + t * 2.5);
-                var h2 = Math.sin(5.17 * theta - r * (8 + t * 4) + 1.3);
-                var h3 = Math.cos((2.31 - t * 0.6) * theta + r * 16 - 0.7 + t * 1.8);
-                var h4 = Math.sin(7.43 * theta + r * 5 + 2.1 + t * 3.5);
-                /* Large amplitude — creates ridges and valleys, not gentle bumps */
-                var amp = 0.15 + t * 0.08;
-                var distortion = (h1 * 0.35 + h2 * 0.28 + h3 * 0.25 + h4 * 0.12) * amp;
-
-                /* Mouse deformation */
-                var bump = 0;
-                if (smoothMX > -998) {
-                    var mdx = x - smoothMX, mdy = y - smoothMY;
-                    bump = 0.3 * Math.exp(-(mdx * mdx + mdy * mdy) / 28800);
-                }
-
-                /* Ripples */
-                var rip = 0;
+            /* ── Generate all rings for current frame ── */
+            function generateRings(morph, t) {
+                var rings = [];
                 var now = Date.now();
-                for (var i = 0; i < ripples.length; i++) {
-                    var p = ripples[i];
-                    var age = (now - p.time) * 0.001;
-                    var rdx = x - p.x, rdy = y - p.y;
-                    var dist = Math.sqrt(rdx * rdx + rdy * rdy);
-                    var front = Math.abs(dist - age * 280);
-                    if (front < 60) {
-                        rip += 0.20 * Math.exp(-age * 1.8) * (1 - front / 60);
-                    }
-                }
 
-                return base + distortion + bump + rip;
-            }
+                /* Superellipse exponent: 2 (circle) → 14 (sharp rect) */
+                var n = 2 + morph * 12;
+                /* Harmonic amplitude fades: full → 15% residual */
+                var dispFade = 1.0 - morph * 0.85;
+                /* Aspect ratio becomes rectangular as morph increases */
+                var aspect = 1 + morph * 0.3;
 
-            /* ── Marching squares ── */
-            var _grid = null, _cols = 0, _rows = 0, _dirty = true;
-            function traceContours(level, cellSize) {
-                var segments = [];
-                var cols = Math.ceil(W / cellSize);
-                var rows = Math.ceil(H / cellSize);
-                var stride = cols + 1;
+                /* Three peak centers — drift with scroll */
+                var centers = [
+                    { x: W * (0.28 + t * 0.10), y: H * (0.32 + t * 0.08), count: 14, maxR: W * 0.50 },
+                    { x: W * (0.76 - t * 0.06), y: H * (0.68 + t * 0.05), count: 10, maxR: W * 0.38 },
+                    { x: W * (0.54 + t * 0.15), y: H * (0.08 - t * 0.03), count: 8, maxR: W * 0.32 }
+                ];
 
-                if (!_grid || _cols !== cols || _rows !== rows) {
-                    _grid = new Float32Array(stride * (rows + 1));
-                    _cols = cols; _rows = rows; _dirty = true;
-                }
-                if (_dirty) {
-                    for (var gy = 0; gy <= rows; gy++)
-                        for (var gx = 0; gx <= cols; gx++)
-                            _grid[gy * stride + gx] = field(gx * cellSize, gy * cellSize);
-                    _dirty = false;
-                }
+                for (var c = 0; c < centers.length; c++) {
+                    var ctr = centers[c];
+                    var spacing = ctr.maxR / (ctr.count + 1);
+                    for (var i = 1; i <= ctr.count; i++) {
+                        var r = i * spacing;
+                        var dist = i / ctr.count; /* 0=inner, 1=outer */
+                        var pts = [];
+                        var steps = Math.max(72, Math.floor(r * 0.35));
 
-                for (var cy = 0; cy < rows; cy++) {
-                    for (var cx = 0; cx < cols; cx++) {
-                        var tl = _grid[cy * stride + cx];
-                        var tr = _grid[cy * stride + cx + 1];
-                        var br = _grid[(cy + 1) * stride + cx + 1];
-                        var bl = _grid[(cy + 1) * stride + cx];
-                        var code = (tl >= level ? 8 : 0) | (tr >= level ? 4 : 0) |
-                                   (br >= level ? 2 : 0) | (bl >= level ? 1 : 0);
-                        if (code === 0 || code === 15) continue;
+                        /* Inner rings rotate more with scroll for depth */
+                        var rotation = morph * Math.PI * 0.2 * (1 - dist);
 
-                        var x0 = cx * cellSize, y0 = cy * cellSize, cs = cellSize;
-                        var eT = [x0 + (level - tl) / (tr - tl) * cs, y0];
-                        var eR = [x0 + cs, y0 + (level - tr) / (br - tr) * cs];
-                        var eB = [x0 + (level - bl) / (br - bl) * cs, y0 + cs];
-                        var eL = [x0, y0 + (level - tl) / (bl - tl) * cs];
+                        for (var j = 0; j <= steps; j++) {
+                            var theta = (j / steps) * Math.PI * 2 + rotation;
 
-                        switch (code) {
-                            case 1: case 14: segments.push([eL, eB]); break;
-                            case 2: case 13: segments.push([eB, eR]); break;
-                            case 3: case 12: segments.push([eL, eR]); break;
-                            case 4: case 11: segments.push([eT, eR]); break;
-                            case 5:  segments.push([eL, eT]); segments.push([eB, eR]); break;
-                            case 6: case 9:  segments.push([eT, eB]); break;
-                            case 7: case 8:  segments.push([eL, eT]); break;
-                            case 10: segments.push([eT, eR]); segments.push([eL, eB]); break;
-                        }
-                    }
-                }
-                return segments;
-            }
+                            /* Superellipse base position */
+                            var sp = superPt(theta, r * aspect, r, n);
+                            var bx = sp[0], by = sp[1];
 
-            /* ── Join segments O(n) via endpoint hash ── */
-            function joinSegments(segments) {
-                if (!segments.length) return [];
-                function key(p) { return (p[0] * 1000 + 0.5 | 0) + ',' + (p[1] * 1000 + 0.5 | 0); }
-                var adj = {};
-                for (var i = 0; i < segments.length; i++) {
-                    for (var e = 0; e < 2; e++) {
-                        var k = key(segments[i][e]);
-                        if (!adj[k]) adj[k] = [];
-                        adj[k].push({ i: i, e: e });
-                    }
-                }
-                var used = new Uint8Array(segments.length);
-                var lines = [];
-                for (var s = 0; s < segments.length; s++) {
-                    if (used[s]) continue;
-                    used[s] = 1;
-                    var path = [segments[s][0], segments[s][1]];
-                    for (var dir = 0; dir < 2; dir++) {
-                        for (;;) {
-                            var tip = dir === 0 ? path[path.length - 1] : path[0];
-                            var nbrs = adj[key(tip)];
-                            if (!nbrs) break;
-                            var found = false;
-                            for (var n = 0; n < nbrs.length; n++) {
-                                if (used[nbrs[n].i]) continue;
-                                used[nbrs[n].i] = 1;
-                                var other = segments[nbrs[n].i][1 - nbrs[n].e];
-                                if (dir === 0) path.push(other); else path.unshift(other);
-                                found = true; break;
+                            /* Add harmonic displacement (radial) */
+                            if (dispFade > 0.01) {
+                                var baseR = Math.sqrt(bx * bx + by * by);
+                                if (baseR > 0) {
+                                    var d = displace(theta - rotation, r, t) * dispFade;
+                                    var scale = (baseR + d) / baseR;
+                                    bx *= scale;
+                                    by *= scale;
+                                }
                             }
-                            if (!found) break;
-                        }
-                    }
-                    if (path.length >= 3) lines.push(path);
-                }
-                return lines;
-            }
 
-            /* ── Digitize: blend smooth points toward a coarse grid ──
-               At amount=0 → original smooth curves.
-               At amount=1 → fully grid-snapped, collinear points removed → angular/rectilinear. */
-            function digitizePath(pts, amount) {
-                if (amount < 0.01 || pts.length < 2) return pts;
-                var gs = 16 + amount * 40; /* grid coarsens as velocity increases */
-                var out = [];
-                var px = -99999, py = -99999;
-                for (var i = 0; i < pts.length; i++) {
-                    var x = pts[i][0], y = pts[i][1];
-                    var sx = Math.round(x / gs) * gs;
-                    var sy = Math.round(y / gs) * gs;
-                    var nx = x + (sx - x) * amount;
-                    var ny = y + (sy - y) * amount;
-                    /* Collapse points that snap to the same position */
-                    if (Math.abs(nx - px) > 0.5 || Math.abs(ny - py) > 0.5) {
-                        out.push([nx, ny]);
-                        px = nx; py = ny;
+                            var px = ctr.x + bx;
+                            var py = ctr.y + by;
+
+                            /* Mouse push: displace points near cursor */
+                            if (smoothMX > -998) {
+                                var mdx = px - smoothMX, mdy = py - smoothMY;
+                                var md2 = mdx * mdx + mdy * mdy;
+                                if (md2 < 90000) { /* within ~300px */
+                                    var push = 25 * Math.exp(-md2 / 25000);
+                                    var mDist = Math.sqrt(md2);
+                                    if (mDist > 0) { px += mdx / mDist * push; py += mdy / mDist * push; }
+                                }
+                            }
+
+                            /* Ripple displacement */
+                            for (var ri = 0; ri < ripples.length; ri++) {
+                                var rp = ripples[ri];
+                                var age = (now - rp.time) * 0.001;
+                                var rdx = px - rp.x, rdy = py - rp.y;
+                                var rd = Math.sqrt(rdx * rdx + rdy * rdy);
+                                var wf = Math.abs(rd - age * 300);
+                                if (wf < 55 && rd > 0) {
+                                    var str = 18 * Math.exp(-age * 1.6) * (1 - wf / 55);
+                                    px += rdx / rd * str;
+                                    py += rdy / rd * str;
+                                }
+                            }
+
+                            pts.push([px, py]);
+                        }
+
+                        var isIndex = (i % 4 === 0);
+                        rings.push({
+                            pts: pts,
+                            a: isIndex ? 0.25 + (1 - dist) * 0.20 : 0.09 + (1 - dist) * 0.15,
+                            w: isIndex ? 1.2 + (1 - dist) * 1.0 : 0.45 + (1 - dist) * 0.55,
+                            delay: c * 0.25 + dist * 1.4,
+                            dur: 0.4 + dist * 0.7
+                        });
                     }
                 }
-                return out.length >= 2 ? out : pts;
+                return rings;
             }
 
             /* ── Path length ── */
@@ -1669,11 +1610,11 @@
                 return len;
             }
 
-            /* ── Mouse proximity [0,1] ── */
+            /* ── Mouse proximity glow ── */
             function mouseHi(pts) {
                 if (smoothMX < -998) return 0;
                 var best = Infinity, R = 200;
-                for (var i = 0; i < pts.length; i += 3) {
+                for (var i = 0; i < pts.length; i += 4) {
                     var dx = pts[i][0] - smoothMX, dy = pts[i][1] - smoothMY;
                     var d = dx * dx + dy * dy;
                     if (d < best) best = d;
@@ -1682,8 +1623,8 @@
                 return best < R ? Math.pow(1 - best / R, 1.6) : 0;
             }
 
-            /* ── Draw one polyline ── */
-            function drawLine(pts, progress, alpha, lw, color, angular) {
+            /* ── Draw one ring ── */
+            function drawRing(pts, progress, alpha, lw, color, morph) {
                 if (!pts || pts.length < 2 || progress <= 0 || alpha <= 0) return;
                 var len = pathLen(pts);
                 if (len < 2) return;
@@ -1694,30 +1635,12 @@
                 ctx.setLineDash([len, len + 2]);
                 ctx.lineDashOffset = len * (1 - Math.min(1, progress));
                 ctx.strokeStyle = color;
-                ctx.globalAlpha = Math.min(1, alpha + hi * 0.55);
-                ctx.lineWidth = lw + hi * 1.4;
-                ctx.lineCap = angular ? 'square' : 'round';
-                ctx.lineJoin = angular ? 'miter' : 'round';
+                ctx.globalAlpha = Math.min(1, alpha + hi * 0.5);
+                ctx.lineWidth = lw + hi * 1.2;
+                ctx.lineCap = morph > 0.5 ? 'square' : 'round';
+                ctx.lineJoin = morph > 0.5 ? 'miter' : 'round';
                 ctx.stroke();
                 ctx.setLineDash([]);
-            }
-
-            /* ── Contour levels ── */
-            var LEVELS = [];
-            function buildLevels() {
-                LEVELS = [];
-                var count = 30;
-                for (var i = 1; i <= count; i++) {
-                    var v = i / (count + 1);
-                    var idx = (i % 5 === 0);
-                    LEVELS.push({
-                        value: v * 1.8,
-                        a: idx ? 0.28 + (1 - v) * 0.18 : 0.10 + (1 - v) * 0.16,
-                        w: idx ? 1.3 + (1 - v) * 1.0 : 0.5 + (1 - v) * 0.6,
-                        delay: i * 0.07,     /* fast stagger: all visible within ~2s */
-                        dur: 0.6 + v * 0.8
-                    });
-                }
             }
 
             /* ── Main draw ── */
@@ -1725,45 +1648,30 @@
                 if (!W || !H) return;
                 ctx.clearRect(0, 0, W, H);
 
-                /* Smooth mouse position */
+                /* Smooth mouse */
                 if (mouseX > -998) {
                     if (smoothMX < -998) { smoothMX = mouseX; smoothMY = mouseY; }
-                    else { smoothMX += (mouseX - smoothMX) * 0.15; smoothMY += (mouseY - smoothMY) * 0.15; }
+                    else { smoothMX += (mouseX - smoothMX) * 0.12; smoothMY += (mouseY - smoothMY) * 0.12; }
                 } else { smoothMX = -9999; smoothMY = -9999; }
 
-                /* Scroll velocity → digitize with spring decay */
-                var target = Math.min(1, scrollVel / 20);
-                digitize += (target - digitize) * 0.14;
-                scrollVel *= 0.85;
-                if (digitize < 0.005) digitize = 0;
+                /* Scroll → morph: 0=organic circles, 1=geometric rectangles */
+                var t = curScrollY / pageH;
+                var morph = Math.min(1, t * 1.5); /* completes at ~67% scroll */
 
                 /* Clean expired ripples */
                 var now = Date.now();
-                for (var r = ripples.length - 1; r >= 0; r--) {
-                    if (now - ripples[r].time > 2500) ripples.splice(r, 1);
-                }
+                for (var i = ripples.length - 1; i >= 0; i--)
+                    if (now - ripples[i].time > 2800) ripples.splice(i, 1);
 
                 var elapsed = reduceMotion ? 99 : (now - startTime) * 0.001;
                 var color = (getComputedStyle(document.documentElement)
                     .getPropertyValue('--text-3').trim()) || '#6E6E73';
-                var cellSize = W < 600 ? 14 : 10;
-                var angular = digitize > 0.3;
 
-                _dirty = true; /* field changed (scroll/mouse/ripples) */
-
-                for (var i = 0; i < LEVELS.length; i++) {
-                    var lv = LEVELS[i];
-                    var baseP = Math.min(1, Math.max(0, (elapsed - lv.delay) / lv.dur));
-                    if (baseP <= 0) continue;
-
-                    var segs = traceContours(lv.value, cellSize);
-                    _dirty = false;
-                    var lines = joinSegments(segs);
-
-                    for (var j = 0; j < lines.length; j++) {
-                        var pts = digitize > 0.01 ? digitizePath(lines[j], digitize) : lines[j];
-                        drawLine(pts, baseP, lv.a, lv.w, color, angular);
-                    }
+                var rings = generateRings(morph, t);
+                for (var i = 0; i < rings.length; i++) {
+                    var ring = rings[i];
+                    var p = Math.min(1, Math.max(0, (elapsed - ring.delay) / ring.dur));
+                    drawRing(ring.pts, p, ring.a, ring.w, color, morph);
                 }
                 ctx.globalAlpha = 1;
             }
@@ -1788,7 +1696,6 @@
                 canvas.style.height = H + 'px';
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
                 pageH = Math.max(1, document.documentElement.scrollHeight - H);
-                buildLevels();
             }
 
             /* ── Events ── */
@@ -1800,11 +1707,8 @@
             });
             window.addEventListener('scroll', function () {
                 curScrollY = window.pageYOffset || 0;
-                scrollVel = Math.max(scrollVel, Math.abs(curScrollY - lastScrollY));
-                lastScrollY = curScrollY;
             }, { passive: true });
 
-            /* Touch / click ripples */
             function addRipple(x, y) {
                 ripples.push({ x: x, y: y, time: Date.now() });
                 if (ripples.length > 5) ripples.shift();
