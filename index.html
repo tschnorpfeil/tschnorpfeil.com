@@ -1475,20 +1475,19 @@
             if (!canvas) return;
             var ctx = canvas.getContext('2d');
             var dpr = Math.min(window.devicePixelRatio || 1, 2);
-            var W, H, cols, rows, cellSize = 18;
+            var W, H, cols, rows;
+            var cellSize = 8; /* small cells = smooth contour curves */
             var time = 0;
             var mouseX = -9999, mouseY = -9999;
-            var isTouch = window.matchMedia('(pointer: coarse)').matches;
             var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var running = true;
 
-            /* Simplex-style 2D noise (compact implementation) */
+            /* Simplex 2D noise */
             var perm = new Uint8Array(512);
             var grad = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[0,1],[0,-1]];
-            (function seed() {
+            (function () {
                 var p = new Uint8Array(256);
                 for (var i = 0; i < 256; i++) p[i] = i;
-                /* Fisher-Yates shuffle seeded by timestamp for variety */
                 var s = Date.now() % 65536;
                 for (var i = 255; i > 0; i--) {
                     s = (s * 16807 + 7) % 2147483647;
@@ -1499,117 +1498,105 @@
             })();
 
             function noise2d(x, y) {
-                var F2 = 0.5 * (Math.sqrt(3) - 1);
-                var G2 = (3 - Math.sqrt(3)) / 6;
+                var F2 = 0.5 * (Math.sqrt(3) - 1), G2 = (3 - Math.sqrt(3)) / 6;
                 var s = (x + y) * F2;
                 var i = Math.floor(x + s), j = Math.floor(y + s);
                 var t = (i + j) * G2;
-                var x0 = x - (i - t), y0 = y - (j - t);
-                var i1 = x0 > y0 ? 1 : 0, j1 = x0 > y0 ? 0 : 1;
-                var x1 = x0 - i1 + G2, y1 = y0 - j1 + G2;
-                var x2 = x0 - 1 + 2 * G2, y2 = y0 - 1 + 2 * G2;
-                var ii = i & 255, jj = j & 255;
-                var n0 = 0, n1 = 0, n2 = 0;
-                var t0 = 0.5 - x0*x0 - y0*y0;
-                if (t0 > 0) { t0 *= t0; var g = grad[perm[ii + perm[jj]] % 8]; n0 = t0 * t0 * (g[0]*x0 + g[1]*y0); }
-                var t1 = 0.5 - x1*x1 - y1*y1;
-                if (t1 > 0) { t1 *= t1; var g = grad[perm[ii + i1 + perm[jj + j1]] % 8]; n1 = t1 * t1 * (g[0]*x1 + g[1]*y1); }
-                var t2 = 0.5 - x2*x2 - y2*y2;
-                if (t2 > 0) { t2 *= t2; var g = grad[perm[ii + 1 + perm[jj + 1]] % 8]; n2 = t2 * t2 * (g[0]*x2 + g[1]*y2); }
-                return 70 * (n0 + n1 + n2);
+                var x0 = x-(i-t), y0 = y-(j-t);
+                var i1 = x0>y0?1:0, j1 = x0>y0?0:1;
+                var x1=x0-i1+G2, y1=y0-j1+G2, x2=x0-1+2*G2, y2=y0-1+2*G2;
+                var ii=i&255, jj=j&255, n0=0, n1=0, n2=0;
+                var t0=0.5-x0*x0-y0*y0; if(t0>0){t0*=t0; var g=grad[perm[ii+perm[jj]]%8]; n0=t0*t0*(g[0]*x0+g[1]*y0);}
+                var t1=0.5-x1*x1-y1*y1; if(t1>0){t1*=t1; var g=grad[perm[ii+i1+perm[jj+j1]]%8]; n1=t1*t1*(g[0]*x1+g[1]*y1);}
+                var t2=0.5-x2*x2-y2*y2; if(t2>0){t2*=t2; var g=grad[perm[ii+1+perm[jj+1]]%8]; n2=t2*t2*(g[0]*x2+g[1]*y2);}
+                return 70*(n0+n1+n2);
             }
 
             function resize() {
                 var rect = canvas.parentElement.getBoundingClientRect();
                 W = rect.width; H = rect.height;
-                canvas.width = W * dpr;
-                canvas.height = H * dpr;
-                canvas.style.width = W + 'px';
-                canvas.style.height = H + 'px';
+                canvas.width = W*dpr; canvas.height = H*dpr;
+                canvas.style.width = W+'px'; canvas.style.height = H+'px';
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                cols = Math.ceil(W / cellSize) + 1;
-                rows = Math.ceil(H / cellSize) + 1;
+                cols = Math.ceil(W/cellSize)+1;
+                rows = Math.ceil(H/cellSize)+1;
             }
 
             function getColor() {
-                var style = getComputedStyle(document.documentElement);
-                return style.getPropertyValue('--text-3').trim() || '#6E6E73';
+                return getComputedStyle(document.documentElement).getPropertyValue('--text-3').trim() || '#6E6E73';
             }
 
-            /* Marching squares segment lookup */
+            /* Marching squares: lookup table */
             var segTable = {
-                1: [[3,0]], 2: [[0,1]], 3: [[3,1]], 4: [[1,2]], 5: [[3,0],[1,2]],
-                6: [[0,2]], 7: [[3,2]], 8: [[2,3]], 9: [[2,0]], 10: [[0,1],[2,3]],
-                11: [[2,1]], 12: [[1,3]], 13: [[1,0]], 14: [[0,3]]
+                1:[[3,0]], 2:[[0,1]], 3:[[3,1]], 4:[[1,2]], 5:[[3,0],[1,2]],
+                6:[[0,2]], 7:[[3,2]], 8:[[2,3]], 9:[[2,0]], 10:[[0,1],[2,3]],
+                11:[[2,1]], 12:[[1,3]], 13:[[1,0]], 14:[[0,3]]
             };
 
-            /* Edge midpoint positions: 0=top, 1=right, 2=bottom, 3=left */
-            function edgePos(edge, cx, cy) {
-                var s = cellSize;
-                switch (edge) {
-                    case 0: return [cx + s * 0.5, cy];
-                    case 1: return [cx + s, cy + s * 0.5];
-                    case 2: return [cx + s * 0.5, cy + s];
-                    case 3: return [cx, cy + s * 0.5];
+            /* Linearly-interpolated edge position — produces smooth contours */
+            function edgePos(edge, cx, cy, vTL, vTR, vBR, vBL, thresh) {
+                var s = cellSize, t;
+                switch(edge) {
+                    case 0: t=clamp((thresh-vTL)/(vTR-vTL)); return [cx+t*s, cy];
+                    case 1: t=clamp((thresh-vTR)/(vBR-vTR)); return [cx+s, cy+t*s];
+                    case 2: t=clamp((thresh-vBL)/(vBR-vBL)); return [cx+t*s, cy+s];
+                    case 3: t=clamp((thresh-vTL)/(vBL-vTL)); return [cx, cy+t*s];
                 }
             }
+            function clamp(v) { return v<0?0:v>1?1:v; }
 
             function draw() {
-                ctx.clearRect(0, 0, W, H);
+                ctx.clearRect(0,0,W,H);
                 var color = getColor();
-                var numLevels = 10;
-                var freq = 0.008;
-                var freq2 = 0.004;
+                /* Low frequency = large rolling terrain features */
+                var freq = 0.0028, freq2 = 0.0014;
+                var numLevels = 12;
 
                 /* Build scalar field */
-                var field = new Float32Array((cols + 1) * (rows + 1));
-                for (var r = 0; r <= rows; r++) {
-                    for (var c = 0; c <= cols; c++) {
-                        var px = c * cellSize, py = r * cellSize;
-                        var v = noise2d(px * freq + time * 0.3, py * freq + time * 0.15);
-                        v += 0.5 * noise2d(px * freq2 + 10 + time * 0.1, py * freq2 + 10 - time * 0.08);
-
-                        /* Mouse influence (desktop only) */
-                        if (!isTouch && mouseX > -999) {
-                            var dx = px - mouseX, dy = py - mouseY;
-                            var dist = Math.sqrt(dx * dx + dy * dy);
-                            var radius = 180;
-                            if (dist < radius) {
-                                var influence = (1 - dist / radius);
-                                influence = influence * influence;
-                                v += influence * 0.6;
+                var stride = cols+1;
+                var field = new Float32Array(stride*(rows+1));
+                for (var r=0; r<=rows; r++) {
+                    for (var c=0; c<=cols; c++) {
+                        var px=c*cellSize, py=r*cellSize;
+                        var v = noise2d(px*freq + time*0.18, py*freq + time*0.09);
+                        v += 0.45*noise2d(px*freq2+17+time*0.07, py*freq2+5-time*0.05);
+                        /* Mouse: push contours away from cursor */
+                        if (mouseX > -999) {
+                            var dx=px-mouseX, dy=py-mouseY;
+                            var d2=dx*dx+dy*dy, r2=240*240;
+                            if (d2<r2) {
+                                var inf=(1-d2/r2); inf=inf*inf;
+                                v += inf*1.4;
                             }
                         }
-
-                        field[r * (cols + 1) + c] = v;
+                        field[r*stride+c] = v;
                     }
                 }
 
-                /* Draw contour lines for each level */
-                for (var level = 0; level < numLevels; level++) {
-                    var threshold = -1 + (2 / numLevels) * (level + 0.5);
-                    var alpha = 0.12 + 0.08 * Math.sin(level * 0.7);
+                /* Draw one path per contour level */
+                for (var lv=0; lv<numLevels; lv++) {
+                    var thresh = -0.9 + (1.8/numLevels)*(lv+0.5);
+                    /* Outer levels subtler, mid-levels slightly bolder */
+                    var mid = (lv+0.5)/numLevels - 0.5;
+                    var alpha = 0.13 + 0.11*(1-4*mid*mid);
 
                     ctx.beginPath();
                     ctx.strokeStyle = color;
                     ctx.globalAlpha = alpha;
-                    ctx.lineWidth = 0.8;
+                    ctx.lineWidth = 0.75;
 
-                    for (var r = 0; r < rows; r++) {
-                        for (var c = 0; c < cols; c++) {
-                            var tl = field[r * (cols + 1) + c] > threshold ? 1 : 0;
-                            var tr = field[r * (cols + 1) + c + 1] > threshold ? 1 : 0;
-                            var br = field[(r + 1) * (cols + 1) + c + 1] > threshold ? 1 : 0;
-                            var bl = field[(r + 1) * (cols + 1) + c] > threshold ? 1 : 0;
-                            var idx = tl * 8 + tr * 4 + br * 2 + bl;
-                            var segs = segTable[idx];
-                            if (!segs) continue;
-                            var cx = c * cellSize, cy = r * cellSize;
-                            for (var s = 0; s < segs.length; s++) {
-                                var a = edgePos(segs[s][0], cx, cy);
-                                var b = edgePos(segs[s][1], cx, cy);
-                                ctx.moveTo(a[0], a[1]);
-                                ctx.lineTo(b[0], b[1]);
+                    for (var r=0; r<rows; r++) {
+                        for (var c=0; c<cols; c++) {
+                            var vTL=field[r*stride+c], vTR=field[r*stride+c+1];
+                            var vBR=field[(r+1)*stride+c+1], vBL=field[(r+1)*stride+c];
+                            var idx=(vTL>thresh?8:0)|(vTR>thresh?4:0)|(vBR>thresh?2:0)|(vBL>thresh?1:0);
+                            var segs=segTable[idx]; if(!segs) continue;
+                            var cx=c*cellSize, cy=r*cellSize;
+                            for (var si=0; si<segs.length; si++) {
+                                var a=edgePos(segs[si][0],cx,cy,vTL,vTR,vBR,vBL,thresh);
+                                var b=edgePos(segs[si][1],cx,cy,vTL,vTR,vBR,vBL,thresh);
+                                ctx.moveTo(a[0],a[1]);
+                                ctx.lineTo(b[0],b[1]);
                             }
                         }
                     }
@@ -1621,51 +1608,39 @@
             var lastFrame = 0;
             function loop(ts) {
                 if (!running) return;
-                /* Throttle to ~30fps */
-                if (ts - lastFrame < 33) { requestAnimationFrame(loop); return; }
+                if (ts-lastFrame < 33) { requestAnimationFrame(loop); return; }
                 lastFrame = ts;
                 time += 0.003;
                 draw();
                 requestAnimationFrame(loop);
             }
 
-            /* Mouse tracking (desktop only) */
-            if (!isTouch) {
-                canvas.parentElement.addEventListener('mousemove', function (e) {
-                    var rect = canvas.parentElement.getBoundingClientRect();
-                    mouseX = e.clientX - rect.left;
-                    mouseY = e.clientY - rect.top;
-                });
-                canvas.parentElement.addEventListener('mouseleave', function () {
-                    mouseX = -9999; mouseY = -9999;
-                });
-            }
-
-            /* Pause when hidden */
-            document.addEventListener('visibilitychange', function () {
-                if (document.hidden) { running = false; }
-                else { running = true; requestAnimationFrame(loop); }
+            /* Mouse tracking — always enabled, canvas has pointer-events:none so hero section receives events */
+            document.addEventListener('mousemove', function(e) {
+                var rect = canvas.getBoundingClientRect();
+                /* Only track while cursor is over the hero */
+                if (e.clientY > rect.bottom) { mouseX = -9999; mouseY = -9999; return; }
+                mouseX = e.clientX - rect.left;
+                mouseY = e.clientY - rect.top;
             });
 
-            /* Resize */
+            document.addEventListener('visibilitychange', function() {
+                if (document.hidden) { running=false; }
+                else { running=true; requestAnimationFrame(loop); }
+            });
+
             var resizeTimer;
-            window.addEventListener('resize', function () {
+            window.addEventListener('resize', function() {
                 clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(function () { resize(); draw(); }, 150);
+                resizeTimer = setTimeout(function(){ resize(); draw(); }, 150);
             });
 
-            /* Theme change — redraw to pick up new color */
-            new MutationObserver(function () { draw(); }).observe(
-                document.documentElement, { attributes: true, attributeFilter: ['data-theme'] }
+            new MutationObserver(function(){ draw(); }).observe(
+                document.documentElement, { attributes:true, attributeFilter:['data-theme'] }
             );
 
-            /* Init */
             resize();
-            if (reduceMotion) {
-                draw(); /* Static render only */
-            } else {
-                requestAnimationFrame(loop);
-            }
+            if (reduceMotion) { draw(); } else { requestAnimationFrame(loop); }
         })();
     </script>
 </body>
