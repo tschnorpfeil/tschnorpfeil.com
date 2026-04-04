@@ -279,11 +279,6 @@
             z-index: -1;
         }
 
-        .hero .wrap {
-            position: relative;
-            z-index: 1;
-        }
-
         .hero-inner {
             width: 100%;
             padding: 4rem 0;
@@ -987,9 +982,10 @@
         </div>
     </nav>
 
+    <canvas id="topo" aria-hidden="true"></canvas>
+
     <!-- HERO -->
     <section class="hero">
-        <canvas id="topo" aria-hidden="true"></canvas>
         <div class="wrap">
             <div class="hero-inner">
                 <h1>
@@ -1471,10 +1467,10 @@
             document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
         })();
 
-        /* ── Generative Topography ──
-           Smooth contour lines from a mathematical landscape.
-           Concentric, gently distorted — radiates outward from
-           an off-center peak. Subtle, minimal, geometric. */
+        /* ── Living Topography ──
+           Real-time contour lines from a mathematical scalar field.
+           Mouse deforms the terrain. Scroll traverses the landscape.
+           Contour character evolves: geometric → structured → organic. */
         (function () {
             var canvas = document.getElementById('topo');
             if (!canvas) return;
@@ -1485,45 +1481,161 @@
             var running = true;
             var startTime = Date.now();
             var mouseX = -9999, mouseY = -9999;
-            var scrollProgress = 0;
+            var smoothMX = -9999, smoothMY = -9999; /* lerped mouse for fluid deformation */
+            var scrollY = 0;
+            var pageH = 1;
 
-            var contours = []; /* [{pts, a, w, delay, dur}] */
+            /* ── Scalar field: evaluate "elevation" at any pixel (x,y) ──
+               Combines a radial peak, layered harmonics, mouse bump,
+               and scroll-driven evolution. */
+            function field(x, y) {
+                /* Scroll-driven peak center: drifts across the canvas */
+                var t = scrollY / pageH; /* 0 at top, ~1 at bottom */
+                var peakX = W * (0.38 + t * 0.24);
+                var peakY = H * (0.42 + t * 0.16);
 
-            /* ── Displacement: layered harmonics with irrational frequencies ── */
-            function displace(theta, r) {
-                return Math.sin(3 * theta + r * 0.0074) * r * 0.13
-                     + Math.sin(5.17 * theta - r * 0.0051 + 1.3) * r * 0.08
-                     + Math.cos(2.31 * theta + r * 0.011 - 0.7) * r * 0.10
-                     + Math.sin(7.43 * theta + r * 0.0033 + 2.1) * r * 0.045;
+                /* Radial distance from peak */
+                var dx = x - peakX, dy = y - peakY;
+                var r = Math.sqrt(dx * dx + dy * dy);
+                var theta = Math.atan2(dy, dx);
+
+                /* Base elevation: gaussian-ish peak */
+                var sigma = Math.max(W, H) * (0.35 + t * 0.15);
+                var base = Math.exp(-(r * r) / (2 * sigma * sigma));
+
+                /* Harmonic distortion — evolves with scroll.
+                   t blends from tight/geometric (low scroll) to organic (high scroll). */
+                var h1 = Math.sin((3 + t * 0.8) * theta + r * 0.007 + t * 2.0);
+                var h2 = Math.sin(5.17 * theta - r * (0.005 + t * 0.002) + 1.3);
+                var h3 = Math.cos((2.31 - t * 0.4) * theta + r * 0.010 - 0.7 + t * 1.5);
+                var h4 = Math.sin(7.43 * theta + r * 0.003 + 2.1 + t * 3.0);
+                /* Harmonic amplitude grows with scroll → more organic at bottom */
+                var amp = 0.06 + t * 0.04;
+                var distortion = (h1 * 0.38 + h2 * 0.25 + h3 * 0.27 + h4 * 0.10) * amp;
+
+                /* Mouse deformation: gaussian bump in the field */
+                var mouseBump = 0;
+                if (smoothMX > -998) {
+                    var mdx = x - smoothMX, mdy = y - smoothMY;
+                    var md2 = mdx * mdx + mdy * mdy;
+                    var mRadius = 120;
+                    mouseBump = 0.18 * Math.exp(-md2 / (2 * mRadius * mRadius));
+                }
+
+                return base + distortion + mouseBump;
             }
 
-            /* ── Build contour rings ── */
-            function generate() {
-                contours = [];
-                var cx = W * 0.44, cy = H * 0.47;
-                var maxR = Math.hypot(W, H) * 0.72;
-                var spacing = Math.max(16, Math.min(32, maxR / 32));
-                var idx = 0;
+            /* ── Marching squares: extract contour polylines from the field ──
+               cellSize controls resolution vs performance. */
+            function traceContours(level, cellSize) {
+                var segments = [];
+                var cols = Math.ceil(W / cellSize);
+                var rows = Math.ceil(H / cellSize);
 
-                for (var r = spacing; r < maxR; r += spacing) {
-                    var pts = [];
-                    var steps = Math.max(80, Math.floor(r * 0.5));
-                    for (var i = 0; i <= steps; i++) {
-                        var theta = (i / steps) * Math.PI * 2;
-                        var rad = r + displace(theta, r);
-                        pts.push([cx + rad * Math.cos(theta), cy + rad * Math.sin(theta)]);
-                    }
-                    var dist = r / maxR;
-                    var isIndex = (idx % 5 === 0); /* every 5th = bolder "index contour" */
-                    contours.push({
-                        pts: pts,
-                        a: isIndex ? 0.07 + (1 - dist) * 0.12 : 0.03 + (1 - dist) * 0.10,
-                        w: isIndex ? 0.7 + (1 - dist) * 0.7 : 0.35 + (1 - dist) * 0.45,
-                        delay: dist * 3.5,
-                        dur: 1.2 + dist * 1.8
-                    });
-                    idx++;
+                /* Sample grid (reuse between contour levels) */
+                if (!traceContours._grid || traceContours._cols !== cols || traceContours._rows !== rows) {
+                    traceContours._grid = new Float32Array((cols + 1) * (rows + 1));
+                    traceContours._cols = cols;
+                    traceContours._rows = rows;
+                    traceContours._dirty = true;
                 }
+                if (traceContours._dirty) {
+                    var g = traceContours._grid;
+                    for (var gy = 0; gy <= rows; gy++) {
+                        for (var gx = 0; gx <= cols; gx++) {
+                            g[gy * (cols + 1) + gx] = field(gx * cellSize, gy * cellSize);
+                        }
+                    }
+                    traceContours._dirty = false;
+                }
+                var grid = traceContours._grid;
+                var stride = cols + 1;
+
+                for (var cy = 0; cy < rows; cy++) {
+                    for (var cx = 0; cx < cols; cx++) {
+                        var tl = grid[cy * stride + cx];
+                        var tr = grid[cy * stride + cx + 1];
+                        var br = grid[(cy + 1) * stride + cx + 1];
+                        var bl = grid[(cy + 1) * stride + cx];
+
+                        var code = 0;
+                        if (tl >= level) code |= 8;
+                        if (tr >= level) code |= 4;
+                        if (br >= level) code |= 2;
+                        if (bl >= level) code |= 1;
+                        if (code === 0 || code === 15) continue;
+
+                        var x0 = cx * cellSize, y0 = cy * cellSize;
+                        var x1 = x0 + cellSize, y1 = y0 + cellSize;
+
+                        /* Linear interpolation along edges */
+                        var tT = (level - tl) / (tr - tl);
+                        var tR = (level - tr) / (br - tr);
+                        var tB = (level - bl) / (br - bl);
+                        var tL = (level - tl) / (bl - tl);
+                        var eT = [x0 + tT * cellSize, y0];
+                        var eR = [x1, y0 + tR * cellSize];
+                        var eB = [x0 + tB * cellSize, y1];
+                        var eL = [x0, y0 + tL * cellSize];
+
+                        switch (code) {
+                            case 1: case 14: segments.push([eL, eB]); break;
+                            case 2: case 13: segments.push([eB, eR]); break;
+                            case 3: case 12: segments.push([eL, eR]); break;
+                            case 4: case 11: segments.push([eT, eR]); break;
+                            case 5:          segments.push([eL, eT]); segments.push([eB, eR]); break;
+                            case 6: case 9:  segments.push([eT, eB]); break;
+                            case 7: case 8:  segments.push([eL, eT]); break;
+                            case 10:         segments.push([eT, eR]); segments.push([eL, eB]); break;
+                        }
+                    }
+                }
+                return segments;
+            }
+
+            /* ── Join segments into continuous polylines (hash-based O(n)) ── */
+            function joinSegments(segments) {
+                if (!segments.length) return [];
+                /* Snap coordinates to grid key for O(1) lookup */
+                function key(p) { return (p[0] * 1000 + 0.5 | 0) + ',' + (p[1] * 1000 + 0.5 | 0); }
+                /* Adjacency: key → [{seg index, end 0|1}] */
+                var adj = {};
+                for (var i = 0; i < segments.length; i++) {
+                    for (var e = 0; e < 2; e++) {
+                        var k = key(segments[i][e]);
+                        if (!adj[k]) adj[k] = [];
+                        adj[k].push({ i: i, e: e });
+                    }
+                }
+                var used = new Uint8Array(segments.length);
+                var lines = [];
+                for (var s = 0; s < segments.length; s++) {
+                    if (used[s]) continue;
+                    used[s] = 1;
+                    var path = [segments[s][0], segments[s][1]];
+                    /* Extend tail, then head */
+                    for (var dir = 0; dir < 2; dir++) {
+                        var extending = true;
+                        while (extending) {
+                            extending = false;
+                            var tip = dir === 0 ? path[path.length - 1] : path[0];
+                            var k2 = key(tip);
+                            var nbrs = adj[k2];
+                            if (!nbrs) break;
+                            for (var n = 0; n < nbrs.length; n++) {
+                                var nb = nbrs[n];
+                                if (used[nb.i]) continue;
+                                used[nb.i] = 1;
+                                var other = segments[nb.i][1 - nb.e];
+                                if (dir === 0) path.push(other); else path.unshift(other);
+                                extending = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (path.length >= 3) lines.push(path);
+                }
+                return lines;
             }
 
             /* ── Path length ── */
@@ -1536,13 +1648,12 @@
                 return len;
             }
 
-            /* ── Mouse proximity [0,1] ── */
+            /* ── Mouse proximity [0,1] for a polyline ── */
             function mouseHi(pts) {
-                if (mouseX < -998) return 0;
-                var best = Infinity, R = 140;
-                /* Sample every 4th point for speed */
-                for (var i = 0; i < pts.length; i += 4) {
-                    var dx = pts[i][0] - mouseX, dy = pts[i][1] - mouseY;
+                if (smoothMX < -998) return 0;
+                var best = Infinity, R = 130;
+                for (var i = 0; i < pts.length; i += 3) {
+                    var dx = pts[i][0] - smoothMX, dy = pts[i][1] - smoothMY;
                     var d = dx * dx + dy * dy;
                     if (d < best) best = d;
                 }
@@ -1550,11 +1661,11 @@
                 return best < R ? Math.pow(1 - best / R, 2) : 0;
             }
 
-            /* ── Draw one contour ring with animated draw-in ── */
+            /* ── Draw one polyline ── */
             function drawLine(pts, progress, alpha, lw, color) {
                 if (!pts || pts.length < 2 || progress <= 0 || alpha <= 0) return;
                 var len = pathLen(pts);
-                if (len < 1) return;
+                if (len < 2) return;
                 var hi = mouseHi(pts);
                 ctx.beginPath();
                 ctx.moveTo(pts[0][0], pts[0][1]);
@@ -1562,27 +1673,68 @@
                 ctx.setLineDash([len, len + 2]);
                 ctx.lineDashOffset = len * (1 - Math.min(1, progress));
                 ctx.strokeStyle = color;
-                ctx.globalAlpha = Math.min(1, alpha + hi * 0.25);
-                ctx.lineWidth = lw + hi * 0.5;
+                ctx.globalAlpha = Math.min(1, alpha + hi * 0.3);
+                ctx.lineWidth = lw + hi * 0.6;
                 ctx.lineCap = 'round';
                 ctx.lineJoin = 'round';
                 ctx.stroke();
                 ctx.setLineDash([]);
             }
 
+            /* ── Contour levels ── */
+            var LEVELS = [];
+            function buildLevels() {
+                LEVELS = [];
+                var count = 22;
+                for (var i = 1; i <= count; i++) {
+                    var v = i / (count + 1); /* 0.04 … 0.96 */
+                    var isIndex = (i % 5 === 0);
+                    LEVELS.push({
+                        value: v,
+                        a: isIndex ? 0.09 + (1 - v) * 0.10 : 0.03 + (1 - v) * 0.09,
+                        w: isIndex ? 0.7 + (1 - v) * 0.6 : 0.35 + (1 - v) * 0.4,
+                        delay: v * 3.0,
+                        dur: 1.0 + v * 2.0
+                    });
+                }
+            }
+
             /* ── Main draw ── */
             function draw() {
                 if (!W || !H) return;
                 ctx.clearRect(0, 0, W, H);
+
+                /* Smooth mouse lerp */
+                if (mouseX > -998) {
+                    if (smoothMX < -998) { smoothMX = mouseX; smoothMY = mouseY; }
+                    else { smoothMX += (mouseX - smoothMX) * 0.15; smoothMY += (mouseY - smoothMY) * 0.15; }
+                } else {
+                    smoothMX = -9999; smoothMY = -9999;
+                }
+
                 var elapsed = reduceMotion ? 99 : (Date.now() - startTime) / 1000;
                 var color = (getComputedStyle(document.documentElement)
                     .getPropertyValue('--text-3').trim()) || '#6E6E73';
-                var retract = scrollProgress * 1.6;
 
-                for (var i = 0; i < contours.length; i++) {
-                    var c = contours[i];
-                    var baseP = Math.min(1, Math.max(0, (elapsed - c.delay) / c.dur));
-                    drawLine(c.pts, Math.max(0, baseP - retract), c.a, c.w, color);
+                /* Cell size: balance quality vs perf.
+                   Larger on mobile for performance. */
+                var cellSize = W < 600 ? 14 : 10;
+
+                /* Mark grid dirty for this frame (field depends on scroll + mouse) */
+                traceContours._dirty = true;
+
+                for (var i = 0; i < LEVELS.length; i++) {
+                    var lv = LEVELS[i];
+                    var baseP = Math.min(1, Math.max(0, (elapsed - lv.delay) / lv.dur));
+                    if (baseP <= 0) continue;
+
+                    var segs = traceContours(lv.value, cellSize);
+                    traceContours._dirty = false; /* grid still valid for this frame */
+                    var lines = joinSegments(segs);
+
+                    for (var j = 0; j < lines.length; j++) {
+                        drawLine(lines[j], baseP, lv.a, lv.w, color);
+                    }
                 }
                 ctx.globalAlpha = 1;
             }
@@ -1606,18 +1758,20 @@
                 canvas.style.width = W + 'px';
                 canvas.style.height = H + 'px';
                 ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-                generate();
+                pageH = Math.max(1, document.documentElement.scrollHeight - H);
+                buildLevels();
             }
 
             /* ── Events ── */
             document.addEventListener('mousemove', function (e) {
-                mouseX = e.clientY < H ? e.clientX : -9999;
-                mouseY = e.clientY < H ? e.clientY : -9999;
+                mouseX = e.clientX;
+                mouseY = e.clientY;
             });
-            var heroEl = document.querySelector('.hero');
+            document.addEventListener('mouseleave', function () {
+                mouseX = -9999; mouseY = -9999;
+            });
             window.addEventListener('scroll', function () {
-                var heroH = heroEl ? heroEl.offsetHeight : H;
-                scrollProgress = Math.min(1, Math.max(0, window.scrollY / heroH));
+                scrollY = window.pageYOffset || 0;
             }, { passive: true });
             document.addEventListener('visibilitychange', function () {
                 if (document.hidden) { running = false; }
