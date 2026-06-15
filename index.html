@@ -32,6 +32,31 @@
     <meta name="twitter:description" content="Engineer, Entrepreneur & Creative">
     <meta name="twitter:image" content="https://tschnorpfeil.com/og-image.png">
 
+    <!-- Resolve theme + language BEFORE first paint (no flash of light on dark,
+         no flash of the wrong language), and set is-ready so the hero can
+         crystallize in from its latent first frame. Tiny and dependency-free. -->
+    <script>
+        (function () {
+            var d = document.documentElement;
+            var theme, lang;
+            try { theme = localStorage.getItem('theme'); } catch (e) { }
+            if (!theme) theme = (window.matchMedia && matchMedia('(prefers-color-scheme:dark)').matches) ? 'dark' : 'light';
+            d.setAttribute('data-theme', theme);
+
+            try { lang = localStorage.getItem('lang'); } catch (e) { }
+            if (!lang) lang = (navigator.language || '').toLowerCase().indexOf('de') === 0 ? 'de' : 'en';
+            d.setAttribute('data-lang', lang);
+            d.lang = lang;
+
+            var reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
+            /* The page is one developing answer. The hero resolves out of latent
+               noise on load (no dead-air, no typed question); reduced motion lands
+               on the fully-resolved page at once. is-ready gates the hero crystallize. */
+            d.className += ' is-ready';
+            window.__gen = { theme: theme, lang: lang, reduce: reduce };
+        })();
+    </script>
+
     <style>
         /* ------------------------------------------
            Self-hosted DM Sans (GDPR compliant)
@@ -59,6 +84,12 @@
             --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
             --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            /* One restrained warm accent — the live "pen" of generation. Reserved
+               for the typing caret and the collapsed thought-receipt only, so the
+               permanent brand stays editorial monochrome. Warm ember, not neon. */
+            --accent: #B7613A;
+            --accent-soft: rgba(183, 97, 58, 0.12);
+            --accent-line: rgba(183, 97, 58, 0.28);
         }
 
         /* Light Theme */
@@ -78,6 +109,8 @@
             --glow: rgba(0, 0, 0, 0.03);
             --glow-strong: rgba(255, 255, 255, 0.4);
             --grain-opacity: 0.03;
+            /* Monochrome "live node" ring on the current journey chapter */
+            --node-ring: rgba(29, 29, 31, 0.16);
         }
 
         /* Dark Theme */
@@ -97,6 +130,10 @@
             --glow: rgba(255, 255, 255, 0.03);
             --glow-strong: rgba(255, 255, 255, 0.16);
             --grain-opacity: 0.04;
+            --node-ring: rgba(245, 245, 247, 0.20);
+            --accent: #D98A5B;
+            --accent-soft: rgba(217, 138, 91, 0.14);
+            --accent-line: rgba(217, 138, 91, 0.30);
         }
 
         /* ------------------------------------------
@@ -263,12 +300,20 @@
            Hero
            ------------------------------------------ */
         .hero {
+            min-height: 100vh;
             min-height: 100svh;
             display: flex;
             align-items: flex-end;
             padding-top: calc(56px + env(safe-area-inset-top, 0px));
+            padding-bottom: 18vh;
             padding-bottom: 18svh;
             position: relative;
+        }
+
+        /* Programmatic focus (after the intro resolves) shouldn't paint a ring
+           around the whole hero */
+        #main:focus {
+            outline: none;
         }
 
         .hero-inner {
@@ -280,29 +325,64 @@
             font-weight: 500;
             letter-spacing: -0.03em;
             line-height: 1.08;
-            margin-bottom: 1.5rem;
-            overflow: hidden;
+            margin-bottom: 1rem;
+            /* visible so the latent blur isn't clipped as each letter resolves */
+            overflow: visible;
         }
 
-        /* Animated typography: each word slides up */
         .hero-word {
             display: inline-block;
-            opacity: 0;
-            transform: translateY(100%);
-            animation: wordUp 0.85s var(--ease) forwards;
         }
 
-        .hero-word:nth-child(1) {
-            animation-delay: 0.15s;
-        }
-
-        .hero-word:nth-child(2) {
-            animation-delay: 0.27s;
-        }
-
-        /* Per-letter weight; the cursor wave is rAF-smoothed in JS */
+        /* The name resolves out of latent noise: each letter denoises (blur →
+           sharp, settling up into place) on a left-to-right sweep. JS stamps a
+           per-letter --ci index for the sweep; with no JS every letter shares
+           delay 0 and they crystallize together — still graceful. Only
+           opacity/transform/filter animate, so widths never reflow. */
         .hero-char {
+            display: inline-block;
             font-weight: 400;
+            animation: crystal 0.72s var(--ease-cot) both;
+            animation-delay: calc(var(--ci, 0) * 0.042s + 0.1s);
+            animation-play-state: paused;
+        }
+
+        .is-ready .hero-char {
+            animation-play-state: running;
+        }
+
+        /* Role line — composed token by token, with a single mid-line revision
+           (the tell that a mind is authoring, not replaying a string). */
+        .hero-role {
+            font-size: clamp(1rem, 2.3vw, 1.15rem);
+            font-weight: 400;
+            color: var(--text);
+            letter-spacing: -0.01em;
+            margin-bottom: 1.5rem;
+            min-height: 1.6em;
+        }
+
+        .role-caret {
+            display: none;
+            width: 2px;
+            height: 1.05em;
+            margin-left: 1px;
+            vertical-align: -0.16em;
+            background: var(--accent);
+            opacity: 0;
+        }
+
+        .role-caret.on {
+            display: inline-block;
+        }
+
+        .role-caret.on::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            animation: blink 1.05s steps(1) infinite;
         }
 
         /* Hairline rule that draws in after the name */
@@ -312,7 +392,47 @@
             transform-origin: left center;
             opacity: 0;
             margin-bottom: 1.75rem;
-            animation: drawRule 0.9s var(--ease) 0.6s forwards;
+            animation: drawRule 0.9s var(--ease) 0.75s forwards;
+        }
+
+        /* The collapsed reasoning receipt — a clickable "thought" that replays
+           its beat. The page's only warm accent, used sparingly. */
+        .thought-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55ch;
+            font-family: var(--mono);
+            font-size: 0.6875rem;
+            letter-spacing: 0.02em;
+            color: var(--text-3);
+            background: var(--accent-soft);
+            border: 0.5px solid var(--accent-line);
+            border-radius: 100px;
+            padding: 0.26rem 0.72rem;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(4px);
+            transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease,
+                opacity 0.5s var(--ease-cot), transform 0.5s var(--ease-cot);
+        }
+
+        .thought-pill.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .thought-pill:hover {
+            color: var(--text-2);
+            border-color: var(--accent);
+        }
+
+        .tp-mark {
+            color: var(--accent);
+            font-size: 0.75em;
+        }
+
+        .hero-pill {
+            margin-top: 1.9rem;
         }
 
         .hero-desc {
@@ -364,21 +484,6 @@
             padding: 4.5rem 0;
         }
 
-        .section-line {
-            height: 0.5px;
-            background: var(--border);
-            border: none;
-        }
-
-        .section-label {
-            font-size: 0.6875rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-3);
-            margin-bottom: 2.5rem;
-        }
-
         /* ------------------------------------------
            Timeline / Journey
            ------------------------------------------ */
@@ -386,12 +491,68 @@
             display: flex;
             flex-direction: column;
             gap: 2.75rem;
+            position: relative;
         }
 
         .tl-item {
+            position: relative;
             display: grid;
             grid-template-columns: 100px 1fr;
             gap: 2rem;
+            padding-left: 1.75rem;
+        }
+
+        /* Reasoning-trace spine: a node per chapter + a connector that
+           appears to draw downward as the items reveal on scroll */
+        .tl-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--bg);
+            border: 1.5px solid var(--border-h);
+            z-index: 1;
+        }
+
+        /* The current chapter (top) reads as the active node — a slow
+           monochrome "ping" echoes the intro's live thinking dot, signalling
+           "this chapter is ongoing" without reintroducing the electric accent */
+        .tl-item:first-child::before {
+            background: var(--text);
+            border-color: var(--text);
+        }
+
+        @media (prefers-reduced-motion: no-preference) {
+            .tl-item:first-child::before {
+                animation: tl-ping 2.6s var(--ease) infinite;
+            }
+        }
+
+        @keyframes tl-ping {
+            0% {
+                box-shadow: 0 0 0 0 var(--node-ring);
+            }
+            70%,
+            100% {
+                box-shadow: 0 0 0 6px transparent;
+            }
+        }
+
+        .tl-item::after {
+            content: '';
+            position: absolute;
+            left: 4px;
+            top: 15px;
+            height: calc(100% + 2.75rem);
+            width: 1px;
+            background: var(--border);
+        }
+
+        .tl-item:last-child::after {
+            display: none;
         }
 
         .tl-time {
@@ -662,6 +823,7 @@
             height: 52px;
             border-radius: 50%;
             background: rgba(0, 0, 0, 0.7);
+            -webkit-backdrop-filter: blur(8px);
             backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
@@ -838,6 +1000,13 @@
             color: var(--text);
         }
 
+        .footer-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
         /* ------------------------------------------
            Animations
            ------------------------------------------ */
@@ -855,16 +1024,22 @@
             }
         }
 
-        @keyframes wordUp {
+        /* A single letter denoising into place — the atom of the page's
+           "resolve out of latent noise" language. */
+        @keyframes crystal {
             from {
                 opacity: 0;
-                transform: translateY(100%);
-                filter: blur(6px);
+                transform: translateY(0.16em) scale(0.94);
+                filter: blur(9px);
+            }
+
+            60% {
+                opacity: 1;
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: none;
                 filter: blur(0);
             }
         }
@@ -881,24 +1056,45 @@
             }
         }
 
+        /* Content resolves out of latent noise: it doesn't fade as a block, it
+           crystallizes — blur → sharp, settling up and into scale. This is the
+           "generation" beat for the artifact itself. */
         .reveal {
             opacity: 0;
-            transform: translateY(20px);
-            filter: blur(8px);
-            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease);
-            transition-delay: calc(var(--reveal-i, 0) * 0.12s);
+            transform: translateY(18px) scale(0.985);
+            filter: blur(10px);
+            transition: opacity 0.75s var(--ease-cot), transform 0.75s var(--ease-cot), filter 0.75s var(--ease-cot);
+            transition-delay: calc(var(--reveal-i, 0) * 0.11s);
         }
 
         .reveal.visible {
             opacity: 1;
-            transform: translateY(0);
+            transform: none;
             filter: blur(0);
+        }
+
+        /* Photographs "develop" — they resolve from a low-fidelity latent state
+           (blurred, desaturated, slightly over-scaled) to full resolution as their
+           card generates. Purely compositor-friendly (filter/transform). */
+        .develop-img img {
+            filter: blur(16px) saturate(0.45) contrast(0.92);
+            transform: scale(1.06);
+            transition: filter 0.95s var(--ease-cot), transform 0.95s var(--ease-cot);
+            transition-delay: calc(var(--reveal-i, 0) * 0.11s + 0.12s);
+            will-change: filter, transform;
+        }
+
+        .develop-img.developed img {
+            filter: none;
+            transform: none;
+            will-change: auto;
         }
 
         @media (prefers-reduced-motion: reduce) {
 
             .reveal,
-            .hero-word,
+            .hero-char,
+            .hero-role,
             .hero-rule,
             .hero-desc,
             .hero-social {
@@ -907,6 +1103,12 @@
                 filter: none;
                 transition: none;
                 animation: none;
+            }
+
+            .role-caret,
+            .develop-img {
+                /* no caret, no develop blur — show the resolved artifact at once */
+                filter: none !important;
             }
 
             .card::after {
@@ -967,12 +1169,19 @@
                 padding: 0 1.25rem;
             }
 
+            /* Match the reasoning inset to .wrap on mobile so it never edges out. */
+            .think-line {
+                padding: 0 1.25rem;
+            }
+
             section {
                 padding: 3.5rem 0;
             }
 
             .hero {
+                min-height: 100vh;
                 min-height: 100svh;
+                padding-bottom: 14vh;
                 padding-bottom: 14svh;
             }
 
@@ -1042,18 +1251,323 @@
                 grid-column: auto;
             }
         }
+
+        /* =========================================================
+           ONE LONG ANSWER
+           The whole page is one continuous agent reply. Mono = the
+           agent's thinking & metadata; sans = the rendered artifact.
+           The reasoning between sections is scroll-driven and fully
+           reversible — the reader holds the playhead, nothing auto-
+           plays. A single rationed accent marks the live edge only.
+           ========================================================= */
+
+        :root {
+            --mono: ui-monospace, 'SF Mono', SFMono-Regular, 'JetBrains Mono', Menlo, Consolas, monospace;
+            --ease-cot: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        @keyframes blink {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+
+        /* ------------------------------------------
+           Section caption — one terse mono label per artifact
+           ------------------------------------------ */
+        .seg-cap {
+            font-family: var(--mono);
+            font-size: 0.6875rem;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            color: var(--text-3);
+            margin-bottom: 2rem;
+        }
+
+        /* ------------------------------------------
+           DEVELOP — each section is one beat of a single, developing
+           answer. On approach a scene THINKS: a few exploratory lines
+           type themselves out in a quiet reserved band. Then the
+           reasoning COLLAPSES into a compact "thought" receipt (the
+           hand-off), and in the space it vacates the answer RESOLVES —
+           text crystallizing out of latent noise, photographs developing
+           to full resolution. Every receipt is clickable to replay its
+           beat. Content lives in the DOM from the start (held back, not
+           absent), so it stays crawlable and reachable with no JS.
+           ------------------------------------------ */
+        .scene {
+            position: relative;
+        }
+
+        /* Reserved thinking band: the reasoning types here, anchored low so
+           it reads as rising toward the answer; the band folds to nothing on
+           collapse, sliding the resolved content up into its place. */
+        .scene-think {
+            position: relative;
+            min-height: 32vh;
+            transition: min-height 0.55s var(--ease-cot);
+        }
+
+        .scene--closing .scene-think {
+            min-height: 42vh;
+        }
+
+        .scene-think.collapsed {
+            min-height: 0;
+        }
+
+        .think-lines {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 12%;
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            transition: opacity 0.45s var(--ease-cot), transform 0.45s var(--ease-cot);
+        }
+
+        .scene-think.collapsed .think-lines {
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+        }
+
+        /* Exploratory reasoning — substance, not stage-direction. Each line
+           appears, types in, then dims as the next overtakes it. */
+        .think-line {
+            font-family: var(--mono);
+            font-size: 0.82rem;
+            line-height: 1.6;
+            letter-spacing: 0.01em;
+            color: var(--text-2);
+            margin: 0.14rem 0;
+            opacity: 0;
+            transform: translateY(7px);
+            transition: opacity 0.45s var(--ease-cot), transform 0.45s var(--ease-cot), color 0.45s ease;
+        }
+
+        .think-line.in {
+            opacity: 1;
+            transform: none;
+        }
+
+        .think-line.dim {
+            color: var(--text-3);
+            opacity: 0.4;
+        }
+
+        .scene-think.is-thinking .think-line.in {
+            will-change: opacity, transform;
+        }
+
+        /* Words never break internally; line breaks fall on spaces. */
+        .think-line .w {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        /* Per-char typewriter: each char reads the line's --reveal count. */
+        .think-line .c {
+            opacity: clamp(0, calc(var(--reveal, 0) - var(--i)), 1);
+        }
+
+        /* The flat live "pen" — the one rationed warm accent, no glow. */
+        .think-caret {
+            display: inline-block;
+            width: 2px;
+            height: 1.05em;
+            margin-left: 2px;
+            vertical-align: -0.18em;
+            background: var(--accent);
+            opacity: var(--ck, 0);
+        }
+
+        .think-caret::after {
+            content: '';
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            animation: blink 1.05s steps(1) infinite;
+        }
+
+        /* Closing turn: the caret rests solid — the answer is complete. */
+        .scene--closing .think-line:last-child .think-caret::after {
+            animation: none;
+            opacity: 1;
+        }
+
+        /* The receipt the reasoning collapses into, sitting above the answer.
+           A short leading tick echoes the journey spine — one developing thread. */
+        .thought-pill.scene-pill {
+            margin-bottom: 1.6rem;
+        }
+
+        /* ------------------------------------------
+           Artifacts wear mono metadata (the agent's labels)
+           ------------------------------------------ */
+        .tl-time {
+            font-family: var(--mono);
+            font-size: 0.6875rem;
+            letter-spacing: 0.02em;
+            color: var(--text-3);
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0.6ch;
+        }
+
+        .tl-idx {
+            font-family: var(--mono);
+            font-size: 0.625rem;
+            color: var(--text-3);
+            opacity: 0.55;
+        }
+
+        .card-type {
+            font-family: var(--mono);
+            text-transform: lowercase;
+            letter-spacing: 0.02em;
+        }
+
+        .contact-label {
+            font-family: var(--mono);
+        }
+
+        .contact-email {
+            font-family: var(--mono);
+            font-size: 0.8125rem;
+        }
+
+        .contact-key {
+            color: var(--text-3);
+            margin-right: 0.6ch;
+        }
+
+        .footer-meta-line {
+            font-family: var(--mono);
+            font-size: 0.625rem;
+            letter-spacing: 0.02em;
+            color: var(--text-3);
+        }
+
+        /* The current chapter's node stays monochrome (with its existing ping).
+           The single warm accent is reserved for the live typing caret and the
+           collapsed thought receipt — see .think-caret / .thought-pill. */
+
+        /* ------------------------------------------
+           Hold the hero entrance until first paint resolves. fill-mode:both
+           means that while paused the elements rest at the animation's first
+           frame (latent) rather than their base style, so there's no flash of
+           the finished hero before it crystallizes in. is-ready is set pre-paint.
+           ------------------------------------------ */
+        .hero-rule,
+        .hero-desc,
+        .hero-social {
+            animation-play-state: paused;
+            animation-fill-mode: both;
+        }
+
+        .is-ready .hero-rule,
+        .is-ready .hero-desc,
+        .is-ready .hero-social {
+            animation-play-state: running;
+        }
+
+
+        /* ------------------------------------------
+           Reduced motion: no auto-play, no typing, no blink.
+           Each scene's reasoning renders as a static, readable
+           mono block in flow, and the content is shown outright.
+           ------------------------------------------ */
+        @media (prefers-reduced-motion: reduce) {
+            .scene-think {
+                min-height: 0;
+                margin: 1.5rem 0 0.5rem;
+            }
+
+            .think-lines {
+                position: static;
+                padding: 0;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
+            .think-line {
+                transform: none;
+                opacity: 1;
+                margin: 0 0 0.4rem;
+                color: var(--text-2);
+            }
+
+            .think-line .c {
+                opacity: 1 !important;
+            }
+
+            .think-caret {
+                display: none;
+            }
+
+            /* Photographs are shown fully resolved — no develop blur. */
+            .develop-img img {
+                filter: none !important;
+                transform: none !important;
+            }
+
+            .seg-cap {
+                opacity: 1;
+                animation: none;
+            }
+        }
     </style>
     <noscript>
         <style>
+            /* No JS: show the fully-resolved answer outright — every artifact
+               crisp, the reasoning a static readable note, no carets. */
             .reveal,
-            .hero-word,
+            .hero-char,
+            .hero-role,
             .hero-rule,
             .hero-desc,
-            .hero-social {
+            .hero-social,
+            .seg-cap {
                 opacity: 1 !important;
                 transform: none !important;
                 filter: none !important;
                 animation: none !important;
+            }
+
+            .develop-img img {
+                filter: none !important;
+                transform: none !important;
+            }
+
+            .role-caret,
+            .think-caret,
+            .thought-pill {
+                display: none !important;
+            }
+
+            .scene-think {
+                min-height: 0 !important;
+                margin: 1.5rem 0 0.5rem !important;
+            }
+
+            .think-lines {
+                position: static !important;
+                padding: 0 !important;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
+            .think-line {
+                transform: none !important;
+                opacity: 1 !important;
+                margin: 0 0 0.4rem !important;
+                color: var(--text-2) !important;
+            }
+
+            .think-line .c {
+                opacity: 1 !important;
             }
         </style>
     </noscript>
@@ -1096,7 +1610,7 @@
     </nav>
 
     <!-- HERO -->
-    <section class="hero" id="main">
+    <section class="hero" id="main" tabindex="-1">
         <div class="wrap">
             <div class="hero-inner">
                 <h1 class="hero-title">
@@ -1110,6 +1624,10 @@
                             class="hero-char">e</span><span class="hero-char">i</span><span
                             class="hero-char">l</span></span>
                 </h1>
+                <p class="hero-role" data-first-en="Engineer." data-first-de="Ingenieur."><span
+                        class="role-text"><span data-en>Civil&nbsp;Engineer · Entrepreneur · Creative.</span><span
+                            data-de>Bauingenieur · Unternehmer · Kreativer.</span></span><span class="role-caret"
+                        aria-hidden="true"></span></p>
                 <div class="hero-rule" aria-hidden="true"></div>
                 <p class="hero-desc">
                     <span data-en>Civil Engineer, entrepreneur, and creative. Since 2021, I've been channeling my
@@ -1150,22 +1668,27 @@
                         Instagram
                     </a>
                 </div>
+                <button type="button" class="thought-pill hero-pill" hidden aria-hidden="true">
+                    <span class="tp-mark">✦</span><span class="tp-label"></span></button>
             </div>
         </div>
     </section>
 
-    <div class="wrap">
-        <hr class="section-line">
-    </div>
-
     <!-- JOURNEY -->
-    <section id="journey">
+    <section class="scene" id="journey">
+        <div class="scene-think" aria-hidden="true">
+            <div class="think-lines">
+                <p class="think-line"><span data-en>Engineer, founder, filmmaker — at a glance, that's three different people.</span><span data-de>Ingenieur, Gründer, Filmemacher — auf den ersten Blick drei verschiedene Personen.</span></p>
+                <p class="think-line"><span data-en>But the through-line is one: he builds things, then tells their story.</span><span data-de>Doch der rote Faden ist einer: Er baut Dinge — und erzählt ihre Geschichte.</span></p>
+                <p class="think-line"><span data-en>So I won't list jobs. I'll trace the arc — newest first.</span><span data-de>Also keine Liste von Stationen. Ich zeichne den Verlauf nach — neueste zuerst.</span></p>
+            </div>
+        </div>
         <div class="wrap">
-            <p class="section-label reveal"><span data-en>Journey</span><span data-de>Werdegang</span></p>
+            <h2 class="seg-cap reveal"><span data-en>// timeline · 5 entries · newest first</span><span data-de>// werdegang · 5 einträge · neueste zuerst</span></h2>
             <div class="tl">
 
                 <div class="tl-item reveal">
-                    <span class="tl-time"><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
+                    <span class="tl-time"><span class="tl-idx">01</span><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
                     <div class="tl-content">
                         <p class="tl-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz
                                 Schnorpfeil Bau GmbH</a></p>
@@ -1190,7 +1713,7 @@
                 </div>
 
                 <div class="tl-item reveal">
-                    <span class="tl-time">2021 — 2023</span>
+                    <span class="tl-time"><span class="tl-idx">02</span>2021 — 2023</span>
                     <div class="tl-content">
                         <p class="tl-title">HomeToGo</p>
                         <p class="tl-sub">Product & Community Advisor</p>
@@ -1212,7 +1735,7 @@
                 </div>
 
                 <div class="tl-item reveal">
-                    <span class="tl-time">2017 — 2023</span>
+                    <span class="tl-time"><span class="tl-idx">03</span>2017 — 2023</span>
                     <div class="tl-content">
                         <p class="tl-title">Mapify</p>
                         <p class="tl-sub"><span data-en>Co-Founder</span><span data-de>Mitgründer</span></p>
@@ -1234,7 +1757,7 @@
                 </div>
 
                 <div class="tl-item reveal">
-                    <span class="tl-time">2014 — 2021</span>
+                    <span class="tl-time"><span class="tl-idx">04</span>2014 — 2021</span>
                     <div class="tl-content">
                         <p class="tl-title"><span data-en>Film, Photography, Motion Graphics & 3D</span><span
                                 data-de>Film, Fotografie, Motion Graphics & 3D</span></p>
@@ -1259,7 +1782,7 @@
                 </div>
 
                 <div class="tl-item reveal">
-                    <span class="tl-time">2016</span>
+                    <span class="tl-time"><span class="tl-idx">05</span>2016</span>
                     <div class="tl-content">
                         <p class="tl-title">B.Sc. <span data-en>Civil Engineering</span><span
                                 data-de>Bauingenieurwesen</span></p>
@@ -1272,20 +1795,22 @@
         </div>
     </section>
 
-    <div class="wrap">
-        <hr class="section-line">
-    </div>
-
     <!-- SELECTED WORK -->
-    <section id="work">
+    <section class="scene" id="work">
+        <div class="scene-think" aria-hidden="true">
+            <div class="think-lines">
+                <p class="think-line"><span data-en>Five chapters in. Now the harder question — what's worth actually showing?</span><span data-de>Fünf Kapitel später. Jetzt die schwierigere Frage — was lohnt es sich wirklich zu zeigen?</span></p>
+                <p class="think-line"><span data-en>The strongest signal is where the engineering meets a camera.</span><span data-de>Das stärkste Signal liegt dort, wo das Ingenieurwesen auf die Kamera trifft.</span></p>
+                <p class="think-line"><span data-en>Pull the film, the startup, the 3D — and let the images develop.</span><span data-de>Ich hole den Film, das Startup, das 3D — und lasse die Bilder entwickeln.</span></p>
+            </div>
+        </div>
         <div class="wrap">
-            <p class="section-label reveal"><span data-en>Selected Work</span><span data-de>Ausgewählte Arbeiten</span>
-            </p>
+            <h2 class="seg-cap reveal"><span data-en>// selected work · 5 items</span><span data-de>// ausgewählte arbeiten · 5 einträge</span></h2>
             <div class="projects-grid">
 
                 <!-- Video Card: 78° North — Olympus/OM SYSTEM -->
                 <div class="card reveal">
-                    <div class="card-video" data-video-id="Aogpku8g-PM">
+                    <div class="card-video develop-img" data-video-id="Aogpku8g-PM">
                         <picture>
                             <source srcset="images/yt-78north.webp" type="image/webp">
                             <img src="images/yt-78north.jpg" alt="78° North — Olympus/OM SYSTEM Cameras" width="1280" height="720" loading="lazy">
@@ -1314,7 +1839,7 @@
 
                 <!-- Video Card: Adidas TERREX -->
                 <div class="card reveal">
-                    <div class="card-video" data-video-id="UUTV-BNikzE">
+                    <div class="card-video develop-img" data-video-id="UUTV-BNikzE">
                         <picture>
                             <source srcset="images/yt-adidas-terrex.webp" type="image/webp">
                             <img src="images/yt-adidas-terrex.jpg" alt="Adidas TERREX" width="480" height="360" loading="lazy">
@@ -1342,7 +1867,7 @@
 
                 <!-- Video Card: Olympus Peru & Bolivia -->
                 <div class="card reveal">
-                    <div class="card-video" data-video-id="_stKu_f_7NQ">
+                    <div class="card-video develop-img" data-video-id="_stKu_f_7NQ">
                         <picture>
                             <source srcset="images/yt-olympus-peru.webp" type="image/webp">
                             <img src="images/yt-olympus-peru.jpg" alt="Olympus/OM SYSTEM — Peru &amp; Bolivia"
@@ -1372,7 +1897,7 @@
 
                 <!-- Mapify Card -->
                 <div class="card reveal">
-                    <div class="card-media">
+                    <div class="card-media develop-img">
                         <picture>
                             <source srcset="images/mapify-illustration.webp" type="image/webp">
                             <img src="images/mapify-illustration.jpg" alt="Mapify" width="1500" height="500" loading="lazy">
@@ -1407,7 +1932,7 @@
 
                 <!-- Unreal Pieces Card (wide) -->
                 <div class="card card--wide reveal">
-                    <div class="card-collage">
+                    <div class="card-collage develop-img">
                         <picture>
                             <source srcset="images/render-bed-ocean.webp" type="image/webp"><img
                                 src="images/render-bed-ocean.jpg" alt="Floating bed on ocean" width="1200" height="1500" loading="lazy">
@@ -1454,34 +1979,51 @@
         </div>
     </section>
 
-    <div class="wrap">
-        <hr class="section-line">
-    </div>
-
     <!-- CONTACT -->
-    <section id="contact">
+    <section class="scene" id="contact">
+        <div class="scene-think" aria-hidden="true">
+            <div class="think-lines">
+                <p class="think-line"><span data-en>The work speaks for itself. Anyone reading this far might want to reach him.</span><span data-de>Die Arbeiten sprechen für sich. Wer so weit liest, möchte ihn vielleicht erreichen.</span></p>
+                <p class="think-line"><span data-en>Two real addresses on file — one for business, one for everything else.</span><span data-de>Zwei echte Adressen hinterlegt — eine geschäftlich, eine für alles andere.</span></p>
+                <p class="think-line"><span data-en>No forms, no funnels. Just both, plainly.</span><span data-de>Keine Formulare, keine Trichter. Einfach beide, direkt.</span></p>
+            </div>
+        </div>
         <div class="wrap">
-            <p class="section-label reveal"><span data-en>Contact</span><span data-de>Kontakt</span></p>
+            <h2 class="seg-cap reveal"><span data-en>// contact · 2 channels</span><span data-de>// kontakt · 2 kanäle</span></h2>
             <div class="contact-grid reveal">
                 <div class="contact-item">
                     <p class="contact-label"><span data-en>Business</span><span data-de>Geschäftlich</span></p>
-                    <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
+                    <a href="mailto:tobias@schnorpfeil.com" class="contact-email"><span class="contact-key">business:</span>tobias@schnorpfeil.com</a>
                     <p class="contact-note">Heinz Schnorpfeil Bau GmbH</p>
                 </div>
                 <div class="contact-item">
                     <p class="contact-label"><span data-en>Personal</span><span data-de>Privat</span></p>
-                    <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
+                    <a href="mailto:tschnorpfeil@gmail.com" class="contact-email"><span class="contact-key">personal:</span>tschnorpfeil@gmail.com</a>
                     <p class="contact-note"><span data-en>Everything else</span><span data-de>Alles andere</span></p>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- CLOSING SCENE -->
+    <div class="scene scene--closing" aria-hidden="true">
+        <div class="scene-think">
+            <div class="think-lines">
+                <p class="think-line"><span data-en>So that's the answer: one person who builds things, and tells their story.</span><span data-de>Das ist also die Antwort: ein Mensch, der Dinge baut — und ihre Geschichte erzählt.</span></p>
+                <p class="think-line"><span data-en>Engineer, founder, filmmaker — and the same hand behind all three.</span><span data-de>Ingenieur, Gründer, Filmemacher — und dieselbe Hand hinter allen dreien.</span></p>
+                <p class="think-line"><span data-en>Answer complete.</span><span data-de>Antwort vollständig.</span></p>
+            </div>
+        </div>
+    </div>
+
     <!-- FOOTER -->
     <footer class="footer">
         <div class="wrap">
             <div class="footer-inner">
-                <span>&copy; 2026 Tobias Schnorpfeil</span>
+                <div class="footer-meta">
+                    <span>&copy; 2026 Tobias Schnorpfeil</span>
+                    <span class="footer-meta-line" aria-hidden="true"><span data-en>answer complete · 4 sections · 5 chapters · 5 works · 2 channels</span><span data-de>antwort vollständig · 4 abschnitte · 5 kapitel · 5 arbeiten · 2 kanäle</span></span>
+                </div>
                 <div class="footer-links">
                     <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank">LinkedIn</a>
                     <a href="https://www.youtube.com/user/TSchnorpfeil" target="_blank">YouTube</a>
@@ -1493,6 +2035,364 @@
     </footer>
 
     <script>
+        /* ----------------------------------------------
+           DEVELOP — the page is one developing answer. The hero
+           resolves out of latent noise on load; each section below
+           thinks a few exploratory lines, collapses that reasoning
+           into a clickable receipt, then resolves its answer: text
+           crystallizing, photographs developing. Every receipt
+           replays its beat. The CV is real; the unfolding is staged.
+           ---------------------------------------------- */
+        (function () {
+            try {
+                console.log('%c  the cv is real — the unfolding is just for you.  ',
+                    'font:12px ui-monospace,monospace;color:#B7613A;');
+            } catch (e) { }
+        })();
+
+        /* Hero: the name resolves out of latent noise (a left-to-right denoise
+           sweep), then the role line composes itself and revises once — the tell
+           that a mind is authoring, not replaying a string. The receipt replays
+           the whole opening. */
+        (function () {
+            var docEl = document.documentElement;
+            var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var h1 = document.querySelector('.hero-title');
+            var chars = h1 ? Array.prototype.slice.call(h1.querySelectorAll('.hero-char')) : [];
+            for (var i = 0; i < chars.length; i++) chars[i].style.setProperty('--ci', i);
+
+            var role = document.querySelector('.hero-role');
+            var textSpan = role && role.querySelector('.role-text');
+            var caret = role && role.querySelector('.role-caret');
+            var pill = document.querySelector('.hero-pill');
+            var live = null, timer = null;
+
+            function curLang() { return docEl.getAttribute('data-lang') === 'de' ? 'de' : 'en'; }
+            function finalFor(lang) {
+                var s = textSpan && (textSpan.querySelector('[data-' + lang + ']') || textSpan.querySelector('[data-en]'));
+                return s ? s.textContent : '';
+            }
+            function pillText(sec) {
+                return curLang() === 'de' ? 'in ' + sec.toFixed(1) + 's gedacht' : 'thought for ' + sec.toFixed(1) + 's';
+            }
+            function revealPill(sec) {
+                if (!pill) return;
+                pill.__sec = sec;
+                var lbl = pill.querySelector('.tp-label');
+                if (lbl) lbl.textContent = pillText(sec);
+                pill.hidden = false; pill.removeAttribute('aria-hidden');
+                requestAnimationFrame(function () { pill.classList.add('in'); });
+            }
+
+            /* Keep the settled role + receipt correct across a language toggle. */
+            window.__heroSync = function () {
+                if (live) live.textContent = finalFor(curLang());
+                if (pill && pill.__sec != null) {
+                    var lbl = pill.querySelector('.tp-label');
+                    if (lbl) lbl.textContent = pillText(pill.__sec);
+                }
+            };
+
+            if (!role || !textSpan || reduce) return;   /* CSS already shows the resolved hero */
+
+            live = document.createElement('span');
+            live.className = 'role-live';
+            textSpan.style.display = 'none';
+            role.insertBefore(live, caret);
+
+            function type(str, done) {
+                var i = 0;
+                (function step() {
+                    live.textContent = str.slice(0, i++);
+                    if (i <= str.length) timer = setTimeout(step, 32 + Math.random() * 24);
+                    else done();
+                })();
+            }
+            function erase(done) {
+                (function step() {
+                    var s = live.textContent;
+                    if (!s.length) return done();
+                    live.textContent = s.slice(0, -1);
+                    timer = setTimeout(step, 20);
+                })();
+            }
+
+            function recrystal() {
+                for (var k = 0; k < chars.length; k++) {
+                    chars[k].style.animation = 'none';
+                    void chars[k].offsetWidth;        /* reflow so the keyframe restarts */
+                    chars[k].style.animation = '';
+                }
+            }
+
+            function compose() {
+                if (timer) clearTimeout(timer);
+                if (caret) caret.classList.add('on');
+                live.textContent = '';
+                var t0 = performance.now();
+                var first = role.getAttribute('data-first-' + curLang()) || role.getAttribute('data-first-en') || '';
+                type(first, function () {
+                    timer = setTimeout(function () {
+                        erase(function () {
+                            type(finalFor(curLang()), function () {
+                                if (caret) setTimeout(function () { caret.classList.remove('on'); }, 480);
+                                revealPill(Math.min(Math.max(0.4, (performance.now() - t0) / 1000), 1.2));
+                            });
+                        });
+                    }, 340);
+                });
+            }
+
+            setTimeout(compose, 540);
+
+            if (pill) pill.addEventListener('click', function () {
+                pill.classList.remove('in');
+                recrystal();
+                setTimeout(compose, 260);
+            });
+        })();
+
+        /* Develop scenes — each section thinks, collapses its reasoning into a
+           receipt, then resolves its answer. The reasoning plays on its own clock
+           (the scroll only triggers it); content lives in the DOM from the start,
+           held back but crawlable. Reduced motion skips straight to the answer. */
+        (function () {
+            var docEl = document.documentElement;
+            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var scenes = Array.prototype.slice.call(document.querySelectorAll('.scene'));
+            if (!scenes.length) return;
+
+            var CHAR_MS = 6, CHAR_JIT = 8, LINE_GAP = 440;
+
+            function clamp(v, a, b) { return v < a ? a : (v > b ? b : v); }
+            function curLang() { return docEl.getAttribute('data-lang') === 'de' ? 'de' : 'en'; }
+            function langDe() { return curLang() === 'de'; }
+
+            /* Each reasoning line types by slicing its active-language text into a
+               live node, so the caret trails the written edge. The source spans are
+               kept (hidden) as the data-raw record and the no-JS fallback. */
+            function prep(line) {
+                if (line.__live) return;
+                var spans = line.querySelectorAll('[data-en],[data-de]');
+                for (var i = 0; i < spans.length; i++) {
+                    if (spans[i].getAttribute('data-raw') == null) spans[i].setAttribute('data-raw', spans[i].textContent);
+                    spans[i].style.display = 'none';
+                }
+                var live = document.createElement('span'); live.className = 'tl-live';
+                var caret = document.createElement('span'); caret.className = 'think-caret';
+                line.appendChild(live); line.appendChild(caret);
+                line.__live = live; line.__caret = caret;
+            }
+            function lineText(line) {
+                var s = line.querySelector('[data-' + curLang() + ']') || line.querySelector('[data-en],[data-de]');
+                return s ? (s.getAttribute('data-raw') || s.textContent) : line.textContent;
+            }
+
+            function makePill(cls) {
+                var b = document.createElement('button');
+                b.type = 'button'; b.className = 'thought-pill ' + cls;
+                b.setAttribute('aria-hidden', 'true');
+                b.innerHTML = '<span class="tp-mark">✦</span><span class="tp-label"></span>';
+                return b;
+            }
+            function pillText(sec) {
+                return langDe() ? 'in ' + sec.toFixed(1) + 's gedacht' : 'thought for ' + sec.toFixed(1) + 's';
+            }
+
+            function typeLine(scene, line, done) {
+                prep(line);
+                line.classList.add('in');
+                line.classList.remove('dim');
+                line.style.setProperty('--ck', 1);
+                var txt = lineText(line), i = 0;
+                (function step() {
+                    if (scene.__abort) return;
+                    line.__live.textContent = txt.slice(0, i++);
+                    if (i <= txt.length) scene.__timer = setTimeout(step, CHAR_MS + Math.random() * CHAR_JIT);
+                    else done();
+                })();
+            }
+
+            function playThink(scene) {
+                if (scene.__started) return;
+                scene.__started = true;
+                scene.__abort = false;
+                scene.__startTime = performance.now();
+                var lines = scene.__lines, N = scene.__N;
+                if (!N) { collapse(scene); return; }
+                scene.__think.classList.add('is-thinking');
+                var idx = 0;
+                (function next() {
+                    if (scene.__abort) return;
+                    if (idx >= N) { settle(scene); return; }
+                    var line = lines[idx];
+                    typeLine(scene, line, function () {
+                        var last = idx === N - 1;
+                        if (scene.__closing && last) {
+                            line.style.setProperty('--ck', 1);     /* closing: caret rests solid */
+                        } else {
+                            line.style.setProperty('--ck', 0);
+                            line.classList.add('dim');
+                        }
+                        idx++;
+                        scene.__timer = setTimeout(next, LINE_GAP);
+                    });
+                })();
+                /* Never wedge if rAF/timers are starved in a background tab. */
+                scene.__failsafe = setTimeout(function () { settle(scene); }, N * 2600 + 4000);
+            }
+
+            /* Bring every line to its finished state at once (used on skip). */
+            function settle(scene) {
+                if (scene.__thinkDone) return;
+                scene.__thinkDone = true;
+                scene.__abort = true;
+                if (scene.__timer) clearTimeout(scene.__timer);
+                if (scene.__failsafe) clearTimeout(scene.__failsafe);
+                for (var i = 0; i < scene.__N; i++) {
+                    var l = scene.__lines[i]; prep(l);
+                    l.classList.add('in');
+                    l.__live.textContent = lineText(l);
+                    if (scene.__closing && i === scene.__N - 1) { l.style.setProperty('--ck', 1); l.classList.remove('dim'); }
+                    else { l.style.setProperty('--ck', 0); l.classList.add('dim'); }
+                }
+                if (scene.__closing) { scene.__think.classList.remove('is-thinking'); return; }
+                collapse(scene);
+            }
+
+            function collapse(scene) {
+                scene.__think.classList.remove('is-thinking');
+                scene.__think.classList.add('collapsed');
+                var sec = clamp((performance.now() - (scene.__startTime || performance.now())) / 1000, 0.3, 1.5);
+                if (scene.__pill) {
+                    scene.__pill.__sec = sec;
+                    var lbl = scene.__pill.querySelector('.tp-label');
+                    if (lbl) lbl.textContent = pillText(sec);
+                    scene.__pill.removeAttribute('aria-hidden');
+                    requestAnimationFrame(function () { scene.__pill.classList.add('in'); });
+                }
+                setTimeout(function () { generate(scene); }, 340);
+            }
+
+            function develop(node) {
+                var els = [];
+                if (node.classList && node.classList.contains('develop-img')) els.push(node);
+                var inner = node.querySelectorAll ? node.querySelectorAll('.develop-img') : [];
+                for (var i = 0; i < inner.length; i++) els.push(inner[i]);
+                for (var j = 0; j < els.length; j++) (function (el) {
+                    requestAnimationFrame(function () { el.classList.add('developed'); });
+                })(els[j]);
+            }
+
+            function generate(scene) {
+                if (scene.__generated) return;
+                scene.__generated = true;
+                var revs = scene.__revs;
+                for (var i = 0; i < revs.length; i++) {
+                    revs[i].style.setProperty('--reveal-i', i);
+                    revs[i].style.pointerEvents = '';
+                    revs[i].classList.add('visible');
+                    develop(revs[i]);
+                    (function (node, idx) {
+                        setTimeout(function () {
+                            node.classList.remove('reveal', 'visible');
+                            node.style.removeProperty('--reveal-i');
+                        }, idx * 120 + 1000);
+                    })(revs[i], i);
+                }
+            }
+
+            /* Replay a beat: tear down, re-hide the answer, think again. */
+            function replay(scene) {
+                if (scene.__closing) return;
+                scene.__abort = true;
+                if (scene.__timer) clearTimeout(scene.__timer);
+                if (scene.__failsafe) clearTimeout(scene.__failsafe);
+                scene.__started = scene.__thinkDone = scene.__generated = false;
+                if (scene.__pill) scene.__pill.classList.remove('in');
+                var revs = scene.__revs;
+                for (var i = 0; i < revs.length; i++) {
+                    revs[i].classList.remove('visible');
+                    revs[i].classList.add('reveal');
+                    revs[i].style.pointerEvents = 'none';
+                    if (revs[i].classList.contains('develop-img')) revs[i].classList.remove('developed');
+                    var d = revs[i].querySelectorAll ? revs[i].querySelectorAll('.develop-img') : [];
+                    for (var j = 0; j < d.length; j++) d[j].classList.remove('developed');
+                }
+                scene.__think.classList.remove('collapsed');
+                for (var k = 0; k < scene.__N; k++) {
+                    var l = scene.__lines[k];
+                    l.classList.remove('in', 'dim');
+                    l.style.setProperty('--ck', 0);
+                    if (l.__live) l.__live.textContent = '';
+                }
+                setTimeout(function () { playThink(scene); }, 240);
+            }
+
+            /* Wire up scenes: hold content back, attach a receipt to each. */
+            for (var s = 0; s < scenes.length; s++) {
+                var sc = scenes[s];
+                sc.__think = sc.querySelector('.scene-think');
+                sc.__lines = sc.__think ? Array.prototype.slice.call(sc.__think.querySelectorAll('.think-line')) : [];
+                sc.__N = sc.__lines.length;
+                sc.__revs = Array.prototype.slice.call(sc.querySelectorAll('.reveal'));
+                sc.__closing = sc.classList.contains('scene--closing');
+                for (var r = 0; r < sc.__revs.length; r++) sc.__revs[r].style.pointerEvents = 'none';
+                if (!sc.__closing) {
+                    var wrap = sc.querySelector('.wrap');
+                    if (wrap) {
+                        var pill = makePill('scene-pill');
+                        wrap.insertBefore(pill, wrap.firstChild);
+                        sc.__pill = pill;
+                        (function (scene) {
+                            pill.addEventListener('click', function () { replay(scene); });
+                        })(sc);
+                    }
+                }
+            }
+
+            /* Trigger each scene's reasoning when it rises into the upper viewport. */
+            var io = new IntersectionObserver(function (ents) {
+                for (var e = 0; e < ents.length; e++) {
+                    if (ents[e].isIntersecting) { io.unobserve(ents[e].target); playThink(ents[e].target); }
+                }
+            }, { rootMargin: '0px 0px -38% 0px', threshold: 0 });
+            for (var o = 0; o < scenes.length; o++) io.observe(scenes[o]);
+
+            /* A deliberate scroll/key past a still-thinking scene skips it straight
+               to the answer — the reader is never held. A short grace stops the very
+               gesture that triggered the scene from also skipping it. */
+            function skip() {
+                var now = performance.now();
+                for (var i = 0; i < scenes.length; i++) {
+                    var sc = scenes[i];
+                    if (sc.__started && !sc.__thinkDone && (now - sc.__startTime) > 420) settle(sc);
+                }
+            }
+            window.addEventListener('wheel', skip, { passive: true });
+            window.addEventListener('touchmove', skip, { passive: true });
+            window.addEventListener('keydown', function (e) {
+                var k = e.key;
+                if (k === ' ' || k === 'PageDown' || k === 'PageUp' || k === 'ArrowDown' ||
+                    k === 'ArrowUp' || k === 'End' || k === 'Home') skip();
+            });
+
+            /* Language toggle: re-type settled lines and refresh receipt labels. */
+            window.__relayout = function () {
+                for (var i = 0; i < scenes.length; i++) {
+                    var sc = scenes[i];
+                    for (var j = 0; j < sc.__lines.length; j++) {
+                        var l = sc.__lines[j];
+                        if (l.__live && l.classList.contains('in')) l.__live.textContent = lineText(l);
+                    }
+                    if (sc.__pill && sc.__pill.__sec != null) {
+                        var lbl = sc.__pill.querySelector('.tp-label');
+                        if (lbl) lbl.textContent = pillText(sc.__pill.__sec);
+                    }
+                }
+            };
+        })();
+
         /* Theme toggle */
         function toggleTheme() {
             var h = document.documentElement;
@@ -1514,6 +2414,9 @@
             h.setAttribute('data-lang', next);
             h.lang = next;
             localStorage.setItem('lang', next);
+            /* Re-render the active-language reasoning and hero role to match. */
+            if (window.__relayout) window.__relayout();
+            if (window.__heroSync) window.__heroSync();
         }
 
         /* Smooth scroll for nav links */
@@ -1539,15 +2442,22 @@
             var target = [], curr = [], centers = [], px = null, py = null, raf = null, ready = false;
 
             function freeze() {
-                chars.forEach(function (c) { c.style.fontWeight = MAX; });
-                var widths = chars.map(function (c) { return c.getBoundingClientRect().width; });
-                chars.forEach(function (c, i) {
+                /* Reset to natural metrics before measuring so a re-freeze (on
+                   resize / orientation change) reads true widths at the new
+                   font-size rather than the previously frozen ones. */
+                chars.forEach(function (c) {
                     c.style.display = 'inline-block';
                     c.style.textAlign = 'center';
+                    c.style.width = 'auto';
+                    c.style.fontWeight = MAX;
+                });
+                var widths = chars.map(function (c) { return c.getBoundingClientRect().width; });
+                chars.forEach(function (c, i) {
                     c.style.width = widths[i] + 'px';
                     c.style.fontWeight = REST;
                     target[i] = curr[i] = REST;
                 });
+                measureCenters();
                 ready = true;
             }
 
@@ -1576,15 +2486,39 @@
 
             function kick() { if (!raf) raf = requestAnimationFrame(frame); }
 
-            (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+            /* Re-freeze whenever the rendered font-size actually changes (font
+               swap, viewport/vw clamp, orientation) — never on our own
+               width-setting, so there's no feedback loop. A ResizeObserver
+               catches size changes that don't fire a window 'resize'. */
+            var lastFS = '';
+            function maybeFreeze() {
+                var fs = getComputedStyle(h1).fontSize;
+                if (ready && fs === lastFS) return;
+                lastFS = fs;
                 freeze();
-                measureCenters();
+            }
+            var freezeT = null;
+            function scheduleFreeze() {
+                if (freezeT) clearTimeout(freezeT);
+                freezeT = setTimeout(maybeFreeze, 120);
+            }
+            (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
+                lastFS = getComputedStyle(h1).fontSize;
+                freeze();
             });
-            window.addEventListener('resize', function () { if (ready) measureCenters(); });
+            window.addEventListener('resize', scheduleFreeze);
+            if (window.ResizeObserver) {
+                try { new ResizeObserver(scheduleFreeze).observe(h1); } catch (e) { }
+            }
+            /* Measure centres once when the cursor arrives (and on resize via
+               scheduleFreeze) rather than on every move — re-reading every
+               glyph's rect per pointermove forced a layout flush each tick. */
+            h1.addEventListener('pointerenter', function () {
+                if (ready) measureCenters();
+            });
             h1.addEventListener('pointermove', function (e) {
                 if (!ready) return;
                 px = e.clientX; py = e.clientY;
-                measureCenters();
                 kick();
             });
             h1.addEventListener('pointerleave', function () {
@@ -1633,6 +2567,8 @@
                 iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
                 iframe.allow = 'autoplay; encrypted-media';
                 iframe.allowFullscreen = true;
+                var titleEl = el.parentNode.querySelector('.card-title');
+                iframe.title = titleEl ? titleEl.textContent.trim() : 'Video';
                 el.insertBefore(iframe, el.firstChild);
                 el.classList.add('playing');
             });
@@ -1664,33 +2600,10 @@
                 navObs.observe(hero);
             }
 
-            /* Scroll reveal with per-batch staggered timing */
-            var obs = new IntersectionObserver(function (entries) {
-                var entering = [];
-                for (var k = 0; k < entries.length; k++) {
-                    if (entries[k].isIntersecting) entering.push(entries[k].target);
-                }
-                if (!entering.length) return;
-                /* Sort by DOM order for top-to-bottom stagger */
-                entering.sort(function (a, b) {
-                    var pos = a.compareDocumentPosition(b);
-                    return pos & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-                });
-                for (var i = 0; i < entering.length; i++) {
-                    entering[i].style.setProperty('--reveal-i', i);
-                    entering[i].classList.add('visible');
-                    obs.unobserve(entering[i]);
-                    /* After the reveal finishes, drop the classes so elements
-                       (esp. cards) regain their own crisp hover transitions */
-                    (function (node, idx) {
-                        setTimeout(function () {
-                            node.classList.remove('reveal', 'visible');
-                            node.style.removeProperty('--reveal-i');
-                        }, idx * 120 + 850);
-                    })(entering[i], i);
-                }
-            }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-            document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
+            /* The section content reveal ("generation") is driven per-scene by
+               the generative-scenes controller above — it staggers each scene's
+               .reveal items in once that scene's reasoning has finished typing,
+               so there's no separate global reveal observer here. */
         })();
     </script>
 </body>
