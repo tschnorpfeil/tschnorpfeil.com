@@ -395,8 +395,9 @@
             animation: drawRule 0.9s var(--ease) 0.75s forwards;
         }
 
-        /* The collapsed reasoning receipt — a clickable "thought" that replays
-           its beat. The page's only warm accent, used sparingly. */
+        /* The collapsed reasoning receipt — a clickable "thought for Xs" that
+           re-opens its reasoning inline (and folds it again). The page's only
+           warm accent, used sparingly. */
         .thought-pill {
             display: inline-flex;
             align-items: center;
@@ -408,7 +409,7 @@
             background: var(--accent-soft);
             border: 0.5px solid var(--accent-line);
             border-radius: 100px;
-            padding: 0.26rem 0.72rem;
+            padding: 0.26rem 0.72rem 0.26rem 0.66rem;
             cursor: pointer;
             opacity: 0;
             transform: translateY(4px);
@@ -424,6 +425,17 @@
         .thought-pill:hover {
             color: var(--text-2);
             border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .thought-pill.open {
+            color: var(--text-2);
+            border-color: var(--accent);
+        }
+
+        .thought-pill:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         .tp-mark {
@@ -431,8 +443,62 @@
             font-size: 0.75em;
         }
 
+        /* A small chevron that points down (collapsed) and flips up (open). */
+        .tp-chevron {
+            width: 6px;
+            height: 6px;
+            margin-left: 0.1rem;
+            border-right: 1px solid currentColor;
+            border-bottom: 1px solid currentColor;
+            transform: translateY(-1px) rotate(45deg);
+            opacity: 0.55;
+            transition: transform 0.3s var(--ease-cot);
+        }
+
+        .thought-pill.open .tp-chevron {
+            transform: translateY(1px) rotate(225deg);
+        }
+
         .hero-pill {
             margin-top: 1.9rem;
+        }
+
+        /* The reasoning the receipt expands — a quiet traced quote, sized to its
+           content, opening just below the pill (header → reasoning → answer). */
+        .beat-reasoning {
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+            margin-left: 0.1rem;
+            padding-left: 0;
+            border-left: 1px solid transparent;
+            transition: max-height 0.5s var(--ease-cot), opacity 0.4s ease,
+                padding-left 0.5s var(--ease-cot), border-color 0.5s ease, margin 0.5s var(--ease-cot);
+        }
+
+        .beat-reasoning.open {
+            max-height: 40vh;
+            opacity: 1;
+            margin: -0.5rem 0 1.5rem 0.1rem;
+            padding-left: 0.95rem;
+            border-left-color: var(--accent-line);
+        }
+
+        .beat-inner {
+            padding-top: 0.7rem;
+        }
+
+        .beat-line {
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            line-height: 1.65;
+            letter-spacing: 0.01em;
+            color: var(--text-3);
+            margin: 0.1rem 0;
+        }
+
+        .hero-reasoning.open {
+            margin-top: 0.9rem;
         }
 
         .hero-desc {
@@ -502,8 +568,10 @@
             padding-left: 1.75rem;
         }
 
-        /* Reasoning-trace spine: a node per chapter + a connector that
-           appears to draw downward as the items reveal on scroll */
+        /* Reasoning-trace spine, read as a chain of thought: each chapter is a
+           completed step (a filled node), joined by a drawn connector; the top
+           chapter is the active step (emphasised, with a slow monochrome ping).
+           A brief "pop" marks each node as its step resolves in. */
         .tl-item::before {
             content: '';
             position: absolute;
@@ -512,14 +580,14 @@
             width: 9px;
             height: 9px;
             border-radius: 50%;
-            background: var(--bg);
+            background: var(--border-h);
             border: 1.5px solid var(--border-h);
             z-index: 1;
         }
 
         /* The current chapter (top) reads as the active node — a slow
            monochrome "ping" echoes the intro's live thinking dot, signalling
-           "this chapter is ongoing" without reintroducing the electric accent */
+           "this chapter is ongoing" without reintroducing the warm accent */
         .tl-item:first-child::before {
             background: var(--text);
             border-color: var(--text);
@@ -528,6 +596,28 @@
         @media (prefers-reduced-motion: no-preference) {
             .tl-item:first-child::before {
                 animation: tl-ping 2.6s var(--ease) infinite;
+            }
+
+            /* As each step resolves in, its node pops — a thought landing. */
+            .tl-item.visible:not(:first-child)::before {
+                animation: node-pop 0.55s var(--ease-cot);
+            }
+        }
+
+        @keyframes node-pop {
+            0% {
+                transform: scale(0.3);
+                opacity: 0.3;
+            }
+
+            55% {
+                transform: scale(1.3);
+                opacity: 1;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
             }
         }
 
@@ -1290,9 +1380,9 @@
            reasoning COLLAPSES into a compact "thought" receipt (the
            hand-off), and in the space it vacates the answer RESOLVES —
            text crystallizing out of latent noise, photographs developing
-           to full resolution. Every receipt is clickable to replay its
-           beat. Content lives in the DOM from the start (held back, not
-           absent), so it stays crawlable and reachable with no JS.
+           to full resolution. Every receipt re-opens its reasoning inline,
+           click to fold. Content lives in the DOM from the start (held back,
+           not absent), so it stays crawlable and reachable with no JS.
            ------------------------------------------ */
         .scene {
             position: relative;
@@ -1668,8 +1758,9 @@
                         Instagram
                     </a>
                 </div>
-                <button type="button" class="thought-pill hero-pill" hidden aria-hidden="true">
-                    <span class="tp-mark">✦</span><span class="tp-label"></span></button>
+                <button type="button" class="thought-pill hero-pill" hidden aria-hidden="true" aria-expanded="false">
+                    <span class="tp-mark">✦</span><span class="tp-label"></span><span class="tp-chevron"
+                        aria-hidden="true"></span></button>
             </div>
         </div>
     </section>
@@ -2065,7 +2156,11 @@
             var textSpan = role && role.querySelector('.role-text');
             var caret = role && role.querySelector('.role-caret');
             var pill = document.querySelector('.hero-pill');
-            var live = null, timer = null;
+            var live = null, timer = null, reasonEl = null;
+            var heroReason = {
+                en: ['Before anything else — who is he, in one line?', 'Name first. Then the three roles, plainly.'],
+                de: ['Zuallererst — wer ist er, in einem Satz?', 'Zuerst der Name. Dann die drei Rollen, schlicht.']
+            };
 
             function curLang() { return docEl.getAttribute('data-lang') === 'de' ? 'de' : 'en'; }
             function finalFor(lang) {
@@ -2084,12 +2179,16 @@
                 requestAnimationFrame(function () { pill.classList.add('in'); });
             }
 
-            /* Keep the settled role + receipt correct across a language toggle. */
+            /* Keep the settled role, receipt and reasoning correct across a toggle. */
             window.__heroSync = function () {
                 if (live) live.textContent = finalFor(curLang());
                 if (pill && pill.__sec != null) {
                     var lbl = pill.querySelector('.tp-label');
                     if (lbl) lbl.textContent = pillText(pill.__sec);
+                }
+                if (reasonEl) {
+                    var ps = reasonEl.querySelectorAll('.beat-line'), src = heroReason[curLang()] || heroReason.en;
+                    for (var i = 0; i < ps.length; i++) ps[i].textContent = src[i];
                 }
             };
 
@@ -2117,12 +2216,21 @@
                 })();
             }
 
-            function recrystal() {
-                for (var k = 0; k < chars.length; k++) {
-                    chars[k].style.animation = 'none';
-                    void chars[k].offsetWidth;        /* reflow so the keyframe restarts */
-                    chars[k].style.animation = '';
+            function buildHeroReason() {
+                if (reasonEl) return reasonEl;
+                var box = document.createElement('div');
+                box.className = 'beat-reasoning hero-reasoning';
+                box.setAttribute('aria-hidden', 'true');
+                var inner = document.createElement('div'); inner.className = 'beat-inner';
+                var src = heroReason[curLang()] || heroReason.en;
+                for (var i = 0; i < src.length; i++) {
+                    var p = document.createElement('p'); p.className = 'beat-line';
+                    p.textContent = src[i]; inner.appendChild(p);
                 }
+                box.appendChild(inner);
+                pill.insertAdjacentElement('afterend', box);
+                reasonEl = box;
+                return box;
             }
 
             function compose() {
@@ -2146,9 +2254,11 @@
             setTimeout(compose, 540);
 
             if (pill) pill.addEventListener('click', function () {
-                pill.classList.remove('in');
-                recrystal();
-                setTimeout(compose, 260);
+                var box = buildHeroReason();
+                var open = !pill.classList.contains('open');
+                pill.classList.toggle('open', open);
+                pill.setAttribute('aria-expanded', open ? 'true' : 'false');
+                box.classList.toggle('open', open);
             });
         })();
 
@@ -2192,7 +2302,8 @@
                 var b = document.createElement('button');
                 b.type = 'button'; b.className = 'thought-pill ' + cls;
                 b.setAttribute('aria-hidden', 'true');
-                b.innerHTML = '<span class="tp-mark">✦</span><span class="tp-label"></span>';
+                b.setAttribute('aria-expanded', 'false');
+                b.innerHTML = '<span class="tp-mark">✦</span><span class="tp-label"></span><span class="tp-chevron" aria-hidden="true"></span>';
                 return b;
             }
             function pillText(sec) {
@@ -2302,31 +2413,40 @@
                 }
             }
 
-            /* Replay a beat: tear down, re-hide the answer, think again. */
-            function replay(scene) {
-                if (scene.__closing) return;
-                scene.__abort = true;
-                if (scene.__timer) clearTimeout(scene.__timer);
-                if (scene.__failsafe) clearTimeout(scene.__failsafe);
-                scene.__started = scene.__thinkDone = scene.__generated = false;
-                if (scene.__pill) scene.__pill.classList.remove('in');
-                var revs = scene.__revs;
-                for (var i = 0; i < revs.length; i++) {
-                    revs[i].classList.remove('visible');
-                    revs[i].classList.add('reveal');
-                    revs[i].style.pointerEvents = 'none';
-                    if (revs[i].classList.contains('develop-img')) revs[i].classList.remove('developed');
-                    var d = revs[i].querySelectorAll ? revs[i].querySelectorAll('.develop-img') : [];
-                    for (var j = 0; j < d.length; j++) d[j].classList.remove('developed');
+            /* Build the re-readable reasoning record once (the "Reasoning" panel
+               the receipt expands), in document flow right after the pill so the
+               order reads header → reasoning → answer, like the AI-SDK pattern. */
+            function buildReasoning(scene) {
+                if (scene.__reasonEl) return scene.__reasonEl;
+                var box = document.createElement('div');
+                box.className = 'beat-reasoning';
+                box.setAttribute('aria-hidden', 'true');
+                var inner = document.createElement('div');
+                inner.className = 'beat-inner';
+                for (var i = 0; i < scene.__N; i++) {
+                    var p = document.createElement('p');
+                    p.className = 'beat-line';
+                    p.textContent = lineText(scene.__lines[i]);
+                    inner.appendChild(p);
                 }
-                scene.__think.classList.remove('collapsed');
-                for (var k = 0; k < scene.__N; k++) {
-                    var l = scene.__lines[k];
-                    l.classList.remove('in', 'dim');
-                    l.style.setProperty('--ck', 0);
-                    if (l.__live) l.__live.textContent = '';
+                box.appendChild(inner);
+                scene.__pill.insertAdjacentElement('afterend', box);
+                scene.__reasonEl = box;
+                return box;
+            }
+
+            /* The receipt re-opens its reasoning inline; click again to fold it
+               (auto-open-while-streaming, fold-when-done, re-open-on-demand). */
+            function toggleReasoning(scene) {
+                var pill = scene.__pill, box = buildReasoning(scene);
+                var open = !pill.classList.contains('open');
+                if (open) {
+                    var ps = box.querySelectorAll('.beat-line');
+                    for (var i = 0; i < ps.length; i++) ps[i].textContent = lineText(scene.__lines[i]);
                 }
-                setTimeout(function () { playThink(scene); }, 240);
+                pill.classList.toggle('open', open);
+                pill.setAttribute('aria-expanded', open ? 'true' : 'false');
+                box.classList.toggle('open', open);
             }
 
             /* Wire up scenes: hold content back, attach a receipt to each. */
@@ -2345,7 +2465,7 @@
                         wrap.insertBefore(pill, wrap.firstChild);
                         sc.__pill = pill;
                         (function (scene) {
-                            pill.addEventListener('click', function () { replay(scene); });
+                            pill.addEventListener('click', function () { toggleReasoning(scene); });
                         })(sc);
                     }
                 }
@@ -2388,6 +2508,10 @@
                     if (sc.__pill && sc.__pill.__sec != null) {
                         var lbl = sc.__pill.querySelector('.tp-label');
                         if (lbl) lbl.textContent = pillText(sc.__pill.__sec);
+                    }
+                    if (sc.__reasonEl) {
+                        var ps = sc.__reasonEl.querySelectorAll('.beat-line');
+                        for (var p = 0; p < ps.length; p++) ps[p].textContent = lineText(sc.__lines[p]);
                     }
                 }
             };
