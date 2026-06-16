@@ -2290,8 +2290,8 @@
             var ctx = canvas.getContext('2d');
             var dpr = Math.min(window.devicePixelRatio || 1, 2);
             var W = 0, H = 0, pts = [], N = 0, ink = { r: 29, g: 29, b: 31 };
-            var intensity = 0.0, target = 0.08, pulseUntil = 0, raf = null, visible = true;
-            var IDLE = 0.08;
+            var intensity = 0.0, target = 0.07, pulseUntil = 0, raf = null, visible = true;
+            var IDLE = 0.07;
 
             function recolor() {
                 var c = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#1d1d1f';
@@ -2318,7 +2318,7 @@
                 var t = (now < pulseUntil) ? 1 : target;
                 intensity += (t - intensity) * 0.045;
                 ctx.clearRect(0, 0, W, H);
-                var cx = W * 0.5, cy = H * 0.45, pull = Math.max(0, intensity - IDLE) * 0.00007;
+                var cx = W * 0.5, cy = H * 0.45, pull = Math.max(0, intensity - IDLE) * 0.00005;
                 for (var i = 0; i < N; i++) {
                     var p = pts[i];
                     p.vx += (cx - p.x) * pull; p.vy += (cy - p.y) * pull;
@@ -2326,11 +2326,11 @@
                     if (p.x < -10) p.x += W + 20; if (p.x > W + 10) p.x -= W + 20;
                     if (p.y < -10) p.y += H + 20; if (p.y > H + 10) p.y -= H + 20;
                 }
-                var maxd = 132, r = ink.r, g = ink.g, b = ink.b;
+                var maxd = 145, r = ink.r, g = ink.g, b = ink.b;
                 for (var a = 0; a < N; a++) for (var c2 = a + 1; c2 < N; c2++) {
                     var dx = pts[a].x - pts[c2].x, dy = pts[a].y - pts[c2].y, d = Math.sqrt(dx * dx + dy * dy);
                     if (d < maxd) {
-                        var al = (1 - d / maxd) * 0.42 * intensity;
+                        var al = (1 - d / maxd) * 0.38 * intensity;
                         if (al > 0.003) {
                             ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + al.toFixed(3) + ')';
                             ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[c2].x, pts[c2].y); ctx.stroke();
@@ -2338,11 +2338,11 @@
                     }
                 }
                 for (var j = 0; j < N; j++) {
-                    var al2 = 0.22 + 0.5 * intensity;
+                    var al2 = 0.18 + 0.46 * intensity;
                     ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + al2.toFixed(3) + ')';
                     ctx.beginPath(); ctx.arc(pts[j].x, pts[j].y, pts[j].r, 0, 6.2832); ctx.fill();
                 }
-                canvas.style.opacity = Math.min(0.42, intensity * 0.6).toFixed(3);
+                canvas.style.opacity = Math.min(0.36, intensity * 0.52).toFixed(3);
                 raf = visible ? requestAnimationFrame(step) : null;
             }
             function start() { if (!raf && visible) raf = requestAnimationFrame(step); }
