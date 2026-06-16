@@ -77,11 +77,30 @@
             font-display: swap;
         }
 
+        /* Instrument Serif (OFL, self-hosted) — the display voice for the name:
+           an editorial serif against the sans body and the mono "system" voice. */
+        @font-face {
+            font-family: 'Instrument Serif';
+            src: url('fonts/InstrumentSerif-Normal.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Instrument Serif';
+            src: url('fonts/InstrumentSerif-Italic.woff2') format('woff2');
+            font-weight: 400;
+            font-style: italic;
+            font-display: swap;
+        }
+
         /* ------------------------------------------
            CSS Variables
            ------------------------------------------ */
         :root {
             --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --display: 'Instrument Serif', 'Times New Roman', Georgia, serif;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
             --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
             /* One restrained warm accent — the live "pen" of generation. Reserved
@@ -108,29 +127,30 @@
             --overlay: rgba(255, 255, 255, 0.98);
             --glow: rgba(0, 0, 0, 0.03);
             --glow-strong: rgba(255, 255, 255, 0.4);
-            --grain-opacity: 0.03;
+            --grain-opacity: 0.05;
             /* Monochrome "live node" ring on the current journey chapter */
             --node-ring: rgba(29, 29, 31, 0.16);
         }
 
-        /* Dark Theme */
+        /* Dark Theme — near-black, nudged a hair warm so the ember accent and the
+           "develop" photography feel of a piece, not a default dark UI. */
         [data-theme="dark"] {
-            --bg: #0A0A0A;
-            --bg-subtle: #111111;
-            --text: #F5F5F7;
-            --text-2: #86868B;
-            --text-3: #6E6E73;
-            --border: #1D1D1F;
-            --border-h: #2C2C2E;
-            --card: #111111;
-            --card-hover: #161616;
-            --tag-bg: #1D1D1F;
-            --tag-text: #98989D;
-            --overlay: rgba(10, 10, 10, 0.98);
+            --bg: #0B0A09;
+            --bg-subtle: #131210;
+            --text: #F4F2EF;
+            --text-2: #8A8782;
+            --text-3: #6E6B66;
+            --border: #201E1B;
+            --border-h: #2E2B27;
+            --card: #131210;
+            --card-hover: #181714;
+            --tag-bg: #201E1B;
+            --tag-text: #9A968F;
+            --overlay: rgba(11, 10, 9, 0.98);
             --glow: rgba(255, 255, 255, 0.03);
             --glow-strong: rgba(255, 255, 255, 0.16);
-            --grain-opacity: 0.04;
-            --node-ring: rgba(245, 245, 247, 0.20);
+            --grain-opacity: 0.065;
+            --node-ring: rgba(244, 242, 239, 0.20);
             --accent: #D98A5B;
             --accent-soft: rgba(217, 138, 91, 0.14);
             --accent-line: rgba(217, 138, 91, 0.30);
@@ -183,6 +203,91 @@
         ::selection {
             background: var(--text);
             color: var(--bg);
+        }
+
+        /* Custom cursor — a warm "pen" dot with a trailing ring. Shown only on
+           fine pointers with motion allowed (the .has-cursor class is added by JS,
+           so no-JS and touch keep the native cursor). */
+        .cursor {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9998;
+            pointer-events: none;
+            display: none;
+            mix-blend-mode: normal;
+        }
+
+        .has-cursor .cursor {
+            display: block;
+        }
+
+        .cursor-dot,
+        .cursor-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 50%;
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            margin: -3px 0 0 -3px;
+            background: var(--accent);
+            transition: opacity 0.2s ease;
+        }
+
+        .cursor-ring {
+            width: 30px;
+            height: 30px;
+            margin: -15px 0 0 -15px;
+            border: 1px solid var(--border-h);
+            transition: width 0.25s var(--ease-cot), height 0.25s var(--ease-cot),
+                margin 0.25s var(--ease-cot), border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .cursor.is-hover .cursor-ring {
+            width: 46px;
+            height: 46px;
+            margin: -23px 0 0 -23px;
+            border-color: var(--accent);
+            background: var(--accent-soft);
+        }
+
+        .cursor.is-hover .cursor-dot {
+            opacity: 0;
+        }
+
+        .cursor.is-down .cursor-ring {
+            width: 22px;
+            height: 22px;
+            margin: -11px 0 0 -11px;
+        }
+
+        @media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+            .has-cursor,
+            .has-cursor a,
+            .has-cursor button,
+            .has-cursor .card,
+            .has-cursor input,
+            .has-cursor [role="button"] {
+                cursor: none;
+            }
+        }
+
+        /* Latent field — fixed behind the content (above the page background,
+           below the text). Opacity is driven in JS; it rests near-invisible and
+           quickens while thinking. */
+        #field {
+            position: fixed;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.9s var(--ease);
         }
 
         a {
@@ -321,11 +426,12 @@
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 7vw, 4rem);
-            font-weight: 500;
-            letter-spacing: -0.03em;
-            line-height: 1.08;
-            margin-bottom: 1rem;
+            font-family: var(--display);
+            font-size: clamp(3.4rem, 11.5vw, 7.5rem);
+            font-weight: 400;
+            letter-spacing: -0.015em;
+            line-height: 0.96;
+            margin-bottom: 1.1rem;
             /* visible so the latent blur isn't clipped as each letter resolves */
             overflow: visible;
         }
@@ -335,20 +441,26 @@
         }
 
         /* The name resolves out of latent noise: each letter denoises (blur →
-           sharp, settling up into place) on a left-to-right sweep. JS stamps a
-           per-letter --ci index for the sweep; with no JS every letter shares
-           delay 0 and they crystallize together — still graceful. Only
-           opacity/transform/filter animate, so widths never reflow. */
+           sharp, settling up into place) on a left-to-right sweep, while JS
+           scrambles the glyph before it locks. JS stamps a per-letter --ci index
+           for the sweep; with no JS every letter shares delay 0 and they
+           crystallize together — still graceful. Only opacity/transform/filter
+           animate, so widths never reflow. */
         .hero-char {
             display: inline-block;
-            font-weight: 400;
-            animation: crystal 0.72s var(--ease-cot) both;
-            animation-delay: calc(var(--ci, 0) * 0.042s + 0.1s);
+            animation: crystal 0.82s var(--ease-cot) both;
+            animation-delay: calc(var(--ci, 0) * 0.05s + 0.45s);
             animation-play-state: paused;
+            will-change: transform, opacity, filter;
         }
 
         .is-ready .hero-char {
             animation-play-state: running;
+        }
+
+        /* A char mid-scramble wears the warm "pen" tint, cooling to ink as it locks. */
+        .hero-char.scrambling {
+            color: var(--accent);
         }
 
         /* Role line — composed token by token, with a single mid-line revision
@@ -1166,10 +1278,13 @@
         /* Photographs "develop" — they resolve from a low-fidelity latent state
            (blurred, desaturated, slightly over-scaled) to full resolution as their
            card generates. Purely compositor-friendly (filter/transform). */
+        /* Photographs "develop": from a warm, washed, low-fidelity latent state
+           (blurred, desaturated, sepia bloom) to full resolution — a print coming
+           up in the tray. Compositor-friendly (filter/transform only). */
         .develop-img img {
-            filter: blur(16px) saturate(0.45) contrast(0.92);
-            transform: scale(1.06);
-            transition: filter 0.95s var(--ease-cot), transform 0.95s var(--ease-cot);
+            filter: blur(18px) saturate(0.25) brightness(1.07) sepia(0.32) contrast(0.92);
+            transform: scale(1.07);
+            transition: filter 1.15s var(--ease-cot), transform 1.15s var(--ease-cot);
             transition-delay: calc(var(--reveal-i, 0) * 0.11s + 0.12s);
             will-change: filter, transform;
         }
@@ -1665,6 +1780,13 @@
 
 <body>
 
+    <!-- Latent field: a quiet generative substrate — a mind at rest that quickens
+         while a scene is thinking, then settles. Decorative; pointer-events none. -->
+    <canvas id="field" aria-hidden="true"></canvas>
+
+    <!-- Custom cursor: a warm "pen" dot with a trailing ring (fine pointers only). -->
+    <div class="cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-dot"></span></div>
+
     <a href="#main" class="skip-link"><span data-en>Skip to content</span><span data-de>Zum Inhalt
             springen</span></a>
 
@@ -1676,6 +1798,20 @@
             <a href="#work" class="nav-link"><span data-en>Work</span><span data-de>Arbeiten</span></a>
             <a href="#contact" class="nav-link"><span data-en>Contact</span><span data-de>Kontakt</span></a>
             <div class="nav-sep"></div>
+            <button class="btn-icon btn-sound" onclick="toggleSound()" aria-label="Toggle sound" aria-pressed="false">
+                <svg data-icon="sound-off" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 9v6h4l5 4V5L8 9H4z" />
+                    <line x1="22" y1="9" x2="16" y2="15" />
+                    <line x1="16" y1="9" x2="22" y2="15" />
+                </svg>
+                <svg data-icon="sound-on" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+                    <path d="M4 9v6h4l5 4V5L8 9H4z" />
+                    <path d="M16 8.5a4 4 0 0 1 0 7" />
+                    <path d="M18.5 6a7 7 0 0 1 0 12" />
+                </svg>
+            </button>
             <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span
                     data-en>DE</span><span data-de>EN</span></button>
             <button class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
@@ -2141,6 +2277,120 @@
             } catch (e) { }
         })();
 
+        /* Latent field — a quiet token/attention substrate behind everything: a
+           mind at rest (a faint drift) that quickens — brighter, more connected,
+           gently converging — while a scene thinks, then settles. rAF pauses when
+           the tab is hidden; reduced-motion replaces it with an inert stub. */
+        (function () {
+            var canvas = document.getElementById('field');
+            if (!canvas || matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                window.__field = { active: function () { }, pulse: function () { }, recolor: function () { } };
+                return;
+            }
+            var ctx = canvas.getContext('2d');
+            var dpr = Math.min(window.devicePixelRatio || 1, 2);
+            var W = 0, H = 0, pts = [], N = 0, ink = { r: 29, g: 29, b: 31 };
+            var intensity = 0.0, target = 0.08, pulseUntil = 0, raf = null, visible = true;
+            var IDLE = 0.08;
+
+            function recolor() {
+                var c = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#1d1d1f';
+                c = c.replace('#', ''); if (c.length === 3) c = c.split('').map(function (x) { return x + x; }).join('');
+                var n = parseInt(c, 16); if (!isNaN(n)) ink = { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+            }
+            function seed() {
+                pts = [];
+                for (var i = 0; i < N; i++) pts.push({
+                    x: Math.random() * W, y: Math.random() * H,
+                    vx: (Math.random() - 0.5) * 0.13, vy: (Math.random() - 0.5) * 0.13,
+                    r: Math.random() * 1.3 + 0.5
+                });
+            }
+            function resize() {
+                W = canvas.clientWidth; H = canvas.clientHeight;
+                canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+                ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+                N = Math.max(28, Math.min(72, Math.round(W * H / 26000)));
+                recolor(); seed();
+            }
+            function step() {
+                var now = performance.now();
+                var t = (now < pulseUntil) ? 1 : target;
+                intensity += (t - intensity) * 0.045;
+                ctx.clearRect(0, 0, W, H);
+                var cx = W * 0.5, cy = H * 0.45, pull = Math.max(0, intensity - IDLE) * 0.00007;
+                for (var i = 0; i < N; i++) {
+                    var p = pts[i];
+                    p.vx += (cx - p.x) * pull; p.vy += (cy - p.y) * pull;
+                    p.x += p.vx; p.y += p.vy; p.vx *= 0.996; p.vy *= 0.996;
+                    if (p.x < -10) p.x += W + 20; if (p.x > W + 10) p.x -= W + 20;
+                    if (p.y < -10) p.y += H + 20; if (p.y > H + 10) p.y -= H + 20;
+                }
+                var maxd = 132, r = ink.r, g = ink.g, b = ink.b;
+                for (var a = 0; a < N; a++) for (var c2 = a + 1; c2 < N; c2++) {
+                    var dx = pts[a].x - pts[c2].x, dy = pts[a].y - pts[c2].y, d = Math.sqrt(dx * dx + dy * dy);
+                    if (d < maxd) {
+                        var al = (1 - d / maxd) * 0.42 * intensity;
+                        if (al > 0.003) {
+                            ctx.strokeStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + al.toFixed(3) + ')';
+                            ctx.beginPath(); ctx.moveTo(pts[a].x, pts[a].y); ctx.lineTo(pts[c2].x, pts[c2].y); ctx.stroke();
+                        }
+                    }
+                }
+                for (var j = 0; j < N; j++) {
+                    var al2 = 0.22 + 0.5 * intensity;
+                    ctx.fillStyle = 'rgba(' + r + ',' + g + ',' + b + ',' + al2.toFixed(3) + ')';
+                    ctx.beginPath(); ctx.arc(pts[j].x, pts[j].y, pts[j].r, 0, 6.2832); ctx.fill();
+                }
+                canvas.style.opacity = Math.min(0.42, intensity * 0.6).toFixed(3);
+                raf = visible ? requestAnimationFrame(step) : null;
+            }
+            function start() { if (!raf && visible) raf = requestAnimationFrame(step); }
+
+            window.__field = {
+                active: function (on) { target = on ? 1 : IDLE; start(); },
+                pulse: function (ms) { pulseUntil = performance.now() + (ms || 1500); start(); },
+                recolor: recolor
+            };
+            window.addEventListener('resize', resize);
+            document.addEventListener('visibilitychange', function () { visible = !document.hidden; if (visible) start(); });
+            resize(); start();
+            window.__field.pulse(2600);   /* ignite on first paint — the page "thinks" before it answers */
+        })();
+
+        /* Custom cursor — the warm "pen" dot tracks tightly; a ring trails with a
+           little lag and swells over anything interactive. Fine pointers + motion
+           only, so touch and reduced-motion keep the native cursor untouched. */
+        (function () {
+            if (!matchMedia('(pointer: fine)').matches || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            var cur = document.querySelector('.cursor');
+            if (!cur) return;
+            var dot = cur.querySelector('.cursor-dot'), ring = cur.querySelector('.cursor-ring');
+            document.documentElement.classList.add('has-cursor');
+            var mx = innerWidth / 2, my = innerHeight / 2, rx = mx, ry = my, raf = null, seen = false;
+            var HOVER = 'a,button,.card,.thought-pill,.social-link,.card-link,[role="button"],input,label';
+
+            function frame() {
+                rx += (mx - rx) * 0.2; ry += (my - ry) * 0.2;
+                ring.style.transform = 'translate(' + rx.toFixed(1) + 'px,' + ry.toFixed(1) + 'px)';
+                if (Math.abs(mx - rx) > 0.1 || Math.abs(my - ry) > 0.1) raf = requestAnimationFrame(frame);
+                else raf = null;
+            }
+            window.addEventListener('pointermove', function (e) {
+                if (e.pointerType && e.pointerType !== 'mouse') return;
+                mx = e.clientX; my = e.clientY;
+                dot.style.transform = 'translate(' + mx + 'px,' + my + 'px)';
+                if (!seen) { seen = true; cur.style.opacity = 1; ring.style.transform = dot.style.transform; rx = mx; ry = my; }
+                if (!raf) raf = requestAnimationFrame(frame);
+            }, { passive: true });
+            window.addEventListener('mouseover', function (e) { if (e.target.closest && e.target.closest(HOVER)) cur.classList.add('is-hover'); });
+            window.addEventListener('mouseout', function (e) { if (e.target.closest && e.target.closest(HOVER)) cur.classList.remove('is-hover'); });
+            window.addEventListener('pointerdown', function () { cur.classList.add('is-down'); });
+            window.addEventListener('pointerup', function () { cur.classList.remove('is-down'); });
+            document.addEventListener('mouseleave', function () { cur.style.opacity = 0; });
+            document.addEventListener('mouseenter', function () { cur.style.opacity = 1; });
+        })();
+
         /* Hero: the name resolves out of latent noise (a left-to-right denoise
            sweep), then the role line composes itself and revises once — the tell
            that a mind is authoring, not replaying a string. The receipt replays
@@ -2151,6 +2401,72 @@
             var h1 = document.querySelector('.hero-title');
             var chars = h1 ? Array.prototype.slice.call(h1.querySelectorAll('.hero-char')) : [];
             for (var i = 0; i < chars.length; i++) chars[i].style.setProperty('--ci', i);
+
+            /* The name resolves from noise: a per-letter glyph scramble that locks
+               left-to-right (in step with the CSS blur-in), then a quiet proximity
+               "lift" wave makes it feel alive under the cursor. Widths are frozen
+               on the final glyphs so the scramble never reflows the wordmark. */
+            (function () {
+                if (reduce || !chars.length) return;
+                var GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyzØ@#%&';
+                var finals = chars.map(function (c) { return c.textContent; });
+                function rnd() { return GLYPHS[(Math.random() * GLYPHS.length) | 0]; }
+                function isGlyph(i) { return finals[i] && finals[i].trim(); }
+                /* scramble immediately so the final name never flashes pre-font */
+                chars.forEach(function (c, i) { if (isGlyph(i)) { c.classList.add('scrambling'); c.textContent = rnd(); } });
+
+                function freezeWidths() {
+                    chars.forEach(function (c, i) { c.textContent = finals[i]; });
+                    var w = chars.map(function (c) { return c.getBoundingClientRect().width; });
+                    chars.forEach(function (c, i) {
+                        c.style.width = w[i] + 'px'; c.style.textAlign = 'center';
+                        if (isGlyph(i) && !c.__locked) { c.classList.add('scrambling'); c.textContent = rnd(); }
+                    });
+                }
+
+                function run() {
+                    freezeWidths();
+                    if (window.__field) window.__field.pulse(2200);   /* field breathes as the name forms */
+                    chars.forEach(function (c, i) {
+                        if (!isGlyph(i)) return;
+                        var lockAt = 470 + i * 52;
+                        var iv = setInterval(function () { if (!c.__locked) c.textContent = rnd(); }, 55);
+                        setTimeout(function () {
+                            clearInterval(iv); c.__locked = true;
+                            c.textContent = finals[i]; c.classList.remove('scrambling');
+                        }, lockAt);
+                    });
+                    setTimeout(liftWave, 470 + chars.length * 52 + 900);
+                }
+
+                function liftWave() {
+                    var centers = [], px = null, py = null, raf = null;
+                    var cur = chars.map(function () { return 0; }), tgt = cur.slice();
+                    chars.forEach(function (c) { c.style.animation = 'none'; });  /* free the transform */
+                    function measure() { centers = chars.map(function (c) { var r = c.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; }); }
+                    function frame() {
+                        var moving = false;
+                        for (var i = 0; i < chars.length; i++) {
+                            if (px !== null && centers[i]) {
+                                var dx = px - centers[i].x, dy = py - centers[i].y;
+                                var p = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / 150); p = p * p * (3 - 2 * p);
+                                tgt[i] = p;
+                            } else tgt[i] = 0;
+                            cur[i] += (tgt[i] - cur[i]) * 0.18;
+                            if (Math.abs(tgt[i] - cur[i]) > 0.002) moving = true;
+                            chars[i].style.transform = 'translateY(' + (-cur[i] * 9).toFixed(2) + 'px)';
+                        }
+                        raf = moving ? requestAnimationFrame(frame) : null;
+                    }
+                    measure();
+                    h1.addEventListener('pointerenter', measure);
+                    h1.addEventListener('pointermove', function (e) { px = e.clientX; py = e.clientY; if (!raf) raf = requestAnimationFrame(frame); });
+                    h1.addEventListener('pointerleave', function () { px = py = null; if (!raf) raf = requestAnimationFrame(frame); });
+                    window.addEventListener('resize', measure);
+                }
+
+                (document.fonts ? document.fonts.ready : Promise.resolve()).then(run);
+            })();
 
             var role = document.querySelector('.hero-role');
             var textSpan = role && role.querySelector('.role-text');
@@ -2259,6 +2575,7 @@
                 pill.classList.toggle('open', open);
                 pill.setAttribute('aria-expanded', open ? 'true' : 'false');
                 box.classList.toggle('open', open);
+                if (window.__sound) window.__sound.note('tick');
             });
         })();
 
@@ -2332,6 +2649,8 @@
                 var lines = scene.__lines, N = scene.__N;
                 if (!N) { collapse(scene); return; }
                 scene.__think.classList.add('is-thinking');
+                if (window.__field) window.__field.active(true);   /* the field quickens */
+                if (window.__sound) window.__sound.note('think');
                 var idx = 0;
                 (function next() {
                     if (scene.__abort) return;
@@ -2367,13 +2686,15 @@
                     if (scene.__closing && i === scene.__N - 1) { l.style.setProperty('--ck', 1); l.classList.remove('dim'); }
                     else { l.style.setProperty('--ck', 0); l.classList.add('dim'); }
                 }
-                if (scene.__closing) { scene.__think.classList.remove('is-thinking'); return; }
+                if (scene.__closing) { scene.__think.classList.remove('is-thinking'); if (window.__field) window.__field.active(false); return; }
                 collapse(scene);
             }
 
             function collapse(scene) {
                 scene.__think.classList.remove('is-thinking');
                 scene.__think.classList.add('collapsed');
+                if (window.__field) window.__field.active(false);   /* the field settles */
+                if (window.__sound) window.__sound.note('resolve');
                 var sec = clamp((performance.now() - (scene.__startTime || performance.now())) / 1000, 0.3, 1.5);
                 if (scene.__pill) {
                     scene.__pill.__sec = sec;
@@ -2447,6 +2768,7 @@
                 pill.classList.toggle('open', open);
                 pill.setAttribute('aria-expanded', open ? 'true' : 'false');
                 box.classList.toggle('open', open);
+                if (window.__sound) window.__sound.note('tick');
             }
 
             /* Wire up scenes: hold content back, attach a receipt to each. */
@@ -2524,11 +2846,52 @@
             h.setAttribute('data-theme', next);
             localStorage.setItem('theme', next);
             updateIcon(next);
+            if (window.__field) window.__field.recolor();
         }
 
         function updateIcon(t) {
             document.querySelector('[data-icon="sun"]').style.display = t === 'dark' ? 'none' : 'block';
             document.querySelector('[data-icon="moon"]').style.display = t === 'dark' ? 'block' : 'none';
+        }
+
+        /* Sound — opt-in, off by default. Soft, sparse, warm tones on the big
+           beats (think / resolve / interactions). The AudioContext is created on
+           the toggle gesture, satisfying autoplay policy. window.__sound.note() is
+           a no-op until enabled, so hooks elsewhere are free to call it always. */
+        var __soundOn = false, __actx = null, __master = null;
+        window.__sound = {
+            note: function (type) {
+                if (!__soundOn || !__actx) return;
+                var now = __actx.currentTime;
+                var sets = { tick: [659], think: [174.61, 196], resolve: [392, 523.25], open: [523.25], lock: [784] };
+                var f = sets[type] || [440];
+                var peak = type === 'think' ? 0.035 : (type === 'tick' ? 0.04 : 0.06);
+                var tail = type === 'think' ? 1.1 : 0.55;
+                for (var i = 0; i < f.length; i++) {
+                    var o = __actx.createOscillator(), g = __actx.createGain();
+                    o.type = 'sine'; o.frequency.value = f[i];
+                    var t0 = now + i * 0.09;
+                    g.gain.setValueAtTime(0.0001, t0);
+                    g.gain.linearRampToValueAtTime(peak, t0 + 0.014);
+                    g.gain.exponentialRampToValueAtTime(0.0001, t0 + tail);
+                    o.connect(g); g.connect(__master);
+                    o.start(t0); o.stop(t0 + tail + 0.05);
+                }
+            }
+        };
+        function toggleSound() {
+            if (!__actx) {
+                try {
+                    __actx = new (window.AudioContext || window.webkitAudioContext)();
+                    __master = __actx.createGain(); __master.gain.value = 0.9; __master.connect(__actx.destination);
+                } catch (e) { __actx = null; }
+            }
+            if (__actx && __actx.state === 'suspended') __actx.resume();
+            __soundOn = !__soundOn;
+            var on = document.querySelector('[data-icon="sound-on"]'), off = document.querySelector('[data-icon="sound-off"]');
+            if (on && off) { on.style.display = __soundOn ? 'block' : 'none'; off.style.display = __soundOn ? 'none' : 'block'; }
+            var btn = document.querySelector('.btn-sound'); if (btn) btn.setAttribute('aria-pressed', __soundOn ? 'true' : 'false');
+            if (__soundOn) window.__sound.note('open');
         }
 
         /* Language toggle */
@@ -2552,105 +2915,6 @@
             });
         });
 
-
-        /* Cursor weight-wave on the hero name — variable font, rAF-smoothed.
-           Letter widths are frozen (measured at max weight) so the wave can
-           never reflow the name; weight eases toward a smoothstep falloff. */
-        (function () {
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            var h1 = document.querySelector('.hero h1');
-            if (!h1) return;
-            var chars = Array.prototype.slice.call(h1.querySelectorAll('.hero-char'));
-            if (!chars.length) return;
-            var REST = 400, MAX = 500, RADIUS = 170, EASE = 0.2;
-            var target = [], curr = [], centers = [], px = null, py = null, raf = null, ready = false;
-
-            function freeze() {
-                /* Reset to natural metrics before measuring so a re-freeze (on
-                   resize / orientation change) reads true widths at the new
-                   font-size rather than the previously frozen ones. */
-                chars.forEach(function (c) {
-                    c.style.display = 'inline-block';
-                    c.style.textAlign = 'center';
-                    c.style.width = 'auto';
-                    c.style.fontWeight = MAX;
-                });
-                var widths = chars.map(function (c) { return c.getBoundingClientRect().width; });
-                chars.forEach(function (c, i) {
-                    c.style.width = widths[i] + 'px';
-                    c.style.fontWeight = REST;
-                    target[i] = curr[i] = REST;
-                });
-                measureCenters();
-                ready = true;
-            }
-
-            function measureCenters() {
-                centers = chars.map(function (c) {
-                    var r = c.getBoundingClientRect();
-                    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-                });
-            }
-
-            function frame() {
-                var moving = false;
-                for (var i = 0; i < chars.length; i++) {
-                    if (px !== null && centers[i]) {
-                        var dx = px - centers[i].x, dy = py - centers[i].y;
-                        var p = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / RADIUS);
-                        p = p * p * (3 - 2 * p);
-                        target[i] = REST + p * (MAX - REST);
-                    }
-                    curr[i] += (target[i] - curr[i]) * EASE;
-                    if (Math.abs(target[i] - curr[i]) > 0.4) moving = true;
-                    chars[i].style.fontWeight = Math.round(curr[i]);
-                }
-                raf = moving ? requestAnimationFrame(frame) : null;
-            }
-
-            function kick() { if (!raf) raf = requestAnimationFrame(frame); }
-
-            /* Re-freeze whenever the rendered font-size actually changes (font
-               swap, viewport/vw clamp, orientation) — never on our own
-               width-setting, so there's no feedback loop. A ResizeObserver
-               catches size changes that don't fire a window 'resize'. */
-            var lastFS = '';
-            function maybeFreeze() {
-                var fs = getComputedStyle(h1).fontSize;
-                if (ready && fs === lastFS) return;
-                lastFS = fs;
-                freeze();
-            }
-            var freezeT = null;
-            function scheduleFreeze() {
-                if (freezeT) clearTimeout(freezeT);
-                freezeT = setTimeout(maybeFreeze, 120);
-            }
-            (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
-                lastFS = getComputedStyle(h1).fontSize;
-                freeze();
-            });
-            window.addEventListener('resize', scheduleFreeze);
-            if (window.ResizeObserver) {
-                try { new ResizeObserver(scheduleFreeze).observe(h1); } catch (e) { }
-            }
-            /* Measure centres once when the cursor arrives (and on resize via
-               scheduleFreeze) rather than on every move — re-reading every
-               glyph's rect per pointermove forced a layout flush each tick. */
-            h1.addEventListener('pointerenter', function () {
-                if (ready) measureCenters();
-            });
-            h1.addEventListener('pointermove', function (e) {
-                if (!ready) return;
-                px = e.clientX; py = e.clientY;
-                kick();
-            });
-            h1.addEventListener('pointerleave', function () {
-                px = py = null;
-                for (var i = 0; i < chars.length; i++) target[i] = REST;
-                kick();
-            });
-        })();
 
         /* Cursor-following spotlight on cards — rAF-smoothed and re-reads the
            card rect each frame, so the glow glides and stays glued to the
