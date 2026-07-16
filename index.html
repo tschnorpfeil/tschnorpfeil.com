@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Tobias Schnorpfeil</title>
     <meta name="description" content="Engineer & entrepreneur, working on digitalization, tech and innovation in a family business.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -219,6 +219,10 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             overflow-x: clip;
+            /* Vertical scrolling only — no pinch-zoom, no horizontal pan.
+               Backs up the viewport meta on iOS Safari, which ignores
+               user-scalable=no. */
+            touch-action: pan-y;
         }
 
         body {
