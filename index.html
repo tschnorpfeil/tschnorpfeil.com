@@ -1256,7 +1256,7 @@
            text after revealing so the bilingual toggle keeps working. */
         (function () {
             var root = document.documentElement;
-            if (!root.classList.contains('anim') || !('IntersectionObserver' in window)) return;
+            if (!root.classList.contains('anim')) return;
             var titles = Array.prototype.slice.call(document.querySelectorAll('.section-title'));
             if (!titles.length) return;
 
@@ -1304,16 +1304,11 @@
                 timers.push(setTimeout(function () { state.span.textContent = state.text; }, 60 + chars.length * 28 + 500));
             }
 
-            var obs = new IntersectionObserver(function (entries) {
-                entries.forEach(function (e) {
-                    if (e.isIntersecting && !e.target._resolved) {
-                        e.target._resolved = true;
-                        obs.unobserve(e.target);
-                        if (e.target._state) reveal(e.target._state);
-                    }
-                });
-            }, { threshold: 0, rootMargin: '0px 0px -35% 0px' });
-
+            /* Reveal a title when it reaches ~65% up the viewport — OR, for the
+               last section (which can never scroll that high), as soon as the
+               page is at the bottom and the title is on screen. A plain scroll +
+               resize check covers both cases and removes itself once every title
+               has resolved, so nothing is ever left stranded in ghost form. */
             var faces = document.fonts ? Promise.all([
                 document.fonts.load("540 1.75rem 'Geist'"),
                 document.fonts.load("400 1.75rem 'Geist Pixel Grid'"),
@@ -1321,7 +1316,27 @@
                 document.fonts.load("400 1.75rem 'Geist Pixel Line'")
             ]) : Promise.resolve();
             faces.then(function () {
-                titles.forEach(function (t) { t._state = prime(t); obs.observe(t); });
+                var pending = [];
+                titles.forEach(function (t) { t._state = prime(t); if (t._state) pending.push(t); });
+                function check() {
+                    var vh = window.innerHeight || document.documentElement.clientHeight;
+                    var se = document.scrollingElement || document.documentElement;
+                    var atEnd = (window.scrollY + vh) >= (se.scrollHeight - 2);
+                    pending = pending.filter(function (t) {
+                        var r = t.getBoundingClientRect();
+                        var reachedLine = r.top <= vh * 0.65 && r.bottom > 0;
+                        var visibleAtEnd = atEnd && r.top < vh && r.bottom > 0;
+                        if (reachedLine || visibleAtEnd) { t._resolved = true; reveal(t._state); return false; }
+                        return true;
+                    });
+                    if (!pending.length) {
+                        window.removeEventListener('scroll', check);
+                        window.removeEventListener('resize', check);
+                    }
+                }
+                window.addEventListener('scroll', check, { passive: true });
+                window.addEventListener('resize', check, { passive: true });
+                check();
             }).catch(function () {});
         })();
 
