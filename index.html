@@ -5,23 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tobias Schnorpfeil</title>
-    <meta name="description" content="Engineer, Entrepreneur & Creative">
+    <meta name="description" content="Engineer & entrepreneur, working on digitalization, tech and innovation in a family business.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+
+    <!-- Set theme + language before first paint (no flash of light for dark-mode users) -->
+    <script>
+        (function () {
+            try {
+                var el = document.documentElement;
+                var t = localStorage.getItem('theme') ||
+                    (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+                el.setAttribute('data-theme', t);
+                var l = localStorage.getItem('lang');
+                if (l) { el.setAttribute('data-lang', l); el.lang = l; }
+                else if ((navigator.language || '').startsWith('de')) {
+                    el.setAttribute('data-lang', 'de'); el.lang = 'de';
+                }
+            } catch (e) {}
+        })();
+    </script>
 
     <!-- SEO / GEO -->
     <link rel="canonical" href="https://tschnorpfeil.com">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Tobias Schnorpfeil">
     <meta name="geo.region" content="DE-RP">
-    <meta name="geo.placename" content="Trier">
+    <meta name="geo.placename" content="Treis-Karden">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://tschnorpfeil.com">
     <meta property="og:title" content="Tobias Schnorpfeil">
-    <meta property="og:description" content="Engineer, Entrepreneur & Creative">
+    <meta property="og:description" content="Engineer & entrepreneur, working on digitalization, tech and innovation in a family business.">
     <meta property="og:image" content="https://tschnorpfeil.com/og-image.png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -29,78 +46,123 @@
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Tobias Schnorpfeil">
-    <meta name="twitter:description" content="Engineer, Entrepreneur & Creative">
+    <meta name="twitter:description" content="Engineer & entrepreneur, working on digitalization, tech and innovation in a family business.">
     <meta name="twitter:image" content="https://tschnorpfeil.com/og-image.png">
 
     <style>
+        /* Hallmark · genre: modern-minimal · macrostructure: Long Document · theme: custom "CI-Cobalt"
+         * enrichment: none (typography-only) · nav: N5 floating pill · footer: Ft2 inline
+         * anchor hue: cobalt oklch(40.1% 0.128 254) (#00478A) · display: Geist · outlier: Geist Mono
+         * pre-emit critique: P5 H5 E5 S5 R5 V4
+         */
+
         /* ------------------------------------------
-           Self-hosted DM Sans (GDPR compliant)
+           Self-hosted Geist (GDPR compliant, no runtime CDN)
            ------------------------------------------ */
         @font-face {
-            font-family: 'DM Sans';
-            src: url('fonts/DMSans-Normal.woff2') format('woff2');
-            font-weight: 300 500;
+            font-family: 'Geist';
+            src: url('fonts/Geist-Variable.woff2') format('woff2');
+            font-weight: 100 900;
             font-style: normal;
             font-display: swap;
         }
 
         @font-face {
-            font-family: 'DM Sans';
-            src: url('fonts/DMSans-Italic.woff2') format('woff2');
-            font-weight: 300 400;
-            font-style: italic;
+            font-family: 'Geist Mono';
+            src: url('fonts/GeistMono-Variable.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Brand glyph only — used in exactly one place (the wordmark monogram) */
+        @font-face {
+            font-family: 'Geist Pixel Grid';
+            src: url('fonts/GeistPixel-Grid.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
             font-display: swap;
         }
 
         /* ------------------------------------------
-           CSS Variables
+           Design tokens (OKLCH, referenced by name)
            ------------------------------------------ */
         :root {
-            --font: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            --ease: cubic-bezier(0.16, 1, 0.3, 1);
-            --transition: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            --font-display: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --font-body: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+            --font-pixel: 'Geist Pixel Grid', var(--font-mono);
+
+            /* Type scale — major third (1.25), 16px base */
+            --text-xs: 0.78rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-md: 1.1875rem;
+            --text-lg: 1.375rem;
+            --text-xl: 1.75rem;
+            --text-display: clamp(2.75rem, 6vw + 0.4rem, 4.75rem);
+
+            /* 4-pt spacing scale */
+            --space-2xs: 0.5rem;
+            --space-xs: 0.75rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --space-2xl: 4.5rem;
+
+            /* Reading measure */
+            --measure: 40rem;
+            --measure-wide: 48rem;
+
+            --radius-pill: 100px;
+            --radius-tight: 6px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+            --dur-micro: 120ms;
+            --dur-short: 220ms;
+            --dur-long: 420ms;
         }
 
-        /* Light Theme */
+        /* Light — cool engineered near-white */
         [data-theme="light"] {
-            --bg: #FFFFFF;
-            --bg-subtle: #F7F7F5;
-            --text: #1D1D1F;
-            --text-2: #6B6B70;
-            --text-3: #6E6E73;
-            --border: #E8E8ED;
-            --border-h: #D2D2D7;
-            --card: #FFFFFF;
-            --card-hover: #FAFAFA;
-            --tag-bg: #F5F5F7;
-            --tag-text: #6E6E73;
-            --overlay: rgba(255, 255, 255, 0.98);
-            --glow: rgba(0, 0, 0, 0.03);
-            --glow-strong: rgba(255, 255, 255, 0.4);
+            --paper: oklch(99.1% 0.001 286);
+            --paper-2: oklch(97.2% 0.003 260);
+            --ink: oklch(20.4% 0.011 261);
+            --ink-2: oklch(45% 0.014 260);
+            --ink-3: oklch(53% 0.013 260);
+            --rule: oklch(90.5% 0.006 260);
+            --rule-2: oklch(85% 0.008 260);
+            --accent: oklch(40.1% 0.128 254);
+            --accent-bright: oklch(52% 0.17 256);
+            --accent-ink: oklch(99% 0.001 286);
+            --focus: oklch(52% 0.17 256);
+            --grid-line: oklch(52% 0.17 256 / 0.05);
+            --overlay: oklch(99.1% 0.001 286 / 0.82);
+            --grain-opacity: 0.022;
+        }
+
+        /* Dark — cool near-black, brightened accent for legibility */
+        [data-theme="dark"] {
+            --paper: oklch(16.5% 0.008 262);
+            --paper-2: oklch(20.5% 0.01 262);
+            --ink: oklch(96% 0.003 286);
+            --ink-2: oklch(72% 0.012 260);
+            --ink-3: oklch(60% 0.012 260);
+            --rule: oklch(27% 0.012 262);
+            --rule-2: oklch(33% 0.014 262);
+            --accent: oklch(70% 0.15 254);
+            --accent-bright: oklch(74% 0.155 256);
+            --accent-ink: oklch(16.5% 0.008 262);
+            --focus: oklch(74% 0.155 256);
+            --grid-line: oklch(74% 0.155 256 / 0.07);
+            --overlay: oklch(16.5% 0.008 262 / 0.82);
             --grain-opacity: 0.03;
         }
 
-        /* Dark Theme */
-        [data-theme="dark"] {
-            --bg: #0A0A0A;
-            --bg-subtle: #111111;
-            --text: #F5F5F7;
-            --text-2: #86868B;
-            --text-3: #6E6E73;
-            --border: #1D1D1F;
-            --border-h: #2C2C2E;
-            --card: #111111;
-            --card-hover: #161616;
-            --tag-bg: #1D1D1F;
-            --tag-text: #98989D;
-            --overlay: rgba(10, 10, 10, 0.98);
-            --glow: rgba(255, 255, 255, 0.03);
-            --glow-strong: rgba(255, 255, 255, 0.16);
-            --grain-opacity: 0.04;
-        }
-
         /* ------------------------------------------
-           Reset & Base
+           Reset & base
            ------------------------------------------ */
         *,
         *::before,
@@ -108,35 +170,35 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            transition: background-color 0.4s ease, color 0.3s ease, border-color 0.3s ease;
         }
 
         html {
             scroll-behavior: smooth;
-            scroll-padding-top: calc(56px + env(safe-area-inset-top, 0px));
+            scroll-padding-top: calc(84px + env(safe-area-inset-top, 0px));
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: clip;
         }
 
         body {
-            font-family: var(--font);
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.55;
-            transition: background var(--transition), color var(--transition);
-            overflow-x: hidden;
+            font-family: var(--font-body);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: var(--text-base);
+            font-weight: 400;
+            line-height: 1.65;
+            letter-spacing: -0.006em;
+            overflow-x: clip;
+            transition: background var(--dur-long) var(--ease-out), color var(--dur-short) var(--ease-out);
         }
 
-        /* Grain texture overlay */
+        /* Grain overlay (GDPR-safe inline data-uri) */
         body::after {
             content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             pointer-events: none;
-            z-index: 9999;
+            z-index: 60;
             opacity: var(--grain-opacity);
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
             background-repeat: repeat;
@@ -144,8 +206,8 @@
         }
 
         ::selection {
-            background: var(--text);
-            color: var(--bg);
+            background: var(--accent);
+            color: var(--accent-ink);
         }
 
         a {
@@ -153,203 +215,237 @@
             text-decoration: none;
         }
 
+        :focus-visible {
+            outline: 2px solid var(--focus);
+            outline-offset: 3px;
+            border-radius: 3px;
+        }
+
         /* ------------------------------------------
-           Navigation
+           Layout
+           ------------------------------------------ */
+        .wrap {
+            width: 100%;
+            max-width: var(--measure-wide);
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        /* ------------------------------------------
+           Nav — N5 floating pill
            ------------------------------------------ */
         .nav {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
+            top: calc(env(safe-area-inset-top, 0px) + 0.9rem);
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 100;
-            padding: env(safe-area-inset-top, 0px) max(2.5rem, env(safe-area-inset-right, 0px)) 0 max(2.5rem, env(safe-area-inset-left, 0px));
-            height: calc(56px + env(safe-area-inset-top, 0px));
+            width: min(calc(100% - 1.5rem), 48rem);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            backdrop-filter: blur(0);
-            -webkit-backdrop-filter: blur(0);
+            gap: var(--space-sm);
+            padding: 0.5rem 0.5rem 0.5rem 1rem;
+            border: 0.5px solid transparent;
+            border-radius: var(--radius-pill);
             background: transparent;
-            border-bottom: 0.5px solid transparent;
-            transition: all var(--transition);
-            -webkit-transform: translateZ(0);
-            transform: translateZ(0);
+            transition: background var(--dur-short) var(--ease-out),
+                border-color var(--dur-short) var(--ease-out),
+                box-shadow var(--dur-short) var(--ease-out);
         }
 
         .nav.scrolled {
-            backdrop-filter: saturate(180%) blur(24px);
-            -webkit-backdrop-filter: saturate(180%) blur(24px);
             background: var(--overlay);
-            border-bottom-color: var(--border);
+            border-color: var(--rule);
+            box-shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            backdrop-filter: saturate(180%) blur(20px);
         }
 
         .nav-name {
-            font-size: 0.8125rem;
-            font-weight: 500;
-            letter-spacing: 0.005em;
-            color: var(--text);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-display);
+            font-size: 0.9375rem;
+            font-weight: 550;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        /* The single Geist Pixel Grid moment — the brand monogram */
+        .monogram {
+            font-family: var(--font-pixel);
+            font-size: 1rem;
+            line-height: 1;
+            color: var(--accent);
+            letter-spacing: 0.02em;
+        }
+
+        [data-theme="dark"] .monogram {
+            color: var(--accent-bright);
         }
 
         .nav-right {
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.15rem;
         }
 
         .nav-link {
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-2);
-            padding: 0.375rem 0.75rem;
-            border-radius: 6px;
-            transition: color 0.2s ease;
-            letter-spacing: 0.005em;
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding: 0.4rem 0.7rem;
+            border-radius: var(--radius-tight);
+            white-space: nowrap;
+            transition: color var(--dur-micro) var(--ease-out), background var(--dur-micro) var(--ease-out);
         }
 
         .nav-link:hover {
-            color: var(--text);
+            color: var(--ink);
+            background: var(--paper-2);
         }
 
         .nav-sep {
             width: 1px;
-            height: 16px;
-            background: var(--border);
-            margin: 0 0.375rem;
+            height: 15px;
+            background: var(--rule-2);
+            margin: 0 0.3rem;
         }
 
         .btn-icon {
-            width: 32px;
+            min-width: 32px;
             height: 32px;
             border: none;
-            border-radius: 6px;
+            border-radius: var(--radius-tight);
             background: transparent;
-            color: var(--text-2);
+            color: var(--ink-2);
             cursor: pointer;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s ease;
-            font-family: var(--font);
+            transition: color var(--dur-micro) var(--ease-out), background var(--dur-micro) var(--ease-out);
+            font-family: var(--font-mono);
             font-size: 0.6875rem;
             font-weight: 500;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.03em;
         }
 
         .btn-icon:hover {
-            color: var(--text);
-            background: var(--tag-bg);
+            color: var(--ink);
+            background: var(--paper-2);
         }
 
         .btn-lang {
-            width: auto;
             padding: 0 0.5rem;
             text-transform: uppercase;
         }
 
         /* ------------------------------------------
-           Layout Container (wider, responsive)
-           ------------------------------------------ */
-        .wrap {
-            max-width: 960px;
-            margin: 0 auto;
-            padding: 0 2rem;
-        }
-
-        .wrap--narrow {
-            max-width: 640px;
-        }
-
-        /* ------------------------------------------
-           Hero
+           Hero / document masthead
            ------------------------------------------ */
         .hero {
             min-height: 100svh;
             display: flex;
             align-items: flex-end;
-            padding-top: calc(56px + env(safe-area-inset-top, 0px));
-            padding-bottom: 18svh;
+            padding-top: calc(96px + env(safe-area-inset-top, 0px));
+            padding-bottom: 16svh;
             position: relative;
         }
 
+        /* Blueprint grid — the one "unique touch", confined to the masthead,
+           faded out radially so it never reads as a full-page background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(to right, var(--grid-line) 0.5px, transparent 0.5px),
+                linear-gradient(to bottom, var(--grid-line) 0.5px, transparent 0.5px);
+            background-size: 2.25rem 2.25rem;
+            -webkit-mask-image: radial-gradient(120% 80% at 15% 90%, #000 0%, transparent 68%);
+            mask-image: radial-gradient(120% 80% at 15% 90%, #000 0%, transparent 68%);
+        }
+
         .hero-inner {
+            position: relative;
+            z-index: 1;
             width: 100%;
         }
 
         .hero h1 {
-            font-size: clamp(2.5rem, 7vw, 4rem);
-            font-weight: 500;
-            letter-spacing: -0.03em;
-            line-height: 1.08;
-            margin-bottom: 1.5rem;
+            font-family: var(--font-display);
+            font-size: var(--text-display);
+            font-weight: 560;
+            letter-spacing: -0.02em;
+            line-height: 1.02;
+            margin-bottom: var(--space-md);
             overflow: hidden;
         }
 
-        /* Animated typography: each word slides up */
         .hero-word {
             display: inline-block;
             opacity: 0;
             transform: translateY(100%);
-            animation: wordUp 0.85s var(--ease) forwards;
+            animation: wordUp 0.85s var(--ease-out) forwards;
         }
 
-        .hero-word:nth-child(1) {
-            animation-delay: 0.15s;
-        }
+        .hero-word:nth-child(1) { animation-delay: 0.14s; }
+        .hero-word:nth-child(2) { animation-delay: 0.26s; }
 
-        .hero-word:nth-child(2) {
-            animation-delay: 0.27s;
-        }
-
-        /* Per-letter weight; the cursor wave is rAF-smoothed in JS */
         .hero-char {
-            font-weight: 400;
+            font-weight: inherit;
         }
 
-        /* Hairline rule that draws in after the name */
         .hero-rule {
             height: 1px;
-            background: var(--border);
+            background: var(--rule);
             transform-origin: left center;
             opacity: 0;
-            margin-bottom: 1.75rem;
-            animation: drawRule 0.9s var(--ease) 0.6s forwards;
+            margin-bottom: var(--space-md);
+            animation: drawRule 0.9s var(--ease-out) 0.55s forwards;
         }
 
         .hero-desc {
-            font-size: 1.0625rem;
-            line-height: 1.65;
-            color: var(--text-2);
-            max-width: 560px;
-            font-weight: 300;
-            margin-bottom: 2.5rem;
+            max-width: var(--measure);
+            font-size: var(--text-md);
+            line-height: 1.6;
+            color: var(--ink-2);
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: var(--space-lg);
             opacity: 0;
-            animation: up 0.8s var(--ease) 0.74s forwards;
+            animation: up 0.8s var(--ease-out) 0.68s forwards;
         }
 
         .hero-social {
             display: flex;
-            gap: 0.5rem;
+            gap: var(--space-md);
             flex-wrap: wrap;
             opacity: 0;
-            animation: up 0.8s var(--ease) 0.87s forwards;
+            animation: up 0.8s var(--ease-out) 0.8s forwards;
         }
 
         .social-link {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-2);
-            padding: 0.4rem 0.875rem;
-            border: 0.5px solid var(--border);
-            border-radius: 100px;
-            transition: all 0.2s ease;
+            gap: 0.4rem;
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
         }
 
         .social-link:hover {
-            color: var(--text);
-            border-color: var(--border-h);
+            color: var(--ink);
+            border-bottom-color: var(--accent-bright);
         }
 
         .social-link svg {
@@ -357,404 +453,232 @@
             height: 13px;
         }
 
+        /* Scroll cue — left-aligned, fades in last, static after (no loop) */
+        .hero-scroll-wrap {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 5svh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-scroll {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-height: 44px;
+            padding: 0 0.5rem;
+            margin-left: -0.5rem;
+            pointer-events: auto;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            font-weight: 450;
+            letter-spacing: 0.02em;
+            color: var(--ink-3);
+            transition: color var(--dur-micro) var(--ease-out);
+            opacity: 0;
+            animation: up 0.8s var(--ease-out) 1s forwards;
+        }
+
+        .hero-scroll:hover { color: var(--ink); }
+
+        .hero-scroll svg {
+            width: 14px;
+            height: 14px;
+            transition: transform var(--dur-micro) var(--ease-out);
+        }
+
+        .hero-scroll:hover svg { transform: translateY(2px); }
+
         /* ------------------------------------------
-           Sections
+           Document sections
            ------------------------------------------ */
         section {
-            padding: 4.5rem 0;
+            padding: var(--space-2xl) 0;
         }
 
-        .section-line {
-            height: 0.5px;
-            background: var(--border);
-            border: none;
+        .section-head {
+            margin-bottom: var(--space-xl);
         }
 
-        .section-label {
-            font-size: 0.6875rem;
-            font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-3);
-            margin-bottom: 2.5rem;
+        .section-title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 540;
+            letter-spacing: -0.025em;
+            color: var(--ink);
         }
 
         /* ------------------------------------------
-           Timeline / Journey
+           Journey — document entries
            ------------------------------------------ */
-        .tl {
-            display: flex;
-            flex-direction: column;
-            gap: 2.75rem;
+        .journey {
+            position: relative;
+            padding-left: 1.75rem;
         }
 
-        .tl-item {
+        .entry {
+            position: relative;
             display: grid;
-            grid-template-columns: 100px 1fr;
-            gap: 2rem;
+            grid-template-columns: 7rem 1fr;
+            gap: var(--space-lg);
+            padding: var(--space-md) 0;
         }
 
-        .tl-time {
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-3);
-            padding-top: 0.125rem;
-            font-variant-numeric: tabular-nums;
+        /* Timeline connector — runs node-to-node, auto-length */
+        .entry:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: calc(4px - 1.75rem);
+            top: calc(var(--space-md) + 0.7rem - 1px);
+            height: 100%;
+            width: 1px;
+            background: var(--rule);
+            transform: translateX(-50%);
+        }
+
+        /* Timeline node — vertically centred on the year's first line */
+        .entry::after {
+            content: '';
+            position: absolute;
+            left: calc(4px - 1.75rem);
+            top: calc(var(--space-md) + 0.7rem - 5px);
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--paper);
+            border: 1.5px solid var(--rule-2);
+            transform: translateX(-50%);
+        }
+
+        .entry--now::after {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 15%, transparent);
+        }
+
+        [data-theme="dark"] .entry--now::after {
+            background: var(--accent-bright);
+            border-color: var(--accent-bright);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent-bright) 20%, transparent);
+        }
+
+        .entry-time {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            font-weight: 450;
+            color: var(--ink-3);
             letter-spacing: 0.01em;
+            font-variant-numeric: tabular-nums;
+            padding-top: 0.35rem;
         }
 
-        .tl-title {
-            font-size: 0.9375rem;
+        .entry--now .entry-time {
+            color: var(--accent);
             font-weight: 500;
-            letter-spacing: -0.005em;
-            margin-bottom: 0.125rem;
         }
 
-        .tl-title a {
-            color: inherit;
-            text-decoration: none;
-            transition: opacity 0.2s ease;
+        [data-theme="dark"] .entry--now .entry-time { color: var(--accent-bright); }
+
+        .entry-title {
+            font-family: var(--font-display);
+            font-size: var(--text-md);
+            font-weight: 530;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.15rem;
+            color: var(--ink);
         }
 
-        .tl-title a:hover {
-            opacity: 0.6;
+        /* Current role leads the document */
+        .entry--now .entry-title { font-size: var(--text-lg); }
+        .entry--now .entry-desc { color: var(--ink); }
+
+        /* Old media recedes */
+        .entry--muted .entry-title { font-weight: 480; color: var(--ink-2); }
+        .entry--muted .entry-desc { color: var(--ink-3); }
+
+        .entry-title a {
+            border-bottom: 1px solid var(--rule-2);
+            transition: border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
         }
 
-        .tl-sub {
-            font-size: 0.8125rem;
+        .entry-title a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent-bright);
+        }
+
+        [data-theme="dark"] .entry-title a:hover {
+            color: var(--accent-bright);
+        }
+
+        .entry-sub {
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            margin-bottom: var(--space-xs);
+        }
+
+        .entry-desc {
+            font-size: var(--text-base);
             font-weight: 400;
-            color: var(--text-2);
-            margin-bottom: 0.5rem;
+            line-height: 1.6;
+            color: var(--ink-2);
+            max-width: 34rem;
         }
 
-        .tl-desc {
-            font-size: 0.8125rem;
-            font-weight: 300;
-            line-height: 1.65;
-            color: var(--text-2);
-        }
-
-        .tl-tags {
+        .tags {
             display: flex;
-            gap: 0.3rem;
+            gap: var(--space-2xs);
             flex-wrap: wrap;
-            margin-top: 0.625rem;
+            margin-top: var(--space-sm);
         }
 
         .tag {
-            font-size: 0.625rem;
-            font-weight: 500;
-            letter-spacing: 0.03em;
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            background: var(--tag-bg);
-            color: var(--tag-text);
+            font-family: var(--font-mono);
+            font-size: 0.6875rem;
+            font-weight: 450;
+            letter-spacing: 0.01em;
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-tight);
+            border: 0.5px solid var(--rule);
+            color: var(--ink-3);
         }
 
-        /* ------------------------------------------
-           Projects / Selected Work — Visual Cards
-           ------------------------------------------ */
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1.25rem;
-        }
-
-        .card {
-            position: relative;
-            border-radius: 12px;
-            border: 0.5px solid var(--border);
-            background: var(--card);
-            overflow: hidden;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-            transition: transform 0.4s var(--ease), border-color 0.3s ease, box-shadow 0.4s ease;
-            cursor: default;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--border-h);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 4px 16px rgba(0, 0, 0, 0.04);
-        }
-
-        /* Gradient border glow on hover */
-        .card::before {
-            content: '';
-            position: absolute;
-            inset: -1px;
-            border-radius: 13px;
-            padding: 1px;
-            background: linear-gradient(135deg, transparent 0%, var(--border-h) 50%, transparent 100%);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-            z-index: 2;
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        /* Cursor-following spotlight (soft-light keeps text legible) */
-        .card::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            mix-blend-mode: soft-light;
-            background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), var(--glow-strong), transparent 60%);
-        }
-
-        .card:hover::after {
-            opacity: 1;
-        }
-
-        /* Full-width card variant (spans 2 columns) */
-        .card--wide {
-            grid-column: 1 / -1;
-        }
-
-        /* Card with image thumbnail */
-        .card-media {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
-            background: var(--bg-subtle);
-        }
-
-        .card-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s var(--ease), filter 0.4s ease;
-        }
-
-        .card:hover .card-media img {
-            transform: scale(1.04);
-            filter: brightness(1.05);
-        }
-
-        /* Gradient placeholder for cards without images */
-        .card-media--gradient {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 70%, #533483 100%);
-            position: relative;
-        }
-
-        [data-theme="light"] .card-media--gradient {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-        }
-
-        /* Image collage strip for wide cards */
-        .card-collage {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 2px;
-            height: 220px;
-            overflow: hidden;
-            background: var(--border);
-        }
-
-        .card-collage picture {
-            display: block;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .card-collage img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s var(--ease), filter 0.4s ease;
-        }
-
-        .card-collage img:hover {
-            transform: scale(1.06);
-            z-index: 1;
-        }
-
-        .card:hover .card-collage img {
-            filter: brightness(1.02);
-        }
-
-        @media (max-width: 600px) {
-            .card-collage {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                grid-auto-rows: auto;
-                height: auto;
-                gap: 2px;
-            }
-
-            .card-collage picture:first-child {
-                grid-column: 1 / -1;
-            }
-
-            .card-collage picture {
-                display: block;
-            }
-
-            .card-collage img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                aspect-ratio: 1 / 1;
-            }
-
-            .card-collage picture:first-child img {
-                aspect-ratio: 16 / 9;
-            }
-        }
-
-        @media (min-width: 601px) and (max-width: 800px) {
-            .card-collage {
-                height: 180px;
-            }
-        }
-
-        /* YouTube video embed container */
-        .card-video {
-            position: relative;
-            width: 100%;
-            aspect-ratio: 16 / 9;
-            overflow: hidden;
-            background: #000;
-            cursor: pointer;
-        }
-
-        .card-video picture,
-        .card-media picture {
-            display: contents;
-        }
-
-        .card-video img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.6s var(--ease), opacity 0.3s ease;
-        }
-
-        .card:hover .card-video img {
-            transform: scale(1.03);
-        }
-
-        /* Play button overlay */
-        .card-play {
-            position: absolute;
-            inset: 0;
+        .entry-links {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .card-play-btn {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.3s var(--ease), background 0.3s ease;
-        }
-
-        .card:hover .card-play-btn {
-            transform: scale(1.08);
-            background: rgba(0, 0, 0, 0.85);
-        }
-
-        .card-play-btn svg {
-            width: 20px;
-            height: 20px;
-            fill: #fff;
-            margin-left: 2px;
-        }
-
-        /* Card with active iframe */
-        .card-video.playing img,
-        .card-video.playing .card-play {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .card-video iframe {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-            z-index: 0;
-        }
-
-        /* Card body */
-        .card-body {
-            padding: 1rem 1.25rem 1.25rem;
-        }
-
-        .card-type {
-            font-size: 0.625rem;
-            font-weight: 500;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--text-3);
-            margin-bottom: 0.25rem;
-        }
-
-        .card-title {
-            font-size: 0.9375rem;
-            font-weight: 500;
-            letter-spacing: -0.005em;
-            margin-bottom: 0.3rem;
-        }
-
-        .card-desc {
-            font-size: 0.8125rem;
-            font-weight: 300;
-            line-height: 1.6;
-            color: var(--text-2);
-        }
-
-        .card-links {
-            display: flex;
-            gap: 0.75rem;
-            margin-top: 0.625rem;
+            gap: var(--space-md);
             flex-wrap: wrap;
+            margin-top: var(--space-sm);
         }
 
-        .card-link {
+        .entry-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
-            font-size: 0.75rem;
-            font-weight: 400;
-            color: var(--text-2);
-            transition: color 0.2s ease;
+            gap: 0.3rem;
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
         }
 
-        .card-link:hover {
-            color: var(--text);
+        .entry-link:hover {
+            color: var(--ink);
+            border-bottom-color: var(--accent-bright);
         }
 
-        .card-link svg {
-            width: 10px;
-            height: 10px;
-            opacity: 0.5;
-            transition: transform 0.25s var(--ease), opacity 0.2s ease;
+        .entry-link svg {
+            width: 11px;
+            height: 11px;
+            opacity: 0.6;
+            transition: transform var(--dur-micro) var(--ease-out), opacity var(--dur-micro) var(--ease-out);
         }
 
-        .card-link:hover svg {
-            transform: translate(3px, -3px);
+        .entry-link:hover svg {
+            transform: translate(2px, -2px);
             opacity: 1;
         }
 
@@ -764,177 +688,126 @@
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-        }
-
-        .contact-item {
-            padding: 1.25rem 0;
-        }
-
-        .contact-item:first-child {
-            border-right: 0.5px solid var(--border);
-            padding-right: 2rem;
-        }
-
-        .contact-item:last-child {
-            padding-left: 2rem;
+            gap: var(--space-lg);
         }
 
         .contact-label {
-            font-size: 0.625rem;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
             font-weight: 500;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--text-3);
-            margin-bottom: 0.625rem;
+            letter-spacing: 0.03em;
+            color: var(--ink-3);
+            margin-bottom: var(--space-2xs);
         }
 
         .contact-email {
-            font-size: 0.875rem;
-            font-weight: 400;
-            color: var(--text);
-            transition: color 0.2s ease;
+            font-family: var(--font-display);
+            font-size: var(--text-md);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            border-bottom: 1px solid var(--rule-2);
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
         }
 
         .contact-email:hover {
-            color: var(--text-2);
+            color: var(--accent);
+            border-bottom-color: var(--accent-bright);
         }
 
+        [data-theme="dark"] .contact-email:hover { color: var(--accent-bright); }
+
         .contact-note {
-            font-size: 0.6875rem;
-            color: var(--text-3);
-            margin-top: 0.25rem;
-            font-weight: 300;
+            font-size: var(--text-sm);
+            color: var(--ink-3);
+            margin-top: 0.3rem;
+            font-weight: 400;
         }
 
         /* ------------------------------------------
-           Footer
+           Footer — Ft2 inline single line
            ------------------------------------------ */
         .footer {
-            padding: 2rem 0;
-            margin-top: 2rem;
+            padding: var(--space-lg) 0 var(--space-xl);
+            border-top: 0.5px solid var(--rule);
+            margin-top: var(--space-lg);
         }
 
         .footer-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.6875rem;
-            color: var(--text-3);
-            font-weight: 300;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--ink-3);
         }
 
         .footer-links {
             display: flex;
-            gap: 1rem;
+            gap: var(--space-md);
+            flex-wrap: wrap;
         }
 
         .footer-links a {
-            color: var(--text-3);
-            transition: color 0.2s ease;
-            font-weight: 400;
+            color: var(--ink-3);
+            transition: color var(--dur-micro) var(--ease-out);
         }
 
-        .footer-links a:hover {
-            color: var(--text);
-        }
+        .footer-links a:hover { color: var(--ink); }
 
         /* ------------------------------------------
-           Animations
+           Load-only hero orchestration (Long Document: no scroll reveals)
            ------------------------------------------ */
         @keyframes up {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-                filter: blur(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-                filter: blur(0);
-            }
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes wordUp {
-            from {
-                opacity: 0;
-                transform: translateY(100%);
-                filter: blur(6px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-                filter: blur(0);
-            }
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes drawRule {
-            from {
-                opacity: 0;
-                transform: scaleX(0);
-            }
-
-            to {
-                opacity: 1;
-                transform: scaleX(1);
-            }
-        }
-
-        .reveal {
-            opacity: 0;
-            transform: translateY(20px);
-            filter: blur(8px);
-            transition: opacity 0.7s var(--ease), transform 0.7s var(--ease), filter 0.7s var(--ease);
-            transition-delay: calc(var(--reveal-i, 0) * 0.12s);
-        }
-
-        .reveal.visible {
-            opacity: 1;
-            transform: translateY(0);
-            filter: blur(0);
+            from { opacity: 0; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
         }
 
         @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
 
-            .reveal,
-            .hero-word,
-            .hero-rule,
-            .hero-desc,
-            .hero-social {
-                opacity: 1;
-                transform: none;
-                filter: none;
-                transition: none;
-                animation: none;
+            .hero-word, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
             }
 
-            .card::after {
-                transition: none;
+            *, *::before, *::after {
+                animation-duration: 150ms !important;
+                transition-duration: 150ms !important;
             }
         }
 
-        /* Drop the decorative grain when the user asks for reduced data */
         @media (prefers-reduced-data: reduce) {
-            body::after {
-                display: none;
-            }
+            body::after { display: none; }
+            .hero::before { display: none; }
         }
 
-        /* Skip-to-content link for keyboard users */
         .skip-link {
             position: absolute;
             top: 0.5rem;
             left: 50%;
             z-index: 200;
-            transform: translate(-50%, -150%);
+            transform: translate(-50%, -160%);
             padding: 0.5rem 1rem;
-            background: var(--text);
-            color: var(--bg);
-            border-radius: 8px;
-            font-size: 0.8125rem;
+            background: var(--ink);
+            color: var(--paper);
+            border-radius: var(--radius-tight);
+            font-size: var(--text-sm);
             font-weight: 500;
-            transition: transform 0.2s var(--ease);
+            transition: transform var(--dur-short) var(--ease-out);
         }
 
         .skip-link:focus {
@@ -942,117 +815,56 @@
             outline: none;
         }
 
-        /* ------------------------------------------
-           Language Toggle
-           ------------------------------------------ */
         [data-lang="en"] [data-de],
         [data-lang="de"] [data-en] {
             display: none;
         }
 
-        /* ------------------------------------------
-           Responsive (Mobile < 600px)
-           ------------------------------------------ */
-        @media (max-width: 600px) {
-            .nav {
-                padding: env(safe-area-inset-top, 0px) max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px));
-            }
-
-            .nav-link,
-            .nav-sep {
-                display: none;
-            }
-
-            .wrap {
-                padding: 0 1.25rem;
-            }
-
-            section {
-                padding: 3.5rem 0;
-            }
-
-            .hero {
-                min-height: 100svh;
-                padding-bottom: 14svh;
-            }
-
-            .hero h1 {
-                font-size: clamp(2.5rem, 11vw, 3.5rem);
-                margin-bottom: 1.25rem;
-            }
-
-            .hero-desc {
-                font-size: 1rem;
-                margin-bottom: 2rem;
-            }
-
-            .social-link {
-                font-size: 0.8125rem;
-                padding: 0.5rem 1rem;
-                gap: 0.4rem;
-            }
-
-            .social-link svg {
-                width: 14px;
-                height: 14px;
-            }
-
-            .tl-item {
-                grid-template-columns: 1fr;
-                gap: 0.25rem;
-            }
-
-            .projects-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .card--wide {
-                grid-column: auto;
-            }
-
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-item:first-child {
-                border-right: none;
-                border-bottom: 0.5px solid var(--border);
-                padding-right: 0;
-                padding-bottom: 1.25rem;
-            }
-
-            .contact-item:last-child {
-                padding-left: 0;
-                padding-top: 1.25rem;
-            }
-
-            .footer-inner {
-                flex-direction: column;
-                gap: 0.75rem;
-            }
+        /* Short viewports (landscape phones): the cue would crowd the fold */
+        @media (max-height: 620px) {
+            .hero-scroll-wrap { display: none; }
         }
 
-        /* Medium screens */
-        @media (min-width: 601px) and (max-width: 800px) {
-            .projects-grid {
-                grid-template-columns: 1fr;
+        /* ------------------------------------------
+           Responsive
+           ------------------------------------------ */
+        @media (max-width: 720px) {
+            .wrap { padding: 0 var(--space-md); }
+
+            .nav {
+                width: calc(100% - 1.25rem);
+                padding: 0.4rem 0.4rem 0.4rem 0.85rem;
             }
 
-            .card--wide {
-                grid-column: auto;
+            .nav-link, .nav-sep { display: none; }
+
+            section { padding: var(--space-xl) 0; }
+
+            .hero { padding-bottom: 12svh; }
+
+            .entry {
+                grid-template-columns: 1fr;
+                gap: var(--space-2xs);
+                padding-left: 1.25rem;
             }
+
+            .entry-time { padding-top: 0; }
+
+            .entry::after,
+            .entry:not(:last-child)::before { left: 3px; }
+
+            .entry::after { top: calc(var(--space-md) + 0.15rem); }
+
+            .entry:not(:last-child)::before { top: calc(var(--space-md) + 0.15rem + 4px); }
+
+            .contact-grid { grid-template-columns: 1fr; }
         }
     </style>
     <noscript>
         <style>
-            .reveal,
-            .hero-word,
-            .hero-rule,
-            .hero-desc,
-            .hero-social {
+            .hero-word, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
                 opacity: 1 !important;
                 transform: none !important;
-                filter: none !important;
                 animation: none !important;
             }
         </style>
@@ -1061,195 +873,133 @@
 
 <body>
 
-    <a href="#main" class="skip-link"><span data-en>Skip to content</span><span data-de>Zum Inhalt
-            springen</span></a>
+    <a href="#main" class="skip-link"><span data-en>Skip to content</span><span data-de>Zum Inhalt springen</span></a>
 
-    <!-- NAVIGATION -->
+    <!-- NAV — N5 floating pill -->
     <nav class="nav">
-        <span class="nav-name">Tobias Schnorpfeil</span>
+        <a href="#main" class="nav-name"><span class="monogram" aria-hidden="true">TS</span> Tobias Schnorpfeil</a>
         <div class="nav-right">
             <a href="#journey" class="nav-link"><span data-en>Journey</span><span data-de>Werdegang</span></a>
-            <a href="#work" class="nav-link"><span data-en>Work</span><span data-de>Arbeiten</span></a>
             <a href="#contact" class="nav-link"><span data-en>Contact</span><span data-de>Kontakt</span></a>
             <div class="nav-sep"></div>
-            <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span
-                    data-en>DE</span><span data-de>EN</span></button>
+            <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span data-en>DE</span><span data-de>EN</span></button>
             <button class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
-                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.5" stroke-linecap="round">
+                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
                     <circle cx="12" cy="12" r="5" />
-                    <line x1="12" y1="1" x2="12" y2="3" />
-                    <line x1="12" y1="21" x2="12" y2="23" />
-                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                    <line x1="1" y1="12" x2="3" y2="12" />
-                    <line x1="21" y1="12" x2="23" y2="12" />
-                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                 </svg>
-                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                    stroke-width="1.5" stroke-linecap="round" style="display:none">
+                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:none">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
             </button>
         </div>
     </nav>
 
-    <!-- HERO -->
+    <!-- HERO / masthead -->
     <section class="hero" id="main">
         <div class="wrap">
             <div class="hero-inner">
                 <h1 class="hero-title">
-                    <span class="hero-word"><span class="hero-char">T</span><span class="hero-char">o</span><span
-                            class="hero-char">b</span><span class="hero-char">i</span><span
-                            class="hero-char">a</span><span class="hero-char">s</span></span>&nbsp;<span
-                        class="hero-word"><span class="hero-char">S</span><span class="hero-char">c</span><span
-                            class="hero-char">h</span><span class="hero-char">n</span><span
-                            class="hero-char">o</span><span class="hero-char">r</span><span
-                            class="hero-char">p</span><span class="hero-char">f</span><span
-                            class="hero-char">e</span><span class="hero-char">i</span><span
-                            class="hero-char">l</span></span>
+                    <span class="hero-word"><span class="hero-char">T</span><span class="hero-char">o</span><span class="hero-char">b</span><span class="hero-char">i</span><span class="hero-char">a</span><span class="hero-char">s</span></span>&nbsp;<span class="hero-word"><span class="hero-char">S</span><span class="hero-char">c</span><span class="hero-char">h</span><span class="hero-char">n</span><span class="hero-char">o</span><span class="hero-char">r</span><span class="hero-char">p</span><span class="hero-char">f</span><span class="hero-char">e</span><span class="hero-char">i</span><span class="hero-char">l</span></span>
                 </h1>
                 <div class="hero-rule" aria-hidden="true"></div>
                 <p class="hero-desc">
-                    <span data-en>Civil Engineer, entrepreneur, and creative. Since 2021, I've been channeling my
-                        experience in engineering, media & marketing, tech, and digitalization into our family
-                        business.</span>
-                    <span data-de>Bauingenieur, Unternehmer und Kreativer. Seit 2021 bringe ich meine Erfahrungen aus
-                        Ingenieurwesen, Media & Marketing, Tech und Digitalisierung in unser Familienunternehmen
-                        ein.</span>
+                    <span data-en>Engineer and entrepreneur. After years in the startup and media world, I now work on digitalization, tech, and innovation in our family business.</span>
+                    <span data-de>Ingenieur und Unternehmer. Nach Jahren in der Start-up- und Medienbranche arbeite ich heute im Familienunternehmen an Digitalisierung, Tech und Innovation.</span>
                 </p>
                 <div class="hero-social">
-                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank"
-                        class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
-                        </svg>
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="noopener" class="social-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
                         LinkedIn
-                    </a>
-                    <a href="https://www.youtube.com/user/TSchnorpfeil" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                        </svg>
-                        YouTube
-                    </a>
-                    <a href="https://www.behance.net/tschnorpfeil" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M6.938 4.503c.702 0 1.34.06 1.92.188.577.13 1.07.33 1.485.61.41.28.733.65.96 1.12.225.47.34 1.05.34 1.73 0 .74-.17 1.36-.507 1.86-.338.5-.837.9-1.502 1.22.906.26 1.576.72 2.022 1.37.448.66.665 1.45.665 2.36 0 .75-.13 1.39-.41 1.93-.28.55-.67 1-1.16 1.35-.48.35-1.05.6-1.67.77-.66.16-1.32.25-2.01.25H0V4.51h6.938v-.007zM6.545 10.16c.6 0 1.096-.16 1.486-.48.39-.32.59-.81.59-1.48 0-.36-.06-.66-.18-.9-.12-.24-.29-.43-.5-.57-.21-.14-.46-.24-.74-.3-.28-.06-.6-.09-.93-.09H3.523v3.82h3.022zm.2 5.57c.36 0 .7-.04 1.01-.12.31-.08.58-.21.81-.39.23-.18.41-.42.54-.73.13-.3.2-.67.2-1.1 0-.87-.24-1.49-.72-1.88-.48-.38-1.1-.58-1.86-.58H3.523v4.8h3.222zM15.834 4.14h6.06v1.67h-6.06V4.14z" />
-                        </svg>
-                        Behance
-                    </a>
-                    <a href="https://www.instagram.com/tschnorpfeil/" target="_blank" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
-                        </svg>
-                        Instagram
                     </a>
                 </div>
             </div>
         </div>
+        <div class="wrap hero-scroll-wrap">
+            <a href="#journey" class="hero-scroll">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+                <span data-en>Journey</span><span data-de>Werdegang</span>
+            </a>
+        </div>
     </section>
-
-    <div class="wrap">
-        <hr class="section-line">
-    </div>
 
     <!-- JOURNEY -->
     <section id="journey">
         <div class="wrap">
-            <p class="section-label reveal"><span data-en>Journey</span><span data-de>Werdegang</span></p>
-            <div class="tl">
+            <div class="section-head">
+                <h2 class="section-title"><span data-en>Journey</span><span data-de>Werdegang</span></h2>
+            </div>
+            <div class="journey">
 
-                <div class="tl-item reveal">
-                    <span class="tl-time"><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
-                    <div class="tl-content">
-                        <p class="tl-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz
-                                Schnorpfeil Bau GmbH</a></p>
-                        <p class="tl-sub"><span data-en>Shareholder 3rd Generation</span><span data-de>Gesellschafter 3.
-                                Generation</span></p>
-                        <p class="tl-desc">
-                            <span data-en>Started on-site — four years as a construction manager in road and bridge
-                                building to understand the core of the business from the ground up. Now focused on
-                                management, digitalization, and group-wide initiatives.</span>
-                            <span data-de>Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und
-                                Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management,
-                                Digitalisierung und gruppenweite Themen.</span>
+                <div class="entry entry--now">
+                    <span class="entry-time"><span data-en>2021 — Now</span><span data-de>2021 — Heute</span></span>
+                    <div>
+                        <p class="entry-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz Schnorpfeil Bau GmbH</a></p>
+                        <p class="entry-sub"><span data-en>Shareholder, 3rd generation</span><span data-de>Gesellschafter, 3. Generation</span></p>
+                        <p class="entry-desc">
+                            <span data-en>Started on-site — four years as a construction manager in road and bridge building to understand the core of the business from the ground up. Now focused on management, digitalization, and group-wide initiatives across the Schnorpfeil group.</span>
+                            <span data-de>Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management, Digitalisierung und gruppenweite Themen der Schnorpfeil-Firmengruppe.</span>
                         </p>
-                        <div class="tl-tags">
-                            <span class="tag"><span data-en>Infrastructure</span><span
-                                    data-de>Infrastruktur</span></span>
-                            <span class="tag"><span data-en>Digitalization</span><span
-                                    data-de>Digitalisierung</span></span>
+                        <div class="tags">
+                            <span class="tag"><span data-en>Infrastructure</span><span data-de>Infrastruktur</span></span>
+                            <span class="tag"><span data-en>Digitalization</span><span data-de>Digitalisierung</span></span>
                             <span class="tag">Management</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="tl-item reveal">
-                    <span class="tl-time">2021 — 2023</span>
-                    <div class="tl-content">
-                        <p class="tl-title">HomeToGo</p>
-                        <p class="tl-sub">Product & Community Advisor</p>
-                        <p class="tl-desc">
-                            <span data-en>Following Mapify's acquisition, advised HomeToGo on product strategy and
-                                community growth — helping scale the platform's social reach and user engagement across
-                                international markets.</span>
-                            <span data-de>Nach der Übernahme von Mapify Beratung von HomeToGo in Produktstrategie und
-                                Community-Aufbau — Skalierung der Social-Media-Reichweite und Nutzerinteraktion auf
-                                internationalen Märkten.</span>
+                <div class="entry">
+                    <span class="entry-time">2021 — 2023</span>
+                    <div>
+                        <p class="entry-title">HomeToGo</p>
+                        <p class="entry-sub">Product &amp; Community Advisor</p>
+                        <p class="entry-desc">
+                            <span data-en>Following Mapify's acquisition, advised HomeToGo on product strategy and community growth — helping scale the platform's social reach and user engagement across international markets.</span>
+                            <span data-de>Nach der Übernahme von Mapify Beratung von HomeToGo in Produktstrategie und Community-Aufbau — Skalierung der Social-Media-Reichweite und Nutzerinteraktion auf internationalen Märkten.</span>
                         </p>
-                        <div class="tl-tags">
-                            <span class="tag"><span data-en>Product Strategy</span><span
-                                    data-de>Produktstrategie</span></span>
+                        <div class="tags">
+                            <span class="tag"><span data-en>Product Strategy</span><span data-de>Produktstrategie</span></span>
                             <span class="tag">Community</span>
                             <span class="tag">Travel-Tech</span>
                         </div>
                     </div>
                 </div>
 
-                <div class="tl-item reveal">
-                    <span class="tl-time">2017 — 2023</span>
-                    <div class="tl-content">
-                        <p class="tl-title">Mapify</p>
-                        <p class="tl-sub"><span data-en>Co-Founder</span><span data-de>Mitgründer</span></p>
-                        <p class="tl-desc">
-                            <span data-en>Travel-tech startup combining visual storytelling with interactive maps —
-                                building a global community of 250,000+ travelers in over 190 countries. Backed by
-                                Lakestar Ventures and Atlantic Labs, ultimately acquired by HomeToGo.</span>
-                            <span data-de>Travel-Tech-Startup, das visuelles Storytelling mit interaktiven Karten
-                                verband — Aufbau einer globalen Community von über 250.000 Reisenden in mehr als 190
-                                Ländern. Unterstützt von Lakestar Ventures und Atlantic Labs, letztlich an HomeToGo
-                                verkauft.</span>
+                <div class="entry">
+                    <span class="entry-time">2017 — 2023</span>
+                    <div>
+                        <p class="entry-title">Mapify</p>
+                        <p class="entry-sub"><span data-en>Co-Founder</span><span data-de>Mitgründer</span></p>
+                        <p class="entry-desc">
+                            <span data-en>Travel-tech startup combining visual storytelling with interactive maps — building a global community of 250,000+ travelers in over 190 countries. Backed by Lakestar Ventures and Atlantic Labs, ultimately acquired by HomeToGo.</span>
+                            <span data-de>Travel-Tech-Startup, das visuelles Storytelling mit interaktiven Karten verband — Aufbau einer globalen Community von über 250.000 Reisenden in mehr als 190 Ländern. Unterstützt von Lakestar Ventures und Atlantic Labs, letztlich an HomeToGo verkauft.</span>
                         </p>
-                        <div class="tl-tags">
+                        <div class="tags">
                             <span class="tag">Startup</span>
                             <span class="tag">Lakestar</span>
                             <span class="tag">Travel-Tech</span>
+                            <span class="tag">Exit</span>
+                        </div>
+                        <div class="entry-links">
+                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank" rel="noopener" class="entry-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
+                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/" target="_blank" rel="noopener" class="entry-link">Business Insider <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
                         </div>
                     </div>
                 </div>
 
-                <div class="tl-item reveal">
-                    <span class="tl-time">2014 — 2021</span>
-                    <div class="tl-content">
-                        <p class="tl-title"><span data-en>Film, Photography, Motion Graphics & 3D</span><span
-                                data-de>Film, Fotografie, Motion Graphics & 3D</span></p>
-                        <p class="tl-sub"><span data-en>Freelance & Personal Work</span><span data-de>Freelance &
-                                persönliche Arbeiten</span></p>
-                        <p class="tl-desc">
-                            <span data-en>Cinematic work for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others.
-                                From the arctic of Svalbard to the coasts of Thailand. Complemented by surreal 3D
-                                renders and motion graphics — featured in Aesthetica Magazine.</span>
-                            <span data-de>Cineastische Arbeiten für Porsche, Adidas, Jack Wolfskin, München Tourismus
-                                und weitere. Von der Arktis Svalbards bis zu den Küsten Thailands. Ergänzt durch
-                                surrealistische 3D-Renders und Motion Graphics — vorgestellt in Aesthetica
-                                Magazine.</span>
+                <div class="entry entry--muted">
+                    <span class="entry-time">2014 — 2021</span>
+                    <div>
+                        <p class="entry-title"><span data-en>Film, Photography, Motion Graphics &amp; 3D</span><span data-de>Film, Fotografie, Motion Graphics &amp; 3D</span></p>
+                        <p class="entry-sub"><span data-en>Freelance &amp; Personal Work</span><span data-de>Freelance &amp; persönliche Arbeiten</span></p>
+                        <p class="entry-desc">
+                            <span data-en>Cinematic work for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others. From the arctic of Svalbard to the coasts of Thailand. Complemented by surreal 3D renders and motion graphics.</span>
+                            <span data-de>Cineastische Arbeiten für Porsche, Adidas, Jack Wolfskin, München Tourismus und weitere. Von der Arktis Svalbards bis zu den Küsten Thailands. Ergänzt durch surrealistische 3D-Renders und Motion Graphics.</span>
                         </p>
-                        <div class="tl-tags">
+                        <div class="tags">
                             <span class="tag">Film</span>
                             <span class="tag"><span data-en>Photography</span><span data-de>Fotografie</span></span>
                             <span class="tag">Motion Graphics</span>
@@ -1258,217 +1008,31 @@
                     </div>
                 </div>
 
-                <div class="tl-item reveal">
-                    <span class="tl-time">2016</span>
-                    <div class="tl-content">
-                        <p class="tl-title">B.Sc. <span data-en>Civil Engineering</span><span
-                                data-de>Bauingenieurwesen</span></p>
-                        <p class="tl-sub"><span data-en>Technical University of Munich</span><span data-de>Technische
-                                Universität München</span></p>
+                <div class="entry">
+                    <span class="entry-time">2016</span>
+                    <div>
+                        <p class="entry-title">B.Sc. <span data-en>Civil Engineering</span><span data-de>Bauingenieurwesen</span></p>
+                        <p class="entry-sub"><span data-en>Technical University of Munich</span><span data-de>Technische Universität München</span></p>
                     </div>
                 </div>
 
             </div>
         </div>
     </section>
-
-    <div class="wrap">
-        <hr class="section-line">
-    </div>
-
-    <!-- SELECTED WORK -->
-    <section id="work">
-        <div class="wrap">
-            <p class="section-label reveal"><span data-en>Selected Work</span><span data-de>Ausgewählte Arbeiten</span>
-            </p>
-            <div class="projects-grid">
-
-                <!-- Video Card: 78° North — Olympus/OM SYSTEM -->
-                <div class="card reveal">
-                    <div class="card-video" data-video-id="Aogpku8g-PM">
-                        <picture>
-                            <source srcset="images/yt-78north.webp" type="image/webp">
-                            <img src="images/yt-78north.jpg" alt="78° North — Olympus/OM SYSTEM Cameras" width="1280" height="720" loading="lazy">
-                        </picture>
-                        <div class="card-play">
-                            <div class="card-play-btn">
-                                <svg viewBox="0 0 24 24">
-                                    <polygon points="6,3 20,12 6,21" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-type">Film / Olympus</p>
-                        <p class="card-title">78° North — Olympus/OM SYSTEM Cameras</p>
-                        <p class="card-desc">
-                            <span data-en>A cinematic journey through the arctic wilderness of Svalbard at 78° North,
-                                shot entirely on Olympus/OM SYSTEM cameras. Capturing raw polar landscapes in extreme
-                                conditions.</span>
-                            <span data-de>Eine cineastische Reise durch die arktische Wildnis Svalbards auf 78° Nord,
-                                komplett auf Olympus/OM SYSTEM Kameras gedreht. Aufnahmen polarer Landschaften unter
-                                extremen Bedingungen.</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Video Card: Adidas TERREX -->
-                <div class="card reveal">
-                    <div class="card-video" data-video-id="UUTV-BNikzE">
-                        <picture>
-                            <source srcset="images/yt-adidas-terrex.webp" type="image/webp">
-                            <img src="images/yt-adidas-terrex.jpg" alt="Adidas TERREX" width="480" height="360" loading="lazy">
-                        </picture>
-                        <div class="card-play">
-                            <div class="card-play-btn">
-                                <svg viewBox="0 0 24 24">
-                                    <polygon points="6,3 20,12 6,21" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-type">Film / Adidas</p>
-                        <p class="card-title">Adidas TERREX</p>
-                        <p class="card-desc">
-                            <span data-en>Brand film for Adidas TERREX — pushing the boundaries between outdoor
-                                performance and cinematic storytelling. Shot on location in rugged alpine
-                                terrain.</span>
-                            <span data-de>Markenfilm für Adidas TERREX — an der Grenze zwischen Outdoor-Performance und
-                                cineastischem Storytelling. Gedreht on location in alpinem Gelände.</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Video Card: Olympus Peru & Bolivia -->
-                <div class="card reveal">
-                    <div class="card-video" data-video-id="_stKu_f_7NQ">
-                        <picture>
-                            <source srcset="images/yt-olympus-peru.webp" type="image/webp">
-                            <img src="images/yt-olympus-peru.jpg" alt="Olympus/OM SYSTEM — Peru &amp; Bolivia"
-                                width="1280" height="720" loading="lazy">
-                        </picture>
-                        <div class="card-play">
-                            <div class="card-play-btn">
-                                <svg viewBox="0 0 24 24">
-                                    <polygon points="6,3 20,12 6,21" />
-                                </svg>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-type">Film / Olympus</p>
-                        <p class="card-title">Olympus/OM SYSTEM — Peru & Bolivia</p>
-                        <p class="card-desc">
-                            <span data-en>Commercial production for Olympus/OM SYSTEM across Peru and Bolivia — from the
-                                salt flats of Uyuni to the peaks of the Andes. A visual journey through South America's
-                                most dramatic landscapes.</span>
-                            <span data-de>Kommerzielle Produktion für Olympus/OM SYSTEM in Peru und Bolivien — von den
-                                Salzwüsten Uyunis bis zu den Gipfeln der Anden. Eine visuelle Reise durch Südamerikas
-                                dramatischste Landschaften.</span>
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Mapify Card -->
-                <div class="card reveal">
-                    <div class="card-media">
-                        <picture>
-                            <source srcset="images/mapify-illustration.webp" type="image/webp">
-                            <img src="images/mapify-illustration.jpg" alt="Mapify" width="1500" height="500" loading="lazy">
-                        </picture>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-type">Startup</p>
-                        <p class="card-title">Mapify</p>
-                        <p class="card-desc">
-                            <span data-en>Travel-tech platform combining visual storytelling with maps. 250K+ users
-                                across 190+ countries. Backed by Lakestar Ventures, acquired by HomeToGo.</span>
-                            <span data-de>Travel-Tech-Plattform, die visuelles Storytelling mit Karten verbindet. 250K+
-                                Nutzer in über 190 Ländern. Gefördert von Lakestar Ventures, übernommen von
-                                HomeToGo.</span>
-                        </p>
-                        <div class="card-links">
-                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank"
-                                class="card-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round">
-                                    <line x1="7" y1="17" x2="17" y2="7" />
-                                    <polyline points="7 7 17 7 17 17" />
-                                </svg></a>
-                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/"
-                                target="_blank" class="card-link">Business Insider <svg viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                                    <line x1="7" y1="17" x2="17" y2="7" />
-                                    <polyline points="7 7 17 7 17 17" />
-                                </svg></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Unreal Pieces Card (wide) -->
-                <div class="card card--wide reveal">
-                    <div class="card-collage">
-                        <picture>
-                            <source srcset="images/render-bed-ocean.webp" type="image/webp"><img
-                                src="images/render-bed-ocean.jpg" alt="Floating bed on ocean" width="1200" height="1500" loading="lazy">
-                        </picture>
-                        <picture>
-                            <source srcset="images/render-tree-moon.webp" type="image/webp"><img
-                                src="images/render-tree-moon.jpg" alt="Tree and moon reflected in water" width="1200" height="1500" loading="lazy">
-                        </picture>
-                        <picture>
-                            <source srcset="images/render-birds.webp" type="image/webp"><img
-                                src="images/render-birds.jpg" alt="Birds against blue sky" width="2000" height="1600" loading="lazy">
-                        </picture>
-                        <picture>
-                            <source srcset="images/render-cloud-tree.webp" type="image/webp"><img
-                                src="images/render-cloud-tree.jpg" alt="Cloud-crowned tree in water" width="2000" height="2000" loading="lazy">
-                        </picture>
-                        <picture>
-                            <source srcset="images/render-golden-sun.webp" type="image/webp"><img
-                                src="images/render-golden-sun.jpg" alt="Silhouette in golden light" width="2000" height="2500" loading="lazy">
-                        </picture>
-                    </div>
-                    <div class="card-body">
-                        <p class="card-type">3D / Digital Art</p>
-                        <p class="card-title">Unreal Pieces</p>
-                        <p class="card-desc">
-                            <span data-en>Surreal 3D landscapes where data dictates form. Floating beds, reflected rock
-                                formations, trees emerging from seascapes. Featured in Aesthetica Magazine.</span>
-                            <span data-de>Surrealistische 3D-Landschaften, in denen Daten die Form bestimmen. Schwebende
-                                Betten, gespiegelte Felsformationen, Bäume aus Meereslandschaften. Vorgestellt in
-                                Aesthetica Magazine.</span>
-                        </p>
-                        <div class="card-links">
-                            <a href="https://www.instagram.com/tschnorpfeil/" target="_blank"
-                                class="card-link">Instagram <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2" stroke-linecap="round">
-                                    <line x1="7" y1="17" x2="17" y2="7" />
-                                    <polyline points="7 7 17 7 17 17" />
-                                </svg></a>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <div class="wrap">
-        <hr class="section-line">
-    </div>
 
     <!-- CONTACT -->
     <section id="contact">
         <div class="wrap">
-            <p class="section-label reveal"><span data-en>Contact</span><span data-de>Kontakt</span></p>
-            <div class="contact-grid reveal">
-                <div class="contact-item">
+            <div class="section-head">
+                <h2 class="section-title"><span data-en>Contact</span><span data-de>Kontakt</span></h2>
+            </div>
+            <div class="contact-grid">
+                <div>
                     <p class="contact-label"><span data-en>Business</span><span data-de>Geschäftlich</span></p>
                     <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
                     <p class="contact-note">Heinz Schnorpfeil Bau GmbH</p>
                 </div>
-                <div class="contact-item">
+                <div>
                     <p class="contact-label"><span data-en>Personal</span><span data-de>Privat</span></p>
                     <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
                     <p class="contact-note"><span data-en>Everything else</span><span data-de>Alles andere</span></p>
@@ -1477,16 +1041,14 @@
         </div>
     </section>
 
-    <!-- FOOTER -->
+    <!-- FOOTER — Ft2 inline single line -->
     <footer class="footer">
         <div class="wrap">
             <div class="footer-inner">
-                <span>&copy; 2026 Tobias Schnorpfeil</span>
+                <span>© 2026 Tobias Schnorpfeil</span>
                 <div class="footer-links">
-                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank">LinkedIn</a>
-                    <a href="https://www.youtube.com/user/TSchnorpfeil" target="_blank">YouTube</a>
-                    <a href="https://www.behance.net/tschnorpfeil" target="_blank">Behance</a>
-                    <a href="https://www.instagram.com/tschnorpfeil/" target="_blank">Instagram</a>
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="noopener">LinkedIn</a>
+                    <a href="mailto:tobias@schnorpfeil.com">Email</a>
                 </div>
             </div>
         </div>
@@ -1501,7 +1063,6 @@
             localStorage.setItem('theme', next);
             updateIcon(next);
         }
-
         function updateIcon(t) {
             document.querySelector('[data-icon="sun"]').style.display = t === 'dark' ? 'none' : 'block';
             document.querySelector('[data-icon="moon"]').style.display = t === 'dark' ? 'block' : 'none';
@@ -1516,181 +1077,35 @@
             localStorage.setItem('lang', next);
         }
 
-        /* Smooth scroll for nav links */
-        document.querySelectorAll('.nav-link').forEach(function (l) {
+        /* In-page links: smooth scroll + move focus so the skip-link (and nav)
+           actually land keyboard / screen-reader users on the target. */
+        var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)');
+        document.querySelectorAll('a[href^="#"]').forEach(function (l) {
             l.addEventListener('click', function (e) {
+                var id = l.getAttribute('href');
+                if (id.length < 2) return;
+                var target = document.querySelector(id);
+                if (!target) return;
                 e.preventDefault();
-                var target = document.querySelector(l.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                target.scrollIntoView({ behavior: prefersReduced.matches ? 'auto' : 'smooth' });
+                if (target.tabIndex < 0) target.setAttribute('tabindex', '-1');
+                target.focus({ preventScroll: true });
             });
         });
 
-
-        /* Cursor weight-wave on the hero name — variable font, rAF-smoothed.
-           Letter widths are frozen (measured at max weight) so the wave can
-           never reflow the name; weight eases toward a smoothstep falloff. */
+        /* Init — theme + language are already set in <head> before first paint */
         (function () {
-            if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-            var h1 = document.querySelector('.hero h1');
-            if (!h1) return;
-            var chars = Array.prototype.slice.call(h1.querySelectorAll('.hero-char'));
-            if (!chars.length) return;
-            var REST = 400, MAX = 500, RADIUS = 170, EASE = 0.2;
-            var target = [], curr = [], centers = [], px = null, py = null, raf = null, ready = false;
+            updateIcon(document.documentElement.getAttribute('data-theme') || 'light');
 
-            function freeze() {
-                chars.forEach(function (c) { c.style.fontWeight = MAX; });
-                var widths = chars.map(function (c) { return c.getBoundingClientRect().width; });
-                chars.forEach(function (c, i) {
-                    c.style.display = 'inline-block';
-                    c.style.textAlign = 'center';
-                    c.style.width = widths[i] + 'px';
-                    c.style.fontWeight = REST;
-                    target[i] = curr[i] = REST;
-                });
-                ready = true;
-            }
-
-            function measureCenters() {
-                centers = chars.map(function (c) {
-                    var r = c.getBoundingClientRect();
-                    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-                });
-            }
-
-            function frame() {
-                var moving = false;
-                for (var i = 0; i < chars.length; i++) {
-                    if (px !== null && centers[i]) {
-                        var dx = px - centers[i].x, dy = py - centers[i].y;
-                        var p = Math.max(0, 1 - Math.sqrt(dx * dx + dy * dy) / RADIUS);
-                        p = p * p * (3 - 2 * p);
-                        target[i] = REST + p * (MAX - REST);
-                    }
-                    curr[i] += (target[i] - curr[i]) * EASE;
-                    if (Math.abs(target[i] - curr[i]) > 0.4) moving = true;
-                    chars[i].style.fontWeight = Math.round(curr[i]);
-                }
-                raf = moving ? requestAnimationFrame(frame) : null;
-            }
-
-            function kick() { if (!raf) raf = requestAnimationFrame(frame); }
-
-            (document.fonts ? document.fonts.ready : Promise.resolve()).then(function () {
-                freeze();
-                measureCenters();
-            });
-            window.addEventListener('resize', function () { if (ready) measureCenters(); });
-            h1.addEventListener('pointermove', function (e) {
-                if (!ready) return;
-                px = e.clientX; py = e.clientY;
-                measureCenters();
-                kick();
-            });
-            h1.addEventListener('pointerleave', function () {
-                px = py = null;
-                for (var i = 0; i < chars.length; i++) target[i] = REST;
-                kick();
-            });
-        })();
-
-        /* Cursor-following spotlight on cards — rAF-smoothed and re-reads the
-           card rect each frame, so the glow glides and stays glued to the
-           cursor even while the card lifts. */
-        document.querySelectorAll('.card').forEach(function (card) {
-            var tx = 50, ty = 50, cx = 50, cy = 50, lx = 0, ly = 0, active = false, raf = null;
-            function frame() {
-                var r = card.getBoundingClientRect();
-                tx = ((lx - r.left) / r.width) * 100;
-                ty = ((ly - r.top) / r.height) * 100;
-                cx += (tx - cx) * 0.18;
-                cy += (ty - cy) * 0.18;
-                card.style.setProperty('--mx', cx + '%');
-                card.style.setProperty('--my', cy + '%');
-                if (active || Math.abs(tx - cx) > 0.1 || Math.abs(ty - cy) > 0.1) raf = requestAnimationFrame(frame);
-                else raf = null;
-            }
-            card.addEventListener('pointerenter', function (e) {
-                active = true; lx = e.clientX; ly = e.clientY;
-                var r = card.getBoundingClientRect();
-                cx = tx = ((lx - r.left) / r.width) * 100;
-                cy = ty = ((ly - r.top) / r.height) * 100;
-                if (!raf) raf = requestAnimationFrame(frame);
-            });
-            card.addEventListener('pointermove', function (e) {
-                lx = e.clientX; ly = e.clientY;
-                if (!raf) raf = requestAnimationFrame(frame);
-            });
-            card.addEventListener('pointerleave', function () { active = false; });
-        });
-
-        /* YouTube video click-to-play */
-        document.querySelectorAll('.card-video').forEach(function (el) {
-            el.addEventListener('click', function () {
-                var videoId = el.getAttribute('data-video-id');
-                if (!videoId || el.classList.contains('playing')) return;
-                var iframe = document.createElement('iframe');
-                iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId + '?autoplay=1&rel=0';
-                iframe.allow = 'autoplay; encrypted-media';
-                iframe.allowFullscreen = true;
-                el.insertBefore(iframe, el.firstChild);
-                el.classList.add('playing');
-            });
-        });
-
-        /* Initialization */
-        (function () {
-            /* Theme */
-            var t = localStorage.getItem('theme') ||
-                (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
-            document.documentElement.setAttribute('data-theme', t);
-            updateIcon(t);
-
-            /* Language */
-            var l = localStorage.getItem('lang');
-            if (l) { document.documentElement.setAttribute('data-lang', l); document.documentElement.lang = l; }
-            else if ((navigator.language || '').startsWith('de')) {
-                document.documentElement.setAttribute('data-lang', 'de');
-                document.documentElement.lang = 'de';
-            }
-
-            /* Nav blur reveal on scroll */
+            /* Nav pill gains its surface once you leave the masthead */
             var nav = document.querySelector('.nav');
             var hero = document.querySelector('.hero');
             if (nav && hero) {
                 var navObs = new IntersectionObserver(function (entries) {
                     nav.classList.toggle('scrolled', !entries[0].isIntersecting);
-                }, { threshold: 0, rootMargin: '-56px 0px 0px 0px' });
+                }, { threshold: 0, rootMargin: '-72px 0px 0px 0px' });
                 navObs.observe(hero);
             }
-
-            /* Scroll reveal with per-batch staggered timing */
-            var obs = new IntersectionObserver(function (entries) {
-                var entering = [];
-                for (var k = 0; k < entries.length; k++) {
-                    if (entries[k].isIntersecting) entering.push(entries[k].target);
-                }
-                if (!entering.length) return;
-                /* Sort by DOM order for top-to-bottom stagger */
-                entering.sort(function (a, b) {
-                    var pos = a.compareDocumentPosition(b);
-                    return pos & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
-                });
-                for (var i = 0; i < entering.length; i++) {
-                    entering[i].style.setProperty('--reveal-i', i);
-                    entering[i].classList.add('visible');
-                    obs.unobserve(entering[i]);
-                    /* After the reveal finishes, drop the classes so elements
-                       (esp. cards) regain their own crisp hover transitions */
-                    (function (node, idx) {
-                        setTimeout(function () {
-                            node.classList.remove('reveal', 'visible');
-                            node.style.removeProperty('--reveal-i');
-                        }, idx * 120 + 850);
-                    })(entering[i], i);
-                }
-            }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-            document.querySelectorAll('.reveal').forEach(function (el) { obs.observe(el); });
         })();
     </script>
 </body>

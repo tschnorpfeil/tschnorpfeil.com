@@ -1,1 +1,7 @@
 .DS_Store
+
+# Local tooling / design-skill install (not part of the deployed site)
+.agents/
+.claude/
+.hallmark/
+skills-lock.json

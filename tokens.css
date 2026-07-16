@@ -1,0 +1,59 @@
+/* Hallmark · portable design tokens
+ * genre: modern-minimal · macrostructure: Long Document · theme: custom "CI-Cobalt"
+ * Source of truth mirrored inline in index.html <style>. Anchor: #00478A (Schnorpfeil CI).
+ */
+:root {
+  /* Fonts */
+  --font-display: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-body:    'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono:    'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+  --font-pixel:   'Geist Pixel Grid', var(--font-mono);
+
+  /* Type scale — major third (1.25) */
+  --text-xs: 0.78rem;  --text-sm: 0.875rem; --text-base: 1rem;
+  --text-md: 1.1875rem; --text-lg: 1.375rem; --text-xl: 1.75rem;
+  --text-2xl: 2.25rem;
+  --text-display: clamp(2.75rem, 6vw + 0.4rem, 4.75rem);
+
+  /* 4-pt spacing scale */
+  --space-3xs: 0.25rem; --space-2xs: 0.5rem; --space-xs: 0.75rem;
+  --space-sm: 1rem;     --space-md: 1.5rem;  --space-lg: 2rem;
+  --space-xl: 3rem;     --space-2xl: 4.5rem; --space-3xl: 7rem;
+
+  --measure: 40rem; --measure-wide: 48rem;
+  --radius-pill: 100px; --radius-card: 10px; --radius-tight: 6px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:  cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+}
+
+/* Light — cool engineered near-white */
+:root[data-theme="light"] {
+  --paper:        oklch(99.1% 0.001 286);
+  --paper-2:      oklch(97.2% 0.003 260);
+  --ink:          oklch(20.4% 0.011 261);
+  --ink-2:        oklch(45% 0.014 260);
+  --ink-3:        oklch(53% 0.013 260);
+  --rule:         oklch(90.5% 0.006 260);
+  --rule-2:       oklch(85% 0.008 260);
+  --accent:       oklch(40.1% 0.128 254); /* #00478A CI */
+  --accent-bright:oklch(52% 0.17 256);
+  --accent-ink:   oklch(99% 0.001 286);
+  --focus:        oklch(52% 0.17 256);
+}
+
+/* Dark — cool near-black, brightened accent */
+:root[data-theme="dark"] {
+  --paper:        oklch(16.5% 0.008 262);
+  --paper-2:      oklch(20.5% 0.01 262);
+  --ink:          oklch(96% 0.003 286);
+  --ink-2:        oklch(72% 0.012 260);
+  --ink-3:        oklch(60% 0.012 260);
+  --rule:         oklch(27% 0.012 262);
+  --rule-2:       oklch(33% 0.014 262);
+  --accent:       oklch(70% 0.15 254);
+  --accent-bright:oklch(74% 0.155 256);
+  --accent-ink:   oklch(16.5% 0.008 262);
+  --focus:        oklch(74% 0.155 256);
+}
