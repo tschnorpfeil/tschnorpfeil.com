@@ -170,7 +170,12 @@
             --accent-ink: oklch(99% 0.001 286);
             --focus: oklch(52% 0.17 256);
             --grid-line: oklch(52% 0.17 256 / 0.05);
-            --overlay: oklch(99.1% 0.001 286 / 0.82);
+            --glass-bg: oklch(99.1% 0.001 286 / 0.55);
+            --glass-bg-strong: oklch(99.1% 0.001 286 / 0.82);
+            --glass-border: oklch(80% 0.01 260 / 0.7);
+            --glass-hi: oklch(100% 0 0 / 0.6);
+            --glass-shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
+            --glass-shadow-strong: 0 1px 2px oklch(0% 0 0 / 0.05), 0 12px 32px oklch(0% 0 0 / 0.09);
             --grain-opacity: 0.022;
         }
 
@@ -188,7 +193,12 @@
             --accent-ink: oklch(16.5% 0.008 262);
             --focus: oklch(74% 0.155 256);
             --grid-line: oklch(74% 0.155 256 / 0.07);
-            --overlay: oklch(16.5% 0.008 262 / 0.82);
+            --glass-bg: oklch(20% 0.01 262 / 0.5);
+            --glass-bg-strong: oklch(18% 0.01 262 / 0.72);
+            --glass-border: oklch(45% 0.02 262 / 0.5);
+            --glass-hi: oklch(100% 0 0 / 0.1);
+            --glass-shadow: 0 1px 2px oklch(0% 0 0 / 0.22), 0 10px 30px oklch(0% 0 0 / 0.38);
+            --glass-shadow-strong: 0 1px 2px oklch(0% 0 0 / 0.28), 0 14px 36px oklch(0% 0 0 / 0.48);
             --grain-opacity: 0.03;
         }
 
@@ -272,6 +282,10 @@
         /* ------------------------------------------
            Nav — N5 floating pill
            ------------------------------------------ */
+        /* Technical glass pill — translucent surface + light blur, hairline
+           border, one crisp specular top edge. Present over the hero (anchored)
+           and densifies on scroll. translateX establishes a compositing layer,
+           which keeps the backdrop-filter stable on iOS Safari. */
         .nav {
             position: fixed;
             top: calc(env(safe-area-inset-top, 0px) + 0.9rem);
@@ -284,20 +298,26 @@
             align-items: center;
             gap: var(--space-sm);
             padding: 0.5rem 0.5rem 0.5rem 1rem;
-            border: 0.5px solid transparent;
+            border: 0.5px solid var(--glass-border);
             border-radius: var(--radius-pill);
-            background: transparent;
+            background: var(--glass-bg);
+            box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow);
+            -webkit-backdrop-filter: saturate(160%) blur(14px);
+            backdrop-filter: saturate(160%) blur(14px);
             transition: background var(--dur-short) var(--ease-out),
                 border-color var(--dur-short) var(--ease-out),
                 box-shadow var(--dur-short) var(--ease-out);
         }
 
         .nav.scrolled {
-            background: var(--overlay);
-            border-color: var(--rule);
-            box-shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
-            -webkit-backdrop-filter: saturate(180%) blur(20px);
-            backdrop-filter: saturate(180%) blur(20px);
+            background: var(--glass-bg-strong);
+            box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow-strong);
+        }
+
+        /* Safari (incl. iOS) that can't composite backdrop-filter falls back to
+           the denser opaque surface so text never sits on a see-through pill. */
+        @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            .nav { background: var(--glass-bg-strong); }
         }
 
         .nav-name {
@@ -424,7 +444,7 @@
             margin-bottom: var(--space-md);
         }
 
-        .hero-word { display: inline; }
+        .hero-word { display: inline; white-space: nowrap; }
 
         .hero-char { font-weight: inherit; }
 
@@ -545,6 +565,18 @@
             letter-spacing: -0.025em;
             color: var(--ink);
         }
+
+        /* Section-title "resolve" echo — a quieter version of the hero entrance,
+           run once on first scroll-in. JS wraps the visible chars, animates,
+           then restores plain text. Not gated by .anim (it's harmless static
+           markup otherwise); the JS itself respects reduced-motion. */
+        .rchar {
+            display: inline-block;
+            text-align: center;
+            transition: color 110ms linear, transform 180ms var(--ease-out);
+        }
+        .rchar.is-ghost { color: var(--accent); }
+        [data-theme="dark"] .rchar.is-ghost { color: var(--accent-bright); }
 
         /* ------------------------------------------
            Journey — document entries
@@ -934,7 +966,7 @@
         <div class="wrap">
             <div class="hero-inner">
                 <h1 class="hero-title">
-                    <span class="hero-word"><span class="hero-char">T</span><span class="hero-char">o</span><span class="hero-char">b</span><span class="hero-char">i</span><span class="hero-char">a</span><span class="hero-char">s</span></span>&nbsp;<span class="hero-word"><span class="hero-char">S</span><span class="hero-char">c</span><span class="hero-char">h</span><span class="hero-char">n</span><span class="hero-char">o</span><span class="hero-char">r</span><span class="hero-char">p</span><span class="hero-char">f</span><span class="hero-char">e</span><span class="hero-char">i</span><span class="hero-char">l</span></span>
+                    <span class="hero-word"><span class="hero-char">T</span><span class="hero-char">o</span><span class="hero-char">b</span><span class="hero-char">i</span><span class="hero-char">a</span><span class="hero-char">s</span></span> <span class="hero-word"><span class="hero-char">S</span><span class="hero-char">c</span><span class="hero-char">h</span><span class="hero-char">n</span><span class="hero-char">o</span><span class="hero-char">r</span><span class="hero-char">p</span><span class="hero-char">f</span><span class="hero-char">e</span><span class="hero-char">i</span><span class="hero-char">l</span></span>
                 </h1>
                 <div class="hero-rule" aria-hidden="true"></div>
                 <p class="hero-desc">
@@ -1156,9 +1188,19 @@
             function clearTimers() { for (var i = 0; i < timers.length; i++) clearTimeout(timers[i]); timers = []; }
 
             function freeze() {
-                chars.forEach(function (c) { c.style.width = ''; c.style.display = 'inline-block'; c.style.textAlign = 'center'; c.style.fontFamily = ''; });
-                var w = chars.map(function (c) { return c.getBoundingClientRect().width; });
-                chars.forEach(function (c, i) { c.style.width = w[i] + 'px'; });
+                /* Measure in the natural, kerned inline flow, then pin each glyph
+                   to its advance to the next glyph in the SAME word — so the frozen
+                   boxes sum to the exact kerned width. Using per-glyph ink widths
+                   instead would ignore kerning (T overhangs o), making gaps too wide
+                   during the animation and snapping the line left when released. */
+                chars.forEach(function (c) { c.style.width = ''; c.style.display = ''; c.style.textAlign = ''; c.style.fontFamily = ''; c.style.transform = ''; });
+                var m = chars.map(function (c) { var r = c.getBoundingClientRect(); return { left: r.left, width: r.width, parent: c.parentNode }; });
+                chars.forEach(function (c, i) {
+                    var adv = (i < chars.length - 1 && m[i + 1].parent === m[i].parent) ? (m[i + 1].left - m[i].left) : m[i].width;
+                    c.style.display = 'inline-block';
+                    c.style.textAlign = 'center';
+                    c.style.width = adv + 'px';
+                });
             }
             function ghost(c) { c.classList.add('is-ghost'); c.style.fontFamily = face(); c.style.transform = 'translateY(' + [-3, -2, 2, 3][rnd(4)] + 'px)'; }
             function resolve(c) { c.classList.remove('is-ghost'); c.style.fontFamily = ''; c.style.transform = 'translateY(0)'; }
@@ -1203,6 +1245,84 @@
             ]) : Promise.reject();
             var safety = setTimeout(finish, 2000);
             faces.then(function () { if (done) return; clearTimeout(safety); run(); }).catch(finish);
+        })();
+
+        /* Section titles — a quiet "resolve" echo. Each title is PRIMED into
+           pixel-ghost form at load (a soft preview that sits there off-screen),
+           then reveals into Geist Sans the first time it scrolls into view — so
+           you never see it snap from final text back into pixels. Same mechanic
+           as the hero, dialed right down (0–1 form tick, ±1px). Gated by
+           html.anim so reduced-motion / no-JS keep plain text; restores plain
+           text after revealing so the bilingual toggle keeps working. */
+        (function () {
+            var root = document.documentElement;
+            if (!root.classList.contains('anim') || !('IntersectionObserver' in window)) return;
+            var titles = Array.prototype.slice.call(document.querySelectorAll('.section-title'));
+            if (!titles.length) return;
+
+            var PIXEL = ["'Geist Pixel Square'", "'Geist Pixel Line'", "'Geist Pixel Grid'"];
+            function rnd(n) { return Math.floor(Math.random() * n); }
+            function face(not) { var f; do { f = PIXEL[rnd(PIXEL.length)]; } while (f === not); return f; }
+
+            /* Split the visible label into per-char boxes, freeze to kerned
+               advances, and drop it into pixel-ghost form. Titles sit like this
+               until they scroll in. Returns the state reveal() needs. */
+            function prime(title) {
+                var lang = root.getAttribute('data-lang') || 'en';
+                var span = title.querySelector('[data-' + lang + ']') || title;
+                var text = span.textContent;
+                if (!text.trim()) return null;
+                span.textContent = '';
+                var chars = [];
+                text.split('').forEach(function (ch) {
+                    var s = document.createElement('span');
+                    s.className = 'rchar';
+                    s.textContent = ch;
+                    span.appendChild(s);
+                    if (ch.trim()) chars.push(s);
+                });
+                var m = chars.map(function (c) { var r = c.getBoundingClientRect(); return { left: r.left, width: r.width }; });
+                chars.forEach(function (c, i) {
+                    var adv = (i < chars.length - 1) ? (m[i + 1].left - m[i].left) : m[i].width;
+                    c.style.width = adv + 'px';
+                });
+                chars.forEach(function (c) { c.classList.add('is-ghost'); c.style.fontFamily = face(); c.style.transform = 'translateY(' + (rnd(2) ? 1 : -1) + 'px)'; });
+                return { span: span, chars: chars, text: text };
+            }
+
+            function reveal(state) {
+                var chars = state.chars, timers = [];
+                chars.forEach(function (c, i) {
+                    var start = 60 + i * 28 + Math.random() * 40;
+                    var ticks = rnd(2);
+                    for (var t = 0; t < ticks; t++) (function (tt) {
+                        timers.push(setTimeout(function () { c.style.fontFamily = face(c.style.fontFamily); }, start + tt * 70));
+                    })(t);
+                    timers.push(setTimeout(function () { c.classList.remove('is-ghost'); c.style.fontFamily = ''; c.style.transform = 'translateY(0)'; }, start + ticks * 70));
+                });
+                /* restore plain, kerned text — also keeps the language toggle intact */
+                timers.push(setTimeout(function () { state.span.textContent = state.text; }, 60 + chars.length * 28 + 500));
+            }
+
+            var obs = new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting && !e.target._resolved) {
+                        e.target._resolved = true;
+                        obs.unobserve(e.target);
+                        if (e.target._state) reveal(e.target._state);
+                    }
+                });
+            }, { threshold: 0, rootMargin: '0px 0px -35% 0px' });
+
+            var faces = document.fonts ? Promise.all([
+                document.fonts.load("540 1.75rem 'Geist'"),
+                document.fonts.load("400 1.75rem 'Geist Pixel Grid'"),
+                document.fonts.load("400 1.75rem 'Geist Pixel Square'"),
+                document.fonts.load("400 1.75rem 'Geist Pixel Line'")
+            ]) : Promise.resolve();
+            faces.then(function () {
+                titles.forEach(function (t) { t._state = prime(t); obs.observe(t); });
+            }).catch(function () {});
         })();
 
         /* Init — theme + language are already set in <head> before first paint */
