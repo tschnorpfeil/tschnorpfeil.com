@@ -252,6 +252,13 @@
             border-radius: 3px;
         }
 
+        /* Skip-link / in-page nav move focus to their target section for
+           screen-reader users. Those targets get tabindex="-1" from JS — they
+           are landmarks, not controls, so suppress the ring (it would otherwise
+           flash a stray accent line across a full-width section). Real controls
+           keep their :focus-visible ring. */
+        [tabindex="-1"]:focus { outline: none; }
+
         /* ------------------------------------------
            Layout
            ------------------------------------------ */
