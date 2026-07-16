@@ -10,6 +10,12 @@
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
 
+    <!-- Preload the faces the hero entrance needs immediately -->
+    <link rel="preload" href="fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/GeistPixel-Grid.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/GeistPixel-Square.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/GeistPixel-Line.woff2" as="font" type="font/woff2" crossorigin>
+
     <!-- Set theme + language before first paint (no flash of light for dark-mode users) -->
     <script>
         (function () {
@@ -22,6 +28,13 @@
                 if (l) { el.setAttribute('data-lang', l); el.lang = l; }
                 else if ((navigator.language || '').startsWith('de')) {
                     el.setAttribute('data-lang', 'de'); el.lang = 'de';
+                }
+                /* Arm the hero "resolve" entrance before paint (no flash), only
+                   when motion is allowed. Failsafe drops the class after the
+                   run so a stalled script can never leave the name hidden. */
+                if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    el.classList.add('anim');
+                    setTimeout(function () { el.classList.remove('anim'); }, 2600);
                 }
             } catch (e) {}
         })();
@@ -75,10 +88,28 @@
             font-display: swap;
         }
 
-        /* Brand glyph only — used in exactly one place (the wordmark monogram) */
+        /* Geist Pixel — the wordmark monogram + the hero "resolve" entrance.
+           Three forms (Grid/Square/Line) the name iterates through before it
+           snaps into Geist Sans. */
         @font-face {
             font-family: 'Geist Pixel Grid';
             src: url('fonts/GeistPixel-Grid.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Geist Pixel Square';
+            src: url('fonts/GeistPixel-Square.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Geist Pixel Line';
+            src: url('fonts/GeistPixel-Line.woff2') format('woff2');
             font-weight: 400;
             font-style: normal;
             font-display: swap;
@@ -384,31 +415,32 @@
             letter-spacing: -0.02em;
             line-height: 1.02;
             margin-bottom: var(--space-md);
-            overflow: hidden;
         }
 
-        .hero-word {
-            display: inline-block;
-            opacity: 0;
-            transform: translateY(100%);
-            animation: wordUp 0.85s var(--ease-out) forwards;
-        }
+        .hero-word { display: inline; }
 
-        .hero-word:nth-child(1) { animation-delay: 0.14s; }
-        .hero-word:nth-child(2) { animation-delay: 0.26s; }
+        .hero-char { font-weight: inherit; }
 
-        .hero-char {
-            font-weight: inherit;
+        /* "Resolve" entrance: the name plots onto the grid as pixel ghosts,
+           iterates through Geist Pixel forms, then snaps into Geist Sans.
+           Active only under html.anim (JS + motion allowed). The DEFAULT state
+           below is the final resolved name — so no-JS and reduced-motion users
+           get it instantly, with no animation. */
+        .anim .hero-char { opacity: 0; }
+        .anim .hero-char.is-plotted { opacity: 1; }
+        .anim .hero-char {
+            transition: color 110ms linear, transform 200ms var(--ease-out);
         }
+        .hero-char.is-ghost { color: var(--accent); }
+        [data-theme="dark"] .hero-char.is-ghost { color: var(--accent-bright); }
 
         .hero-rule {
             height: 1px;
             background: var(--rule);
             transform-origin: left center;
-            opacity: 0;
             margin-bottom: var(--space-md);
-            animation: drawRule 0.9s var(--ease-out) 0.55s forwards;
         }
+        .anim .hero-rule { opacity: 0; animation: drawRule 0.8s var(--ease-out) 1.15s forwards; }
 
         .hero-desc {
             max-width: var(--measure);
@@ -418,17 +450,15 @@
             font-weight: 400;
             letter-spacing: -0.01em;
             margin-bottom: var(--space-lg);
-            opacity: 0;
-            animation: up 0.8s var(--ease-out) 0.68s forwards;
         }
+        .anim .hero-desc { opacity: 0; animation: up 0.7s var(--ease-out) 1.3s forwards; }
 
         .hero-social {
             display: flex;
             gap: var(--space-md);
             flex-wrap: wrap;
-            opacity: 0;
-            animation: up 0.8s var(--ease-out) 0.8s forwards;
         }
+        .anim .hero-social { opacity: 0; animation: up 0.7s var(--ease-out) 1.42s forwards; }
 
         .social-link {
             display: inline-flex;
@@ -477,9 +507,8 @@
             letter-spacing: 0.02em;
             color: var(--ink-3);
             transition: color var(--dur-micro) var(--ease-out);
-            opacity: 0;
-            animation: up 0.8s var(--ease-out) 1s forwards;
         }
+        .anim .hero-scroll { opacity: 0; animation: up 0.8s var(--ease-out) 1.55s forwards; }
 
         .hero-scroll:hover { color: var(--ink); }
 
@@ -765,11 +794,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes wordUp {
-            from { opacity: 0; transform: translateY(100%); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
         @keyframes drawRule {
             from { opacity: 0; transform: scaleX(0); }
             to { opacity: 1; transform: scaleX(1); }
@@ -778,7 +802,7 @@
         @media (prefers-reduced-motion: reduce) {
             html { scroll-behavior: auto; }
 
-            .hero-word, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
+            .hero-char, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
                 opacity: 1 !important;
                 transform: none !important;
                 animation: none !important;
@@ -862,7 +886,7 @@
     </style>
     <noscript>
         <style>
-            .hero-word, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
+            .hero-char, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
                 opacity: 1 !important;
                 transform: none !important;
                 animation: none !important;
@@ -1092,6 +1116,87 @@
                 target.focus({ preventScroll: true });
             });
         });
+
+        /* Hero "resolve" entrance — plot · iterate · resolve.
+           Letters materialize onto the grid as pixel ghosts (Square/Line/Grid),
+           the mass snaps into Geist fast, a few stragglers iterate and click
+           last; then the rule signs off underneath. Runs once, only under
+           html.anim (set in <head> when motion is allowed). Widths are frozen
+           to the final Geist advances so no pixel form ever reflows the name;
+           they're released again on finish so the name stays responsive. */
+        (function () {
+            var root = document.documentElement;
+            if (!root.classList.contains('anim')) return;
+            var h1 = document.querySelector('.hero h1');
+            var chars = h1 ? Array.prototype.slice.call(h1.querySelectorAll('.hero-char')) : [];
+            if (!chars.length) { root.classList.remove('anim'); return; }
+
+            var PIXEL = ["'Geist Pixel Square'", "'Geist Pixel Line'", "'Geist Pixel Grid'"];
+            var PLOT_START = 120, PLOT_STEP = 22;
+            var MASS_START = 620, MASS_JITTER = 260;
+            var STRAGGLE_START = 900, STRAGGLE_JITTER = 200;
+            var TICK = 85, STRAGGLERS = 3;
+            var timers = [], done = false;
+
+            function rnd(n) { return Math.floor(Math.random() * n); }
+            function shuffled(n) {
+                var a = [], i, j, t;
+                for (i = 0; i < n; i++) a.push(i);
+                for (j = n - 1; j > 0; j--) { i = rnd(j + 1); t = a[j]; a[j] = a[i]; a[i] = t; }
+                return a;
+            }
+            function face(not) { var f; do { f = PIXEL[rnd(PIXEL.length)]; } while (f === not); return f; }
+            function clearTimers() { for (var i = 0; i < timers.length; i++) clearTimeout(timers[i]); timers = []; }
+
+            function freeze() {
+                chars.forEach(function (c) { c.style.width = ''; c.style.display = 'inline-block'; c.style.textAlign = 'center'; c.style.fontFamily = ''; });
+                var w = chars.map(function (c) { return c.getBoundingClientRect().width; });
+                chars.forEach(function (c, i) { c.style.width = w[i] + 'px'; });
+            }
+            function ghost(c) { c.classList.add('is-ghost'); c.style.fontFamily = face(); c.style.transform = 'translateY(' + [-3, -2, 2, 3][rnd(4)] + 'px)'; }
+            function resolve(c) { c.classList.remove('is-ghost'); c.style.fontFamily = ''; c.style.transform = 'translateY(0)'; }
+
+            /* Return the name to plain, kerned, responsive inline text. */
+            function finish() {
+                if (done) return; done = true; clearTimers();
+                chars.forEach(function (c) {
+                    c.classList.remove('is-ghost'); c.classList.add('is-plotted');
+                    c.style.width = ''; c.style.display = ''; c.style.textAlign = '';
+                    c.style.fontFamily = ''; c.style.transform = '';
+                });
+            }
+
+            function run() {
+                freeze();
+                chars.forEach(function (c) { c.classList.remove('is-plotted'); ghost(c); });
+
+                shuffled(chars.length).forEach(function (ci, rank) {
+                    timers.push(setTimeout(function () { chars[ci].classList.add('is-plotted'); }, PLOT_START + rank * PLOT_STEP));
+                });
+
+                var stragglers = shuffled(chars.length).slice(0, STRAGGLERS);
+                chars.forEach(function (c, i) {
+                    var late = stragglers.indexOf(i) >= 0;
+                    var start = late ? STRAGGLE_START + Math.random() * STRAGGLE_JITTER : MASS_START + Math.random() * MASS_JITTER;
+                    var ticks = late ? 2 + rnd(2) : rnd(2);
+                    for (var t = 0; t < ticks; t++) (function (tt) {
+                        timers.push(setTimeout(function () { c.style.fontFamily = face(c.style.fontFamily); }, start + tt * TICK));
+                    })(t);
+                    timers.push(setTimeout(function () { resolve(c); }, start + ticks * TICK));
+                });
+
+                timers.push(setTimeout(finish, STRAGGLE_START + STRAGGLE_JITTER + 4 * TICK + 260));
+            }
+
+            var faces = document.fonts ? Promise.all([
+                document.fonts.load("560 4rem 'Geist'"),
+                document.fonts.load("400 4rem 'Geist Pixel Grid'"),
+                document.fonts.load("400 4rem 'Geist Pixel Square'"),
+                document.fonts.load("400 4rem 'Geist Pixel Line'")
+            ]) : Promise.reject();
+            var safety = setTimeout(finish, 2000);
+            faces.then(function () { if (done) return; clearTimeout(safety); run(); }).catch(finish);
+        })();
 
         /* Init — theme + language are already set in <head> before first paint */
         (function () {
