@@ -1275,21 +1275,35 @@
             function prime(title) {
                 var lang = root.getAttribute('data-lang') || 'en';
                 var span = title.querySelector('[data-' + lang + ']') || title;
-                var text = span.textContent;
+                var textNode = span.firstChild;
+                if (!textNode || textNode.nodeType !== 3) return null;
+                var text = textNode.nodeValue;
                 if (!text.trim()) return null;
+
+                /* Measure each glyph's KERNED advance from the single text run
+                   BEFORE splitting. Kerning doesn't cross element boundaries, so
+                   once the label is per-char spans the letters lose their kerning;
+                   measuring then would freeze loose widths and the title would
+                   jump left when it restores to a plain (kerned) text node. A
+                   Range over one character reports its laid-out advance, so the
+                   frozen boxes sum to the exact final width — no shift. */
+                var range = document.createRange();
+                var advances = [];
+                for (var j = 0; j < text.length; j++) {
+                    range.setStart(textNode, j);
+                    range.setEnd(textNode, j + 1);
+                    advances.push(range.getBoundingClientRect().width);
+                }
+
                 span.textContent = '';
                 var chars = [];
-                text.split('').forEach(function (ch) {
+                text.split('').forEach(function (ch, k) {
                     var s = document.createElement('span');
                     s.className = 'rchar';
                     s.textContent = ch;
+                    s.style.width = advances[k] + 'px';
                     span.appendChild(s);
                     if (ch.trim()) chars.push(s);
-                });
-                var m = chars.map(function (c) { var r = c.getBoundingClientRect(); return { left: r.left, width: r.width }; });
-                chars.forEach(function (c, i) {
-                    var adv = (i < chars.length - 1) ? (m[i + 1].left - m[i].left) : m[i].width;
-                    c.style.width = adv + 'px';
                 });
                 chars.forEach(function (c) { c.classList.add('is-ghost'); c.style.fontFamily = face(); c.style.transform = 'translateY(' + (rnd(2) ? 1 : -1) + 'px)'; });
                 return { span: span, chars: chars, text: text };
