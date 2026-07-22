@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Tobias Schnorpfeil</title>
     <meta name="description" content="Engineer & entrepreneur, working on digitalization, tech and innovation in a family business.">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -46,6 +46,8 @@
     <meta name="author" content="Tobias Schnorpfeil">
     <meta name="geo.region" content="DE-RP">
     <meta name="geo.placename" content="Treis-Karden">
+    <meta name="geo.position" content="50.1751;7.3056">
+    <meta name="ICBM" content="50.1751, 7.3056">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
@@ -61,6 +63,56 @@
     <meta name="twitter:title" content="Tobias Schnorpfeil">
     <meta name="twitter:description" content="Engineer & entrepreneur, working on digitalization, tech and innovation in a family business.">
     <meta name="twitter:image" content="https://tschnorpfeil.com/og-image.png">
+
+    <!-- Schema.org JSON-LD (Generative Engine Optimization) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Tobias Schnorpfeil",
+      "url": "https://tschnorpfeil.com",
+      "jobTitle": "Engineer & Entrepreneur",
+      "worksFor": {
+        "@type": "Organization",
+        "name": "Heinz Schnorpfeil Bau GmbH",
+        "url": "https://www.schnorpfeil.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Kastellauner Str. 51",
+          "addressLocality": "Treis-Karden",
+          "postalCode": "56253",
+          "addressRegion": "DE-RP",
+          "addressCountry": "DE"
+        }
+      },
+      "alumniOf": [
+        {
+          "@type": "EducationalOrganization",
+          "name": "Technical University of Munich"
+        }
+      ],
+      "sameAs": [
+        "https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/"
+      ],
+      "subjectOf": [
+        {
+          "@type": "Article",
+          "url": "https://techcrunch.com/2018/10/09/mapify/"
+        },
+        {
+          "@type": "Article",
+          "url": "https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/"
+        }
+      ],
+      "knowsAbout": [
+        "Civil Engineering",
+        "Digitalization",
+        "Infrastructure",
+        "Entrepreneurship",
+        "Travel-Tech"
+      ]
+    }
+    </script>
 
     <style>
         /* Hallmark · genre: modern-minimal · macrostructure: Long Document · theme: custom "CI-Cobalt"
@@ -950,16 +1002,16 @@
             <a href="#journey" class="nav-link"><span data-en>Journey</span><span data-de>Werdegang</span></a>
             <a href="#contact" class="nav-link"><span data-en>Contact</span><span data-de>Kontakt</span></a>
             <div class="nav-sep"></div>
-            <button class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span data-en>DE</span><span data-de>EN</span></button>
-            <button class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
-                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <button type="button" class="btn-icon btn-lang" onclick="toggleLang()" aria-label="Toggle language"><span data-en>DE</span><span data-de>EN</span></button>
+            <button type="button" class="btn-icon" onclick="toggleTheme()" aria-label="Toggle theme">
+                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
                     <circle cx="12" cy="12" r="5" />
                     <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
                     <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
                     <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
                     <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
                 </svg>
-                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" style="display:none">
+                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" style="display:none">
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
                 </svg>
             </button>
@@ -967,7 +1019,7 @@
     </nav>
 
     <!-- HERO / masthead -->
-    <section class="hero" id="main">
+    <section class="hero" id="main" tabindex="-1">
         <div class="wrap">
             <div class="hero-inner">
                 <h1 class="hero-title">
@@ -976,11 +1028,11 @@
                 <div class="hero-rule" aria-hidden="true"></div>
                 <p class="hero-desc">
                     <span data-en>Engineer and entrepreneur. After years in the startup and media world, I now work on digitalization, tech, and innovation in our family business.</span>
-                    <span data-de>Ingenieur und Unternehmer. Nach Jahren in der Start-up- und Medienbranche arbeite ich heute im Familienunternehmen an Digitalisierung, Tech und Innovation.</span>
+                    <span data-de>Ingenieur und Unternehmer. Nach Jahren in der Start-up- und Medienbranche arbeite ich heute im Fa&shy;mi&shy;li&shy;en&shy;un&shy;ter&shy;neh&shy;men an Di&shy;gi&shy;ta&shy;li&shy;sie&shy;rung, Tech und Innovation.</span>
                 </p>
                 <div class="hero-social">
                     <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="noopener" class="social-link">
-                        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
                         LinkedIn
                     </a>
                 </div>
@@ -995,7 +1047,7 @@
     </section>
 
     <!-- JOURNEY -->
-    <section id="journey">
+    <section id="journey" tabindex="-1">
         <div class="wrap">
             <div class="section-head">
                 <h2 class="section-title"><span data-en>Journey</span><span data-de>Werdegang</span></h2>
@@ -1009,11 +1061,11 @@
                         <p class="entry-sub"><span data-en>Shareholder, 3rd generation</span><span data-de>Gesellschafter, 3. Generation</span></p>
                         <p class="entry-desc">
                             <span data-en>Started on-site — four years as a construction manager in road and bridge building to understand the core of the business from the ground up. Now focused on management, digitalization, and group-wide initiatives across the Schnorpfeil group.</span>
-                            <span data-de>Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management, Digitalisierung und gruppenweite Themen der Schnorpfeil-Firmengruppe.</span>
+                            <span data-de>Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management, Di&shy;gi&shy;ta&shy;li&shy;sie&shy;rung und gruppenweite Themen der Schnorpfeil-Firmengruppe.</span>
                         </p>
                         <div class="tags">
                             <span class="tag"><span data-en>Infrastructure</span><span data-de>Infrastruktur</span></span>
-                            <span class="tag"><span data-en>Digitalization</span><span data-de>Digitalisierung</span></span>
+                            <span class="tag"><span data-en>Digitalization</span><span data-de>Di&shy;gi&shy;ta&shy;li&shy;sie&shy;rung</span></span>
                             <span class="tag">Management</span>
                         </div>
                     </div>
@@ -1052,8 +1104,8 @@
                             <span class="tag">Exit</span>
                         </div>
                         <div class="entry-links">
-                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank" rel="noopener" class="entry-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
-                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/" target="_blank" rel="noopener" class="entry-link">Business Insider <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
+                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank" rel="noopener" class="entry-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
+                            <a href="https://www.businessinsider.de/gruenderszene/business/mapify-reise-netzwerk-seed-runde/" target="_blank" rel="noopener" class="entry-link">Business Insider <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
                         </div>
                     </div>
                 </div>
@@ -1079,7 +1131,7 @@
                 <div class="entry">
                     <span class="entry-time">2016</span>
                     <div>
-                        <p class="entry-title">B.Sc. <span data-en>Civil Engineering</span><span data-de>Bauingenieurwesen</span></p>
+                        <p class="entry-title">B.Sc. <span data-en>Civil Engineering</span><span data-de>Bau&shy;in&shy;ge&shy;nieur&shy;we&shy;sen</span></p>
                         <p class="entry-sub"><span data-en>Technical University of Munich</span><span data-de>Technische Universität München</span></p>
                     </div>
                 </div>
@@ -1089,7 +1141,7 @@
     </section>
 
     <!-- CONTACT -->
-    <section id="contact">
+    <section id="contact" tabindex="-1">
         <div class="wrap">
             <div class="section-head">
                 <h2 class="section-title"><span data-en>Contact</span><span data-de>Kontakt</span></h2>
