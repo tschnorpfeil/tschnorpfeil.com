@@ -1,0 +1,1452 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Tobias Schnorpfeil — Ingenieur & Unternehmer</title>
+    <meta name="description" content="Tobias Schnorpfeil ist Ingenieur und Unternehmer und treibt Digitalisierung, Tech und Innovation bei der Heinz Schnorpfeil Bau GmbH voran. Mitgründer des Travel-Tech-Startups Mapify, übernommen von HomeToGo.">
+    <meta name="theme-color" content="#fcfcfd" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#0c0e12" media="(prefers-color-scheme: dark)">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+
+    <!-- Preload the faces the hero entrance needs immediately -->
+    <link rel="preload" href="/fonts/Geist-Variable.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/GeistPixel-Grid.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/GeistPixel-Square.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/GeistPixel-Line.woff2" as="font" type="font/woff2" crossorigin>
+
+    <!-- Set theme before first paint (no flash of light for dark-mode users) -->
+    <script>
+        (function () {
+            try {
+                var el = document.documentElement;
+                var t = localStorage.getItem('theme') ||
+                    (matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light');
+                el.setAttribute('data-theme', t);
+                /* Arm the hero "resolve" entrance before paint (no flash), only
+                   when motion is allowed. Failsafe drops the class after the
+                   run so a stalled script can never leave the name hidden. */
+                if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    el.classList.add('anim');
+                    setTimeout(function () { el.classList.remove('anim'); }, 2600);
+                }
+            } catch (e) {}
+        })();
+    </script>
+
+    <!-- SEO / GEO -->
+    <link rel="canonical" href="https://tschnorpfeil.com/de/">
+    <link rel="alternate" hreflang="en" href="https://tschnorpfeil.com/">
+    <link rel="alternate" hreflang="de" href="https://tschnorpfeil.com/de/">
+    <link rel="alternate" hreflang="x-default" href="https://tschnorpfeil.com/">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Tobias Schnorpfeil">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="profile">
+    <meta property="profile:first_name" content="Tobias">
+    <meta property="profile:last_name" content="Schnorpfeil">
+    <meta property="og:url" content="https://tschnorpfeil.com/de/">
+    <meta property="og:site_name" content="Tobias Schnorpfeil">
+    <meta property="og:title" content="Tobias Schnorpfeil — Ingenieur & Unternehmer">
+    <meta property="og:description" content="Tobias Schnorpfeil ist Ingenieur und Unternehmer und treibt Digitalisierung, Tech und Innovation bei der Heinz Schnorpfeil Bau GmbH voran. Mitgründer des Travel-Tech-Startups Mapify, übernommen von HomeToGo.">
+    <meta property="og:image" content="https://tschnorpfeil.com/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Tobias Schnorpfeil — Ingenieur & Unternehmer">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:locale:alternate" content="en_US">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Tobias Schnorpfeil — Ingenieur & Unternehmer">
+    <meta name="twitter:description" content="Tobias Schnorpfeil ist Ingenieur und Unternehmer und treibt Digitalisierung, Tech und Innovation bei der Heinz Schnorpfeil Bau GmbH voran. Mitgründer des Travel-Tech-Startups Mapify, übernommen von HomeToGo.">
+    <meta name="twitter:image" content="https://tschnorpfeil.com/og-image.png">
+    <meta name="twitter:image:alt" content="Tobias Schnorpfeil — Ingenieur & Unternehmer">
+
+    <!-- Schema.org JSON-LD (Generative Engine Optimization) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "Person",
+                "@id": "https://tschnorpfeil.com/#person",
+                "name": "Tobias Schnorpfeil",
+                "url": "https://tschnorpfeil.com/",
+                "image": "https://tschnorpfeil.com/og-image.png",
+                "description": "Tobias Schnorpfeil ist Ingenieur und Unternehmer und treibt Digitalisierung, Tech und Innovation bei der Heinz Schnorpfeil Bau GmbH voran. Mitgründer des Travel-Tech-Startups Mapify, übernommen von HomeToGo.",
+                "jobTitle": "Ingenieur & Unternehmer",
+                "email": "mailto:tobias@schnorpfeil.com",
+                "knowsLanguage": [
+                    "en",
+                    "de"
+                ],
+                "worksFor": {
+                    "@type": "Organization",
+                    "name": "Heinz Schnorpfeil Bau GmbH",
+                    "url": "https://www.schnorpfeil.com",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "Kastellauner Str. 51",
+                        "addressLocality": "Treis-Karden",
+                        "postalCode": "56253",
+                        "addressRegion": "DE-RP",
+                        "addressCountry": "DE"
+                    }
+                },
+                "alumniOf": [
+                    {
+                        "@type": "EducationalOrganization",
+                        "name": "Technical University of Munich"
+                    }
+                ],
+                "sameAs": [
+                    "https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/"
+                ],
+                "subjectOf": [
+                    {
+                        "@type": "Article",
+                        "url": "https://techcrunch.com/2018/10/09/mapify/"
+                    }
+                ],
+                "knowsAbout": [
+                    "Civil Engineering",
+                    "Digitalization",
+                    "Infrastructure",
+                    "Entrepreneurship",
+                    "Travel-Tech"
+                ]
+            },
+            {
+                "@type": "WebSite",
+                "@id": "https://tschnorpfeil.com/#website",
+                "url": "https://tschnorpfeil.com/",
+                "name": "Tobias Schnorpfeil",
+                "inLanguage": [
+                    "en",
+                    "de"
+                ],
+                "about": {
+                    "@id": "https://tschnorpfeil.com/#person"
+                }
+            },
+            {
+                "@type": "ProfilePage",
+                "@id": "https://tschnorpfeil.com/de/#profilepage",
+                "url": "https://tschnorpfeil.com/de/",
+                "name": "Tobias Schnorpfeil — Ingenieur & Unternehmer",
+                "inLanguage": "de",
+                "isPartOf": {
+                    "@id": "https://tschnorpfeil.com/#website"
+                },
+                "about": {
+                    "@id": "https://tschnorpfeil.com/#person"
+                },
+                "mainEntity": {
+                    "@id": "https://tschnorpfeil.com/#person"
+                },
+                "dateCreated": "2026-02-16",
+                "dateModified": "2026-08-17"
+            }
+        ]
+    }
+    </script>
+
+    <style>
+        /* Hallmark · genre: modern-minimal · macrostructure: Long Document · theme: custom "CI-Cobalt"
+         * enrichment: none (typography-only) · nav: N5 floating pill · footer: Ft2 inline
+         * anchor hue: cobalt oklch(40.1% 0.128 254) (#00478A) · display: Geist · outlier: Geist Mono
+         * pre-emit critique: P5 H5 E5 S5 R5 V4
+         */
+
+        /* ------------------------------------------
+           Self-hosted Geist (GDPR compliant, no runtime CDN)
+           ------------------------------------------ */
+        @font-face {
+            font-family: 'Geist';
+            src: url('/fonts/Geist-Variable.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Geist Mono';
+            src: url('/fonts/GeistMono-Variable.woff2') format('woff2');
+            font-weight: 100 900;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* Geist Pixel — the wordmark monogram + the hero "resolve" entrance.
+           Three forms (Grid/Square/Line) the name iterates through before it
+           snaps into Geist Sans. */
+        @font-face {
+            font-family: 'Geist Pixel Grid';
+            src: url('/fonts/GeistPixel-Grid.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Geist Pixel Square';
+            src: url('/fonts/GeistPixel-Square.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        @font-face {
+            font-family: 'Geist Pixel Line';
+            src: url('/fonts/GeistPixel-Line.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        /* ------------------------------------------
+           Design tokens (OKLCH, referenced by name)
+           ------------------------------------------ */
+        :root {
+            --font-display: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --font-body: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', monospace;
+            --font-pixel: 'Geist Pixel Grid', var(--font-mono);
+
+            /* Type scale — major third (1.25), 16px base */
+            --text-xs: 0.78rem;
+            --text-sm: 0.875rem;
+            --text-base: 1rem;
+            --text-md: 1.1875rem;
+            --text-lg: 1.375rem;
+            --text-xl: 1.75rem;
+            --text-display: clamp(2.75rem, 6vw + 0.4rem, 4.75rem);
+
+            /* 4-pt spacing scale */
+            --space-2xs: 0.5rem;
+            --space-xs: 0.75rem;
+            --space-sm: 1rem;
+            --space-md: 1.5rem;
+            --space-lg: 2rem;
+            --space-xl: 3rem;
+            --space-2xl: 4.5rem;
+
+            /* Reading measure */
+            --measure: 40rem;
+            --measure-wide: 48rem;
+
+            --radius-pill: 100px;
+            --radius-tight: 6px;
+
+            --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+            --dur-micro: 120ms;
+            --dur-short: 220ms;
+            --dur-long: 420ms;
+        }
+
+        /* Light — cool engineered near-white */
+        [data-theme="light"] {
+            --paper: oklch(99.1% 0.001 286);
+            --paper-2: oklch(97.2% 0.003 260);
+            --ink: oklch(20.4% 0.011 261);
+            --ink-2: oklch(45% 0.014 260);
+            --ink-3: oklch(53% 0.013 260);
+            --rule: oklch(90.5% 0.006 260);
+            --rule-2: oklch(85% 0.008 260);
+            --accent: oklch(40.1% 0.128 254);
+            --accent-bright: oklch(52% 0.17 256);
+            --accent-ink: oklch(99% 0.001 286);
+            --focus: oklch(52% 0.17 256);
+            --grid-line: oklch(52% 0.17 256 / 0.05);
+            --glass-bg: oklch(99.1% 0.001 286 / 0.55);
+            --glass-bg-strong: oklch(99.1% 0.001 286 / 0.82);
+            --glass-border: oklch(80% 0.01 260 / 0.7);
+            --glass-hi: oklch(100% 0 0 / 0.6);
+            --glass-shadow: 0 1px 2px oklch(0% 0 0 / 0.04), 0 8px 24px oklch(0% 0 0 / 0.06);
+            --glass-shadow-strong: 0 1px 2px oklch(0% 0 0 / 0.05), 0 12px 32px oklch(0% 0 0 / 0.09);
+            --grain-opacity: 0.022;
+        }
+
+        /* Dark — cool near-black, brightened accent for legibility */
+        [data-theme="dark"] {
+            --paper: oklch(16.5% 0.008 262);
+            --paper-2: oklch(20.5% 0.01 262);
+            --ink: oklch(96% 0.003 286);
+            --ink-2: oklch(72% 0.012 260);
+            --ink-3: oklch(60% 0.012 260);
+            --rule: oklch(27% 0.012 262);
+            --rule-2: oklch(33% 0.014 262);
+            --accent: oklch(70% 0.15 254);
+            --accent-bright: oklch(74% 0.155 256);
+            --accent-ink: oklch(16.5% 0.008 262);
+            --focus: oklch(74% 0.155 256);
+            --grid-line: oklch(74% 0.155 256 / 0.07);
+            --glass-bg: oklch(20% 0.01 262 / 0.5);
+            --glass-bg-strong: oklch(18% 0.01 262 / 0.72);
+            --glass-border: oklch(45% 0.02 262 / 0.5);
+            --glass-hi: oklch(100% 0 0 / 0.1);
+            --glass-shadow: 0 1px 2px oklch(0% 0 0 / 0.22), 0 10px 30px oklch(0% 0 0 / 0.38);
+            --glass-shadow-strong: 0 1px 2px oklch(0% 0 0 / 0.28), 0 14px 36px oklch(0% 0 0 / 0.48);
+            --grain-opacity: 0.03;
+        }
+
+        /* ------------------------------------------
+           Reset & base
+           ------------------------------------------ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: calc(84px + env(safe-area-inset-top, 0px));
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: clip;
+            /* Vertical scrolling only — no pinch-zoom, no horizontal pan.
+               Backs up the viewport meta on iOS Safari, which ignores
+               user-scalable=no. */
+            touch-action: pan-y;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--paper);
+            color: var(--ink);
+            font-size: var(--text-base);
+            font-weight: 400;
+            line-height: 1.65;
+            letter-spacing: -0.006em;
+            overflow-x: clip;
+            transition: background var(--dur-long) var(--ease-out), color var(--dur-short) var(--ease-out);
+        }
+
+        /* Grain overlay (GDPR-safe inline data-uri) */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 60;
+            opacity: var(--grain-opacity);
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+            background-repeat: repeat;
+            background-size: 256px 256px;
+        }
+
+        ::selection {
+            background: var(--accent);
+            color: var(--accent-ink);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--focus);
+            outline-offset: 3px;
+            border-radius: 3px;
+        }
+
+        /* Skip-link / in-page nav move focus to their target section for
+           screen-reader users. Those targets get tabindex="-1" from JS — they
+           are landmarks, not controls, so suppress the ring (it would otherwise
+           flash a stray accent line across a full-width section). Real controls
+           keep their :focus-visible ring. */
+        [tabindex="-1"]:focus { outline: none; }
+
+        /* ------------------------------------------
+           Layout
+           ------------------------------------------ */
+        .wrap {
+            width: 100%;
+            max-width: var(--measure-wide);
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        /* ------------------------------------------
+           Nav — N5 floating pill
+           ------------------------------------------ */
+        /* Technical glass pill — translucent surface + light blur, hairline
+           border, one crisp specular top edge. Present over the hero (anchored)
+           and densifies on scroll. translateX establishes a compositing layer,
+           which keeps the backdrop-filter stable on iOS Safari. */
+        .nav {
+            position: fixed;
+            top: calc(env(safe-area-inset-top, 0px) + 0.9rem);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 100;
+            width: min(calc(100% - 1.5rem), 48rem);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: 0.5rem 0.5rem 0.5rem 1rem;
+            border: 0.5px solid var(--glass-border);
+            border-radius: var(--radius-pill);
+            background: var(--glass-bg);
+            box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow);
+            -webkit-backdrop-filter: saturate(160%) blur(14px);
+            backdrop-filter: saturate(160%) blur(14px);
+            transition: background var(--dur-short) var(--ease-out),
+                border-color var(--dur-short) var(--ease-out),
+                box-shadow var(--dur-short) var(--ease-out);
+        }
+
+        .nav.scrolled {
+            background: var(--glass-bg-strong);
+            box-shadow: inset 0 1px 0 var(--glass-hi), var(--glass-shadow-strong);
+        }
+
+        /* Safari (incl. iOS) that can't composite backdrop-filter falls back to
+           the denser opaque surface so text never sits on a see-through pill. */
+        @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+            .nav { background: var(--glass-bg-strong); }
+        }
+
+        .nav-name {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: var(--font-display);
+            font-size: 0.9375rem;
+            font-weight: 550;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            white-space: nowrap;
+        }
+
+        /* The single Geist Pixel Grid moment — the brand monogram */
+        .monogram {
+            font-family: var(--font-pixel);
+            font-size: 1rem;
+            line-height: 1;
+            color: var(--accent);
+            letter-spacing: 0.02em;
+        }
+
+        [data-theme="dark"] .monogram {
+            color: var(--accent-bright);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 0.15rem;
+        }
+
+        .nav-link {
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding: 0.4rem 0.7rem;
+            border-radius: var(--radius-tight);
+            white-space: nowrap;
+            transition: color var(--dur-micro) var(--ease-out), background var(--dur-micro) var(--ease-out);
+        }
+
+        .nav-link:hover {
+            color: var(--ink);
+            background: var(--paper-2);
+        }
+
+        .nav-sep {
+            width: 1px;
+            height: 15px;
+            background: var(--rule-2);
+            margin: 0 0.3rem;
+        }
+
+        .btn-icon {
+            min-width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: var(--radius-tight);
+            background: transparent;
+            color: var(--ink-2);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: color var(--dur-micro) var(--ease-out), background var(--dur-micro) var(--ease-out);
+            font-family: var(--font-mono);
+            font-size: 0.6875rem;
+            font-weight: 500;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-icon:hover {
+            color: var(--ink);
+            background: var(--paper-2);
+        }
+
+        .btn-lang {
+            padding: 0 0.5rem;
+            text-transform: uppercase;
+        }
+
+        /* ------------------------------------------
+           Hero / document masthead
+           ------------------------------------------ */
+        .hero {
+            min-height: 100svh;
+            display: flex;
+            align-items: flex-end;
+            padding-top: calc(96px + env(safe-area-inset-top, 0px));
+            padding-bottom: 16svh;
+            position: relative;
+        }
+
+        /* Blueprint grid — the one "unique touch", confined to the masthead,
+           faded out radially so it never reads as a full-page background */
+        .hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            background-image:
+                linear-gradient(to right, var(--grid-line) 0.5px, transparent 0.5px),
+                linear-gradient(to bottom, var(--grid-line) 0.5px, transparent 0.5px);
+            background-size: 2.25rem 2.25rem;
+            -webkit-mask-image: radial-gradient(120% 80% at 15% 90%, #000 0%, transparent 68%);
+            mask-image: radial-gradient(120% 80% at 15% 90%, #000 0%, transparent 68%);
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: var(--text-display);
+            font-weight: 560;
+            letter-spacing: -0.02em;
+            line-height: 1.02;
+            margin-bottom: var(--space-md);
+        }
+
+        .hero-word { display: inline; white-space: nowrap; }
+
+        .hero-char { font-weight: inherit; }
+
+        /* "Resolve" entrance: the name plots onto the grid as pixel ghosts,
+           iterates through Geist Pixel forms, then snaps into Geist Sans.
+           Active only under html.anim (JS + motion allowed). The DEFAULT state
+           below is the final resolved name — so no-JS and reduced-motion users
+           get it instantly, with no animation. */
+        .anim .hero-char { opacity: 0; }
+        .anim .hero-char.is-plotted { opacity: 1; }
+        .anim .hero-char {
+            transition: color 110ms linear, transform 200ms var(--ease-out);
+        }
+        .hero-char.is-ghost { color: var(--accent); }
+        [data-theme="dark"] .hero-char.is-ghost { color: var(--accent-bright); }
+
+        .hero-rule {
+            height: 1px;
+            background: var(--rule);
+            transform-origin: left center;
+            margin-bottom: var(--space-md);
+        }
+        .anim .hero-rule { opacity: 0; animation: drawRule 0.8s var(--ease-out) 1.15s forwards; }
+
+        .hero-desc {
+            max-width: var(--measure);
+            font-size: var(--text-md);
+            line-height: 1.6;
+            color: var(--ink-2);
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            margin-bottom: var(--space-lg);
+        }
+        .anim .hero-desc { opacity: 0; animation: up 0.7s var(--ease-out) 1.3s forwards; }
+
+        .hero-social {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+        .anim .hero-social { opacity: 0; animation: up 0.7s var(--ease-out) 1.42s forwards; }
+
+        .social-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+        }
+
+        .social-link:hover {
+            color: var(--ink);
+            border-bottom-color: var(--accent-bright);
+        }
+
+        .social-link svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* Scroll cue — left-aligned, fades in last, static after (no loop) */
+        .hero-scroll-wrap {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 5svh;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-scroll {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            min-height: 44px;
+            padding: 0 0.5rem;
+            margin-left: -0.5rem;
+            pointer-events: auto;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            font-weight: 450;
+            letter-spacing: 0.02em;
+            color: var(--ink-3);
+            transition: color var(--dur-micro) var(--ease-out);
+        }
+        .anim .hero-scroll { opacity: 0; animation: up 0.8s var(--ease-out) 1.55s forwards; }
+
+        .hero-scroll:hover { color: var(--ink); }
+
+        .hero-scroll svg {
+            width: 14px;
+            height: 14px;
+            transition: transform var(--dur-micro) var(--ease-out);
+        }
+
+        .hero-scroll:hover svg { transform: translateY(2px); }
+
+        /* ------------------------------------------
+           Document sections
+           ------------------------------------------ */
+        section {
+            padding: var(--space-2xl) 0;
+        }
+
+        .section-head {
+            margin-bottom: var(--space-xl);
+        }
+
+        .section-title {
+            font-family: var(--font-display);
+            font-size: var(--text-xl);
+            font-weight: 540;
+            letter-spacing: -0.025em;
+            color: var(--ink);
+        }
+
+        /* Section-title "resolve" echo — a quieter version of the hero entrance,
+           run once on first scroll-in. JS wraps the visible chars, animates,
+           then restores plain text. Not gated by .anim (it's harmless static
+           markup otherwise); the JS itself respects reduced-motion. */
+        .rchar {
+            display: inline-block;
+            text-align: center;
+            transition: color 110ms linear, transform 180ms var(--ease-out);
+        }
+        .rchar.is-ghost { color: var(--accent); }
+        [data-theme="dark"] .rchar.is-ghost { color: var(--accent-bright); }
+
+        /* ------------------------------------------
+           Journey — document entries
+           ------------------------------------------ */
+        .journey {
+            position: relative;
+            padding-left: 1.75rem;
+        }
+
+        .entry {
+            position: relative;
+            display: grid;
+            grid-template-columns: 7rem 1fr;
+            gap: var(--space-lg);
+            padding: var(--space-md) 0;
+        }
+
+        /* Timeline connector — runs node-to-node, auto-length */
+        .entry:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: calc(4px - 1.75rem);
+            top: calc(var(--space-md) + 0.7rem - 1px);
+            height: 100%;
+            width: 1px;
+            background: var(--rule);
+            transform: translateX(-50%);
+        }
+
+        /* Timeline node — vertically centred on the year's first line */
+        .entry::after {
+            content: '';
+            position: absolute;
+            left: calc(4px - 1.75rem);
+            top: calc(var(--space-md) + 0.7rem - 5px);
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: var(--paper);
+            border: 1.5px solid var(--rule-2);
+            transform: translateX(-50%);
+        }
+
+        .entry--now::after {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 15%, transparent);
+        }
+
+        [data-theme="dark"] .entry--now::after {
+            background: var(--accent-bright);
+            border-color: var(--accent-bright);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent-bright) 20%, transparent);
+        }
+
+        .entry-time {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            font-weight: 450;
+            color: var(--ink-3);
+            letter-spacing: 0.01em;
+            font-variant-numeric: tabular-nums;
+            padding-top: 0.35rem;
+        }
+
+        .entry--now .entry-time {
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        [data-theme="dark"] .entry--now .entry-time { color: var(--accent-bright); }
+
+        .entry-title {
+            font-family: var(--font-display);
+            font-size: var(--text-md);
+            font-weight: 530;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.15rem;
+            color: var(--ink);
+        }
+
+        /* Current role leads the document */
+        .entry--now .entry-title { font-size: var(--text-lg); }
+        .entry--now .entry-desc { color: var(--ink); }
+
+        /* Old media recedes */
+        .entry--muted .entry-title { font-weight: 480; color: var(--ink-2); }
+        .entry--muted .entry-desc { color: var(--ink-3); }
+
+        .entry-title a {
+            border-bottom: 1px solid var(--rule-2);
+            transition: border-color var(--dur-micro) var(--ease-out), color var(--dur-micro) var(--ease-out);
+        }
+
+        .entry-title a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent-bright);
+        }
+
+        [data-theme="dark"] .entry-title a:hover {
+            color: var(--accent-bright);
+        }
+
+        .entry-sub {
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            margin-bottom: var(--space-xs);
+        }
+
+        .entry-desc {
+            font-size: var(--text-base);
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--ink-2);
+            max-width: 34rem;
+        }
+
+        .tags {
+            display: flex;
+            gap: var(--space-2xs);
+            flex-wrap: wrap;
+            margin-top: var(--space-sm);
+        }
+
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.6875rem;
+            font-weight: 450;
+            letter-spacing: 0.01em;
+            padding: 0.15rem 0.5rem;
+            border-radius: var(--radius-tight);
+            border: 0.5px solid var(--rule);
+            color: var(--ink-3);
+        }
+
+        .entry-links {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            margin-top: var(--space-sm);
+        }
+
+        .entry-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+        }
+
+        .entry-link:hover {
+            color: var(--ink);
+            border-bottom-color: var(--accent-bright);
+        }
+
+        .entry-link svg {
+            width: 11px;
+            height: 11px;
+            opacity: 0.6;
+            transition: transform var(--dur-micro) var(--ease-out), opacity var(--dur-micro) var(--ease-out);
+        }
+
+        .entry-link:hover svg {
+            transform: translate(2px, -2px);
+            opacity: 1;
+        }
+
+        /* ------------------------------------------
+           Contact
+           ------------------------------------------ */
+        .contact-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+        }
+
+        .contact-label {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            color: var(--ink-3);
+            margin-bottom: var(--space-2xs);
+        }
+
+        .contact-email {
+            font-family: var(--font-display);
+            font-size: var(--text-md);
+            font-weight: 500;
+            letter-spacing: -0.02em;
+            color: var(--ink);
+            border-bottom: 1px solid var(--rule-2);
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
+        }
+
+        .contact-email:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent-bright);
+        }
+
+        [data-theme="dark"] .contact-email:hover { color: var(--accent-bright); }
+
+        .contact-note {
+            font-size: var(--text-sm);
+            color: var(--ink-3);
+            margin-top: 0.3rem;
+            font-weight: 400;
+        }
+
+        /* ------------------------------------------
+           Footer — Ft2 inline single line
+           ------------------------------------------ */
+        .footer {
+            padding: var(--space-lg) 0 var(--space-xl);
+            border-top: 0.5px solid var(--rule);
+            margin-top: var(--space-lg);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--ink-3);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: var(--space-md);
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--ink-3);
+            transition: color var(--dur-micro) var(--ease-out);
+        }
+
+        .footer-links a:hover { color: var(--ink); }
+
+        /* ------------------------------------------
+           Load-only hero orchestration (Long Document: no scroll reveals)
+           ------------------------------------------ */
+        @keyframes up {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes drawRule {
+            from { opacity: 0; transform: scaleX(0); }
+            to { opacity: 1; transform: scaleX(1); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html { scroll-behavior: auto; }
+
+            .hero-char, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+            *, *::before, *::after {
+                animation-duration: 150ms !important;
+                transition-duration: 150ms !important;
+            }
+        }
+
+        @media (prefers-reduced-data: reduce) {
+            body::after { display: none; }
+            .hero::before { display: none; }
+        }
+
+        .skip-link {
+            position: absolute;
+            top: 0.5rem;
+            left: 50%;
+            z-index: 200;
+            transform: translate(-50%, -160%);
+            padding: 0.5rem 1rem;
+            background: var(--ink);
+            color: var(--paper);
+            border-radius: var(--radius-tight);
+            font-size: var(--text-sm);
+            font-weight: 500;
+            transition: transform var(--dur-short) var(--ease-out);
+        }
+
+        .skip-link:focus {
+            transform: translate(-50%, 0);
+            outline: none;
+        }
+
+        /* Short viewports (landscape phones): the cue would crowd the fold */
+        @media (max-height: 620px) {
+            .hero-scroll-wrap { display: none; }
+        }
+
+        /* ------------------------------------------
+           Responsive
+           ------------------------------------------ */
+        @media (max-width: 720px) {
+            .wrap { padding: 0 var(--space-md); }
+
+            .nav {
+                /* align the pill's edges with the content gutter (.wrap padding) */
+                width: calc(100% - 3rem);
+                padding: 0.4rem 0.4rem 0.4rem 0.85rem;
+            }
+
+            .nav-link, .nav-sep { display: none; }
+
+            section { padding: var(--space-xl) 0; }
+
+            .hero { padding-bottom: 12svh; }
+
+            .entry {
+                grid-template-columns: 1fr;
+                gap: var(--space-2xs);
+                padding-left: 1.25rem;
+            }
+
+            .entry-time { padding-top: 0; }
+
+            .entry::after,
+            .entry:not(:last-child)::before { left: 3px; }
+
+            .entry::after { top: calc(var(--space-md) + 0.15rem); }
+
+            .entry:not(:last-child)::before { top: calc(var(--space-md) + 0.15rem + 4px); }
+
+            .contact-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <noscript>
+        <style>
+            .hero-char, .hero-rule, .hero-desc, .hero-social, .hero-scroll {
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+        </style>
+    </noscript>
+</head>
+
+<body>
+
+    <a href="#main" class="skip-link">Zum Inhalt springen</a>
+
+    <!-- NAV — N5 floating pill -->
+    <nav class="nav">
+        <a href="#main" class="nav-name"><span class="monogram" aria-hidden="true">TS</span> Tobias Schnorpfeil</a>
+        <div class="nav-right">
+            <a href="#journey" class="nav-link">Werdegang</a>
+            <a href="#contact" class="nav-link">Kontakt</a>
+            <div class="nav-sep"></div>
+            <a href="/" class="btn-icon btn-lang" hreflang="en" lang="en" aria-label="Auf Englisch wechseln">EN</a>
+            <button type="button" class="btn-icon" onclick="toggleTheme()" aria-label="Farbschema umschalten">
+                <svg data-icon="sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+                    <circle cx="12" cy="12" r="5" />
+                    <line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" />
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                    <line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" />
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+                <svg data-icon="moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" style="display:none">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- HERO / masthead -->
+    <section class="hero" id="main" tabindex="-1">
+        <div class="wrap">
+            <div class="hero-inner">
+                <h1 class="hero-title">
+                    <span class="hero-word"><span class="hero-char">T</span><span class="hero-char">o</span><span class="hero-char">b</span><span class="hero-char">i</span><span class="hero-char">a</span><span class="hero-char">s</span></span> <span class="hero-word"><span class="hero-char">S</span><span class="hero-char">c</span><span class="hero-char">h</span><span class="hero-char">n</span><span class="hero-char">o</span><span class="hero-char">r</span><span class="hero-char">p</span><span class="hero-char">f</span><span class="hero-char">e</span><span class="hero-char">i</span><span class="hero-char">l</span></span>
+                </h1>
+                <div class="hero-rule" aria-hidden="true"></div>
+                <p class="hero-desc">
+                    Ingenieur und Unternehmer. Nach Jahren in der Start-up- und Medienbranche arbeite ich heute im Fa&shy;mi&shy;li&shy;en&shy;un&shy;ter&shy;neh&shy;men an Di&shy;gi&shy;ta&shy;li&shy;sie&shy;rung, Tech und Innovation.
+                </p>
+                <div class="hero-social">
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener" class="social-link">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
+                        LinkedIn
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="wrap hero-scroll-wrap">
+            <a href="#journey" class="hero-scroll">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9" /></svg>
+                Werdegang
+            </a>
+        </div>
+    </section>
+
+    <!-- JOURNEY -->
+    <section id="journey" tabindex="-1">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 class="section-title">Werdegang</h2>
+            </div>
+            <div class="journey">
+
+                <div class="entry entry--now">
+                    <span class="entry-time">2021 — Heute</span>
+                    <div>
+                        <p class="entry-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz Schnorpfeil Bau GmbH</a></p>
+                        <p class="entry-sub">Gesellschafter, 3. Generation</p>
+                        <p class="entry-desc">
+                            Angefangen auf der Baustelle — vier Jahre als Bauleiter im Straßen- und Brückenbau, um das Kerngeschäft von Grund auf zu verstehen. Heute Fokus auf Management, Di&shy;gi&shy;ta&shy;li&shy;sie&shy;rung und gruppenweite Themen der Schnorpfeil-Firmengruppe.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Infrastruktur</span>
+                            <span class="tag">Di&shy;gi&shy;ta&shy;li&shy;sie&shy;rung</span>
+                            <span class="tag">Management</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="entry">
+                    <span class="entry-time">2021 — 2023</span>
+                    <div>
+                        <p class="entry-title">HomeToGo</p>
+                        <p class="entry-sub">Product &amp; Community Advisor</p>
+                        <p class="entry-desc">
+                            Nach der Übernahme von Mapify Beratung von HomeToGo in Produktstrategie und Community-Aufbau — Skalierung der Social-Media-Reichweite und Nutzerinteraktion auf internationalen Märkten.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Produktstrategie</span>
+                            <span class="tag">Community</span>
+                            <span class="tag">Travel-Tech</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="entry">
+                    <span class="entry-time">2017 — 2023</span>
+                    <div>
+                        <p class="entry-title">Mapify</p>
+                        <p class="entry-sub">Mitgründer</p>
+                        <p class="entry-desc">
+                            Travel-Tech-Startup, das visuelles Storytelling mit interaktiven Karten verband — Aufbau einer globalen Community von über 250.000 Reisenden in mehr als 190 Ländern. Unterstützt von Lakestar Ventures und Atlantic Labs, letztlich an HomeToGo verkauft.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Startup</span>
+                            <span class="tag">Lakestar</span>
+                            <span class="tag">Travel-Tech</span>
+                            <span class="tag">Exit</span>
+                        </div>
+                        <div class="entry-links">
+                            <a href="https://techcrunch.com/2018/10/09/mapify/" target="_blank" rel="noopener" class="entry-link">TechCrunch <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="7" y1="17" x2="17" y2="7" /><polyline points="7 7 17 7 17 17" /></svg></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="entry entry--muted">
+                    <span class="entry-time">2014 — 2021</span>
+                    <div>
+                        <p class="entry-title">Film, Fotografie, Motion Graphics &amp; 3D</p>
+                        <p class="entry-sub">Freelance &amp; persönliche Arbeiten</p>
+                        <p class="entry-desc">
+                            Cineastische Arbeiten für Porsche, Adidas, Jack Wolfskin, München Tourismus und weitere. Von der Arktis Svalbards bis zu den Küsten Thailands. Ergänzt durch surrealistische 3D-Renders und Motion Graphics.
+                        </p>
+                        <div class="tags">
+                            <span class="tag">Film</span>
+                            <span class="tag">Fotografie</span>
+                            <span class="tag">Motion Graphics</span>
+                            <span class="tag">3D</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="entry">
+                    <span class="entry-time">2016</span>
+                    <div>
+                        <p class="entry-title">B.Sc. Bau&shy;in&shy;ge&shy;nieur&shy;we&shy;sen</p>
+                        <p class="entry-sub">Technische Universität München</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" tabindex="-1">
+        <div class="wrap">
+            <div class="section-head">
+                <h2 class="section-title">Kontakt</h2>
+            </div>
+            <div class="contact-grid">
+                <div>
+                    <p class="contact-label">Geschäftlich</p>
+                    <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
+                    <p class="contact-note">Heinz Schnorpfeil Bau GmbH</p>
+                </div>
+                <div>
+                    <p class="contact-label">Privat</p>
+                    <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
+                    <p class="contact-note">Alles andere</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER — Ft2 inline single line -->
+    <footer class="footer">
+        <div class="wrap">
+            <div class="footer-inner">
+                <span>© 2026 Tobias Schnorpfeil</span>
+                <div class="footer-links">
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener">LinkedIn</a>
+                    <a href="mailto:tobias@schnorpfeil.com">Email</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        /* Theme toggle */
+        function toggleTheme() {
+            var h = document.documentElement;
+            var next = h.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            h.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            updateIcon(next);
+        }
+        function updateIcon(t) {
+            document.querySelector('[data-icon="sun"]').style.display = t === 'dark' ? 'none' : 'block';
+            document.querySelector('[data-icon="moon"]').style.display = t === 'dark' ? 'block' : 'none';
+        }
+
+        /* In-page links: smooth scroll + move focus so the skip-link (and nav)
+           actually land keyboard / screen-reader users on the target. */
+        var prefersReduced = matchMedia('(prefers-reduced-motion: reduce)');
+        document.querySelectorAll('a[href^="#"]').forEach(function (l) {
+            l.addEventListener('click', function (e) {
+                var id = l.getAttribute('href');
+                if (id.length < 2) return;
+                var target = document.querySelector(id);
+                if (!target) return;
+                e.preventDefault();
+                target.scrollIntoView({ behavior: prefersReduced.matches ? 'auto' : 'smooth' });
+                if (target.tabIndex < 0) target.setAttribute('tabindex', '-1');
+                target.focus({ preventScroll: true });
+            });
+        });
+
+        /* Hero "resolve" entrance — plot · iterate · resolve.
+           Letters materialize onto the grid as pixel ghosts (Square/Line/Grid),
+           the mass snaps into Geist fast, a few stragglers iterate and click
+           last; then the rule signs off underneath. Runs once, only under
+           html.anim (set in <head> when motion is allowed). Widths are frozen
+           to the final Geist advances so no pixel form ever reflows the name;
+           they're released again on finish so the name stays responsive. */
+        (function () {
+            var root = document.documentElement;
+            if (!root.classList.contains('anim')) return;
+            var h1 = document.querySelector('.hero h1');
+            var chars = h1 ? Array.prototype.slice.call(h1.querySelectorAll('.hero-char')) : [];
+            if (!chars.length) { root.classList.remove('anim'); return; }
+
+            var PIXEL = ["'Geist Pixel Square'", "'Geist Pixel Line'", "'Geist Pixel Grid'"];
+            var PLOT_START = 120, PLOT_STEP = 22;
+            var MASS_START = 620, MASS_JITTER = 260;
+            var STRAGGLE_START = 900, STRAGGLE_JITTER = 200;
+            var TICK = 85, STRAGGLERS = 3;
+            var timers = [], done = false;
+
+            function rnd(n) { return Math.floor(Math.random() * n); }
+            function shuffled(n) {
+                var a = [], i, j, t;
+                for (i = 0; i < n; i++) a.push(i);
+                for (j = n - 1; j > 0; j--) { i = rnd(j + 1); t = a[j]; a[j] = a[i]; a[i] = t; }
+                return a;
+            }
+            function face(not) { var f; do { f = PIXEL[rnd(PIXEL.length)]; } while (f === not); return f; }
+            function clearTimers() { for (var i = 0; i < timers.length; i++) clearTimeout(timers[i]); timers = []; }
+
+            function freeze() {
+                /* Measure in the natural, kerned inline flow, then pin each glyph
+                   to its advance to the next glyph in the SAME word — so the frozen
+                   boxes sum to the exact kerned width. Using per-glyph ink widths
+                   instead would ignore kerning (T overhangs o), making gaps too wide
+                   during the animation and snapping the line left when released. */
+                chars.forEach(function (c) { c.style.width = ''; c.style.display = ''; c.style.textAlign = ''; c.style.fontFamily = ''; c.style.transform = ''; });
+                var m = chars.map(function (c) { var r = c.getBoundingClientRect(); return { left: r.left, width: r.width, parent: c.parentNode }; });
+                chars.forEach(function (c, i) {
+                    var adv = (i < chars.length - 1 && m[i + 1].parent === m[i].parent) ? (m[i + 1].left - m[i].left) : m[i].width;
+                    c.style.display = 'inline-block';
+                    c.style.textAlign = 'center';
+                    c.style.width = adv + 'px';
+                });
+            }
+            function ghost(c) { c.classList.add('is-ghost'); c.style.fontFamily = face(); c.style.transform = 'translateY(' + [-3, -2, 2, 3][rnd(4)] + 'px)'; }
+            function resolve(c) { c.classList.remove('is-ghost'); c.style.fontFamily = ''; c.style.transform = 'translateY(0)'; }
+
+            /* Return the name to plain, kerned, responsive inline text. */
+            function finish() {
+                if (done) return; done = true; clearTimers();
+                chars.forEach(function (c) {
+                    c.classList.remove('is-ghost'); c.classList.add('is-plotted');
+                    c.style.width = ''; c.style.display = ''; c.style.textAlign = '';
+                    c.style.fontFamily = ''; c.style.transform = '';
+                });
+            }
+
+            function run() {
+                freeze();
+                chars.forEach(function (c) { c.classList.remove('is-plotted'); ghost(c); });
+
+                shuffled(chars.length).forEach(function (ci, rank) {
+                    timers.push(setTimeout(function () { chars[ci].classList.add('is-plotted'); }, PLOT_START + rank * PLOT_STEP));
+                });
+
+                var stragglers = shuffled(chars.length).slice(0, STRAGGLERS);
+                chars.forEach(function (c, i) {
+                    var late = stragglers.indexOf(i) >= 0;
+                    var start = late ? STRAGGLE_START + Math.random() * STRAGGLE_JITTER : MASS_START + Math.random() * MASS_JITTER;
+                    var ticks = late ? 2 + rnd(2) : rnd(2);
+                    for (var t = 0; t < ticks; t++) (function (tt) {
+                        timers.push(setTimeout(function () { c.style.fontFamily = face(c.style.fontFamily); }, start + tt * TICK));
+                    })(t);
+                    timers.push(setTimeout(function () { resolve(c); }, start + ticks * TICK));
+                });
+
+                timers.push(setTimeout(finish, STRAGGLE_START + STRAGGLE_JITTER + 4 * TICK + 260));
+            }
+
+            var faces = document.fonts ? Promise.all([
+                document.fonts.load("560 4rem 'Geist'"),
+                document.fonts.load("400 4rem 'Geist Pixel Grid'"),
+                document.fonts.load("400 4rem 'Geist Pixel Square'"),
+                document.fonts.load("400 4rem 'Geist Pixel Line'")
+            ]) : Promise.reject();
+            var safety = setTimeout(finish, 2000);
+            faces.then(function () { if (done) return; clearTimeout(safety); run(); }).catch(finish);
+        })();
+
+        /* Section titles — a quiet "resolve" echo. Each title is PRIMED into
+           pixel-ghost form at load (a soft preview that sits there off-screen),
+           then reveals into Geist Sans the first time it scrolls into view — so
+           you never see it snap from final text back into pixels. Same mechanic
+           as the hero, dialed right down (0–1 form tick, ±1px). Gated by
+           html.anim so reduced-motion / no-JS keep plain text; restores plain
+           text after revealing. */
+        (function () {
+            var root = document.documentElement;
+            if (!root.classList.contains('anim')) return;
+            var titles = Array.prototype.slice.call(document.querySelectorAll('.section-title'));
+            if (!titles.length) return;
+
+            var PIXEL = ["'Geist Pixel Square'", "'Geist Pixel Line'", "'Geist Pixel Grid'"];
+            function rnd(n) { return Math.floor(Math.random() * n); }
+            function face(not) { var f; do { f = PIXEL[rnd(PIXEL.length)]; } while (f === not); return f; }
+
+            /* Split the visible label into per-char boxes, freeze to kerned
+               advances, and drop it into pixel-ghost form. Titles sit like this
+               until they scroll in. Returns the state reveal() needs. */
+            function prime(title) {
+                var span = title;
+                var textNode = span.firstChild;
+                if (!textNode || textNode.nodeType !== 3) return null;
+                var text = textNode.nodeValue;
+                if (!text.trim()) return null;
+
+                /* Measure each glyph's KERNED advance from the single text run
+                   BEFORE splitting. Kerning doesn't cross element boundaries, so
+                   once the label is per-char spans the letters lose their kerning;
+                   measuring then would freeze loose widths and the title would
+                   jump left when it restores to a plain (kerned) text node. A
+                   Range over one character reports its laid-out advance, so the
+                   frozen boxes sum to the exact final width — no shift. */
+                var range = document.createRange();
+                var advances = [];
+                for (var j = 0; j < text.length; j++) {
+                    range.setStart(textNode, j);
+                    range.setEnd(textNode, j + 1);
+                    advances.push(range.getBoundingClientRect().width);
+                }
+
+                span.textContent = '';
+                var chars = [];
+                text.split('').forEach(function (ch, k) {
+                    var s = document.createElement('span');
+                    s.className = 'rchar';
+                    s.textContent = ch;
+                    s.style.width = advances[k] + 'px';
+                    span.appendChild(s);
+                    if (ch.trim()) chars.push(s);
+                });
+                chars.forEach(function (c) { c.classList.add('is-ghost'); c.style.fontFamily = face(); c.style.transform = 'translateY(' + (rnd(2) ? 1 : -1) + 'px)'; });
+                return { span: span, chars: chars, text: text };
+            }
+
+            function reveal(state) {
+                var chars = state.chars, timers = [];
+                chars.forEach(function (c, i) {
+                    var start = 60 + i * 28 + Math.random() * 40;
+                    var ticks = rnd(2);
+                    for (var t = 0; t < ticks; t++) (function (tt) {
+                        timers.push(setTimeout(function () { c.style.fontFamily = face(c.style.fontFamily); }, start + tt * 70));
+                    })(t);
+                    timers.push(setTimeout(function () { c.classList.remove('is-ghost'); c.style.fontFamily = ''; c.style.transform = 'translateY(0)'; }, start + ticks * 70));
+                });
+                /* restore plain, kerned text */
+                timers.push(setTimeout(function () { state.span.textContent = state.text; }, 60 + chars.length * 28 + 500));
+            }
+
+            /* Reveal a title when it reaches ~65% up the viewport — OR, for the
+               last section (which can never scroll that high), as soon as the
+               page is at the bottom and the title is on screen. A plain scroll +
+               resize check covers both cases and removes itself once every title
+               has resolved, so nothing is ever left stranded in ghost form. */
+            var faces = document.fonts ? Promise.all([
+                document.fonts.load("540 1.75rem 'Geist'"),
+                document.fonts.load("400 1.75rem 'Geist Pixel Grid'"),
+                document.fonts.load("400 1.75rem 'Geist Pixel Square'"),
+                document.fonts.load("400 1.75rem 'Geist Pixel Line'")
+            ]) : Promise.resolve();
+            faces.then(function () {
+                var pending = [];
+                titles.forEach(function (t) { t._state = prime(t); if (t._state) pending.push(t); });
+                function check() {
+                    var vh = window.innerHeight || document.documentElement.clientHeight;
+                    var se = document.scrollingElement || document.documentElement;
+                    var atEnd = (window.scrollY + vh) >= (se.scrollHeight - 2);
+                    pending = pending.filter(function (t) {
+                        var r = t.getBoundingClientRect();
+                        var reachedLine = r.top <= vh * 0.65 && r.bottom > 0;
+                        var visibleAtEnd = atEnd && r.top < vh && r.bottom > 0;
+                        if (reachedLine || visibleAtEnd) { t._resolved = true; reveal(t._state); return false; }
+                        return true;
+                    });
+                    if (!pending.length) {
+                        window.removeEventListener('scroll', check);
+                        window.removeEventListener('resize', check);
+                    }
+                }
+                window.addEventListener('scroll', check, { passive: true });
+                window.addEventListener('resize', check, { passive: true });
+                check();
+            }).catch(function () {});
+        })();
+
+        /* Init — theme + language are already set in <head> before first paint */
+        (function () {
+            updateIcon(document.documentElement.getAttribute('data-theme') || 'light');
+
+            /* Nav pill gains its surface once you leave the masthead */
+            var nav = document.querySelector('.nav');
+            var hero = document.querySelector('.hero');
+            if (nav && hero) {
+                var navObs = new IntersectionObserver(function (entries) {
+                    nav.classList.toggle('scrolled', !entries[0].isIntersecting);
+                }, { threshold: 0, rootMargin: '-72px 0px 0px 0px' });
+                navObs.observe(hero);
+            }
+        })();
+    </script>
+</body>
+
+</html>
