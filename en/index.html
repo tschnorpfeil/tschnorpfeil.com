@@ -38,11 +38,23 @@
         })();
     </script>
 
+    <!-- Auto-redirect to DE only if explicitly preferred by user -->
+    <script>
+        (function() {
+            try {
+                if (localStorage.getItem('lang_pref') === 'de') {
+                    window.location.replace('/');
+                }
+            } catch(e) {}
+        })();
+    </script>
+
     <!-- SEO / GEO -->
     <link rel="canonical" href="https://tschnorpfeil.com/en/">
     <link rel="alternate" hreflang="de" href="https://tschnorpfeil.com/">
     <link rel="alternate" hreflang="en" href="https://tschnorpfeil.com/en/">
     <link rel="alternate" hreflang="x-default" href="https://tschnorpfeil.com/">
+    <link rel="alternate" type="text/plain" href="https://tschnorpfeil.com/llms-full.txt" title="LLM Full Context">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Tobias Schnorpfeil">
 
@@ -68,7 +80,7 @@
     <meta name="twitter:image" content="https://tschnorpfeil.com/og-image.png">
     <meta name="twitter:image:alt" content="Tobias Schnorpfeil — Engineer & Entrepreneur">
 
-    <!-- Schema.org JSON-LD (Generative Engine Optimization) -->
+    <!-- Schema.org JSON-LD (Generative Engine Optimization & Entity Graph) -->
     <script type="application/ld+json">
     {
         "@context": "https://schema.org",
@@ -85,6 +97,24 @@
                 "knowsLanguage": [
                     "en",
                     "de"
+                ],
+                "hasOccupation": [
+                    {
+                        "@type": "Occupation",
+                        "name": "Civil Engineer & Shareholder",
+                        "occupationLocation": {
+                            "@type": "Country",
+                            "name": "Germany"
+                        }
+                    },
+                    {
+                        "@type": "Occupation",
+                        "name": "Tech Entrepreneur",
+                        "occupationLocation": {
+                            "@type": "Country",
+                            "name": "Germany"
+                        }
+                    }
                 ],
                 "worksFor": {
                     "@type": "Organization",
@@ -111,17 +141,46 @@
                         "@type": "EducationalOrganization",
                         "name": "Technical University of Munich",
                         "url": "https://www.tum.de",
-                        "sameAs": "https://en.wikipedia.org/wiki/Technical_University_of_Munich"
+                        "sameAs": [
+                            "https://en.wikipedia.org/wiki/Technical_University_of_Munich",
+                            "https://www.wikidata.org/wiki/Q15780"
+                        ]
                     }
                 ],
                 "sameAs": [
                     "https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/",
+                    "https://www.youtube.com/@TSchnorpfeil",
+                    "https://www.behance.net/tschnorpfeil",
                     "https://github.com/tschnorpfeil"
                 ],
                 "subjectOf": [
                     {
+                        "@type": "NewsArticle",
+                        "headline": "Mapify raises $1M to build a travel platform around user-generated spot guides",
+                        "url": "https://techcrunch.com/2018/10/09/mapify/",
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "TechCrunch"
+                        }
+                    },
+                    {
                         "@type": "Article",
-                        "url": "https://techcrunch.com/2018/10/09/mapify/"
+                        "headline": "Building New Worlds",
+                        "url": "https://aestheticamagazine.com/building-new-worlds/",
+                        "publisher": {
+                            "@type": "Organization",
+                            "name": "Aesthetica Magazine"
+                        }
+                    },
+                    {
+                        "@type": "PodcastEpisode",
+                        "name": "Meine Story: Tobias Schnorpfeil — Das erste Viertel",
+                        "url": "https://podcasts.apple.com/de/podcast/meine-story-tobias-schnorpfeil-das-erste-viertel/id1527780076?i=1000508544837"
+                    },
+                    {
+                        "@type": "ProfilePage",
+                        "name": "Tobias Schnorpfeil Portrait",
+                        "url": "https://schau.berlin/experts/tobias-schnorpfeil"
                     }
                 ],
                 "knowsAbout": [
@@ -129,7 +188,9 @@
                     "Digitalization",
                     "Infrastructure",
                     "Entrepreneurship",
-                    "Travel-Tech"
+                    "Travel-Tech",
+                    "Cinematography",
+                    "3D Animation"
                 ]
             },
             {
@@ -161,7 +222,7 @@
                     "@id": "https://tschnorpfeil.com/#person"
                 },
                 "dateCreated": "2026-02-16",
-                "dateModified": "2026-08-17"
+                "dateModified": "2026-08-25"
             }
         ]
     }

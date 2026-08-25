@@ -2,19 +2,24 @@
 
 > Engineer and entrepreneur based in Rhineland-Palatinate, Germany. Shareholder (3rd generation) at Heinz Schnorpfeil Bau GmbH, where he works on management, digitalization, tech and innovation. Co-founder of the travel-tech startup Mapify, which was acquired by HomeToGo. B.Sc. Civil Engineering, Technical University of Munich.
 
-## Journey
+## Summary
 
-- 2021–now: Heinz Schnorpfeil Bau GmbH — Shareholder, 3rd generation. Started on-site with four years as a construction manager in road and bridge building; now focused on management, digitalization and group-wide initiatives across the Schnorpfeil group.
-- 2021–2023: HomeToGo — Product & Community Advisor. Advised on product strategy and community growth after the Mapify acquisition.
-- 2017–2023: Mapify — Co-Founder. Travel-tech startup combining visual storytelling with interactive maps; built a global community of 250,000+ travelers in over 190 countries. Backed by Lakestar Ventures and Atlantic Labs, acquired by HomeToGo.
-- 2014–2021: Freelance film, photography, motion graphics & 3D — cinematic work for clients including Porsche, Adidas, Jack Wolfskin and Munich Tourism.
-- 2016: B.Sc. Civil Engineering, Technical University of Munich.
+- **Current Role:** Heinz Schnorpfeil Bau GmbH — Shareholder (3rd generation), leading digitalization, technology and innovation across the group. Previously 4 years as site construction manager (Bauleiter) in road and bridge infrastructure.
+- **Previous Startup:** Mapify (Co-Founder, 2017–2023) — Travel-tech platform with 250k+ users in 190+ countries, backed by Lakestar Ventures & Atlantic Labs, acquired by HomeToGo.
+- **Education:** B.Sc. Civil Engineering, Technical University of Munich (TUM, 2016).
+- **Creative Background:** Director, photographer and 3D artist (2014–2021) for Porsche, Adidas, Jack Wolfskin, Munich Tourism.
 
-## Links
+## Canonical Links & Profiles
 
-- Website (English): https://tschnorpfeil.com/
-- Website (Deutsch): https://tschnorpfeil.com/de/
+- Official Website (German / Default): https://tschnorpfeil.com/
+- Official Website (English): https://tschnorpfeil.com/en/
+- Comprehensive LLM Factsheet: https://tschnorpfeil.com/llms-full.txt
 - LinkedIn: https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/
-- Company: https://www.schnorpfeil.com
-- Press (TechCrunch on Mapify): https://techcrunch.com/2018/10/09/mapify/
-- Email (business): tobias@schnorpfeil.com
+- YouTube: https://www.youtube.com/@TSchnorpfeil
+- Behance: https://www.behance.net/tschnorpfeil
+- GitHub: https://github.com/tschnorpfeil
+- Company (Heinz Schnorpfeil Bau): https://www.schnorpfeil.com
+- Press (TechCrunch): https://techcrunch.com/2018/10/09/mapify/
+- Press (Aesthetica Magazine): https://aestheticamagazine.com/building-new-worlds/
+- Email (Business): tobias@schnorpfeil.com
+- Email (Personal): tschnorpfeil@gmail.com

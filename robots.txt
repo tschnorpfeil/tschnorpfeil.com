@@ -1,7 +1,7 @@
 User-agent: *
 Allow: /
 
-# AI / LLM crawlers explicitly welcome
+# AI / LLM search crawlers explicitly welcomed
 User-agent: GPTBot
 Allow: /
 
@@ -26,4 +26,13 @@ Allow: /
 User-agent: meta-externalagent
 Allow: /
 
+User-agent: Amazonbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
 Sitemap: https://tschnorpfeil.com/sitemap.xml
+# LLM Context: https://tschnorpfeil.com/llms.txt
+# Full LLM Context: https://tschnorpfeil.com/llms-full.txt
+
