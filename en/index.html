@@ -488,20 +488,6 @@
                 box-shadow var(--dur-short) var(--ease-out);
         }
 
-        .status-pulse {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent) 25%, transparent);
-            display: inline-block;
-            flex-shrink: 0;
-            margin-right: 0.15rem;
-        }
-        [data-theme="dark"] .status-pulse {
-            background: var(--accent-bright);
-            box-shadow: 0 0 0 2px color-mix(in oklch, var(--accent-bright) 30%, transparent);
-        }
 
         .nav.scrolled {
             background: var(--glass-bg-strong);
@@ -682,44 +668,27 @@
         }
         .anim .hero-social { opacity: 0; animation: up 0.7s var(--ease-out) 1.42s forwards; }
 
-        .prime-btn {
+        .social-link {
             display: inline-flex;
             align-items: center;
-            gap: 0.45rem;
-            height: 32px;
-            padding: 0 0.8rem;
-            border-radius: var(--radius-tight);
-            border: 1px solid var(--rule-2);
-            background: var(--paper-2);
+            gap: 0.4rem;
             font-family: var(--font-mono);
-            font-size: var(--text-xs);
-            font-weight: 500;
+            font-size: var(--text-sm);
+            font-weight: 450;
+            color: var(--ink-2);
+            padding-bottom: 2px;
+            border-bottom: 1px solid transparent;
+            transition: color var(--dur-micro) var(--ease-out), border-bottom-color var(--dur-micro) var(--ease-out);
+        }
+
+        .social-link:hover {
             color: var(--ink);
-            text-decoration: none;
-            transition: all var(--dur-short) var(--ease-out);
+            border-bottom-color: var(--accent-bright);
         }
-        .prime-btn:hover {
-            background: var(--paper);
-            border-color: var(--accent-bright);
-            color: var(--accent);
-            transform: translateY(-1px);
-            box-shadow: 0 2px 8px color-mix(in oklch, var(--accent) 12%, transparent);
-        }
-        [data-theme="dark"] .prime-btn:hover {
-            color: var(--accent-bright);
-        }
-        .prime-btn svg {
+
+        .social-link svg {
             width: 13px;
             height: 13px;
-        }
-        .btn-arrow {
-            opacity: 0.5;
-            font-size: 0.85em;
-            transition: transform var(--dur-micro) var(--ease-out);
-        }
-        .prime-btn:hover .btn-arrow {
-            opacity: 1;
-            transform: translate(1px, -1px);
         }
 
         /* Scroll cue — left-aligned, fades in last, static after (no loop) */
@@ -871,61 +840,6 @@
             color: var(--accent-bright);
         }
 
-        .entry-head-row {
-            display: flex;
-            align-items: baseline;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-bottom: 0.2rem;
-        }
-
-        .entry-badge {
-            font-family: var(--font-mono);
-            font-size: 0.6875rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            padding: 0.15rem 0.45rem;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--rule);
-            background: var(--paper-2);
-            color: var(--ink-3);
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.35rem;
-        }
-
-        .badge--active {
-            color: var(--accent);
-            border-color: color-mix(in oklch, var(--accent) 30%, transparent);
-            background: color-mix(in oklch, var(--accent) 8%, transparent);
-        }
-
-        [data-theme="dark"] .badge--active {
-            color: var(--accent-bright);
-            border-color: color-mix(in oklch, var(--accent-bright) 35%, transparent);
-            background: color-mix(in oklch, var(--accent-bright) 12%, transparent);
-        }
-
-        .badge-pulse-dot {
-            width: 5px;
-            height: 5px;
-            border-radius: 50%;
-            background: currentColor;
-            box-shadow: 0 0 0 2px color-mix(in oklch, currentColor 25%, transparent);
-        }
-
-        .badge--exit {
-            color: oklch(50% 0.16 142);
-            border-color: oklch(50% 0.16 142 / 0.3);
-            background: oklch(50% 0.16 142 / 0.08);
-        }
-
-        [data-theme="dark"] .badge--exit {
-            color: oklch(75% 0.16 142);
-            border-color: oklch(75% 0.16 142 / 0.35);
-            background: oklch(75% 0.16 142 / 0.12);
-        }
 
         .entry-title {
             font-family: var(--font-display);
@@ -1030,75 +944,47 @@
         .contact-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: var(--space-md);
-        }
-
-        @media (max-width: 640px) {
-            .contact-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .contact-card {
-            padding: 1.25rem 1.5rem;
-            border: 1px solid var(--rule);
-            border-radius: var(--radius-card);
-            background: var(--paper);
-            display: flex;
-            flex-direction: column;
-            gap: 0.25rem;
-            transition: border-color var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
-        }
-
-        .contact-card:hover {
-            border-color: var(--accent-bright);
-            transform: translateY(-1px);
+            gap: var(--space-lg);
         }
 
         .contact-label {
             font-family: var(--font-mono);
             font-size: var(--text-xs);
-            font-weight: 600;
-            letter-spacing: 0.04em;
-            color: var(--accent);
-            text-transform: uppercase;
-        }
-
-        [data-theme="dark"] .contact-label {
-            color: var(--accent-bright);
+            font-weight: 500;
+            letter-spacing: 0.03em;
+            color: var(--ink-3);
+            margin-bottom: var(--space-2xs);
         }
 
         .contact-email {
             font-family: var(--font-display);
             font-size: var(--text-md);
-            font-weight: 530;
+            font-weight: 500;
             letter-spacing: -0.02em;
             color: var(--ink);
-            text-decoration: none;
-            display: inline-block;
-            transition: color var(--dur-micro) var(--ease-out);
+            border-bottom: 1px solid var(--rule-2);
+            transition: color var(--dur-micro) var(--ease-out), border-color var(--dur-micro) var(--ease-out);
         }
 
         .contact-email:hover {
             color: var(--accent);
+            border-bottom-color: var(--accent-bright);
         }
 
-        [data-theme="dark"] .contact-email:hover {
-            color: var(--accent-bright);
-        }
+        [data-theme="dark"] .contact-email:hover { color: var(--accent-bright); }
 
         .contact-note {
-            font-family: var(--font-mono);
-            font-size: var(--text-xs);
+            font-size: var(--text-sm);
             color: var(--ink-3);
-            margin-top: 0.2rem;
+            margin-top: 0.3rem;
+            font-weight: 400;
         }
 
         /* ------------------------------------------
-           Footer — PRIME Status Bar
+           Footer
            ------------------------------------------ */
         .footer {
-            padding: var(--space-md) 0 var(--space-lg);
+            padding: var(--space-lg) 0 var(--space-xl);
             border-top: 1px solid var(--rule);
             margin-top: var(--space-xl);
         }
@@ -1111,10 +997,6 @@
             flex-wrap: wrap;
             font-family: var(--font-mono);
             font-size: var(--text-xs);
-            color: var(--ink-3);
-        }
-
-        .footer-sys {
             color: var(--ink-3);
         }
 
@@ -1248,9 +1130,9 @@
 
     <a href="#main" class="skip-link">Skip to content</a>
 
-    <!-- NAV — N5 floating pill with PRIME status pulse -->
+    <!-- NAV -->
     <nav class="nav">
-        <a href="#main" class="nav-name"><span class="status-pulse" aria-hidden="true"></span><span class="monogram" aria-hidden="true">TS</span> Tobias Schnorpfeil</a>
+        <a href="#main" class="nav-name"><span class="monogram" aria-hidden="true">TS</span> Tobias Schnorpfeil</a>
         <div class="nav-right">
             <a href="#journey" class="nav-link">Journey</a>
             <a href="#contact" class="nav-link">Contact</a>
@@ -1284,15 +1166,9 @@
                     Engineer and entrepreneur. After years in the startup and media world, I now work on digitalization, tech, and innovation in our family business.
                 </p>
                 <div class="hero-social">
-                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener" class="prime-btn">
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener" class="social-link">
                         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" /></svg>
-                        <span>LinkedIn</span>
-                        <span class="btn-arrow" aria-hidden="true">↗</span>
-                    </a>
-                    <a href="mailto:tobias@schnorpfeil.com" class="prime-btn">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                        <span>Email</span>
-                        <span class="btn-arrow" aria-hidden="true">→</span>
+                        LinkedIn
                     </a>
                 </div>
             </div>
@@ -1318,10 +1194,7 @@
                         <span class="entry-time">2021 — Now</span>
                     </div>
                     <div class="entry-body">
-                        <div class="entry-head-row">
-                            <p class="entry-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz Schnorpfeil Bau GmbH</a></p>
-                            <span class="entry-badge badge--active"><span class="badge-pulse-dot" aria-hidden="true"></span> Active</span>
-                        </div>
+                        <p class="entry-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz Schnorpfeil Bau GmbH</a></p>
                         <p class="entry-sub">Shareholder, 3rd generation</p>
                         <p class="entry-desc">
                             Started on-site — four years as a construction manager in road and bridge building to understand the core of the business from the ground up. Now focused on management, digitalization, and group-wide initiatives across the Schnorpfeil group.
@@ -1339,10 +1212,7 @@
                         <span class="entry-time">2021 — 2023</span>
                     </div>
                     <div class="entry-body">
-                        <div class="entry-head-row">
-                            <p class="entry-title">HomeToGo</p>
-                            <span class="entry-badge">Advisor</span>
-                        </div>
+                        <p class="entry-title">HomeToGo</p>
                         <p class="entry-sub">Product &amp; Community Advisor</p>
                         <p class="entry-desc">
                             Following Mapify's acquisition, advised HomeToGo on product strategy and community growth — helping scale the platform's social reach and user engagement across international markets.
@@ -1360,10 +1230,7 @@
                         <span class="entry-time">2017 — 2023</span>
                     </div>
                     <div class="entry-body">
-                        <div class="entry-head-row">
-                            <p class="entry-title">Mapify</p>
-                            <span class="entry-badge badge--exit">Exit to HomeToGo</span>
-                        </div>
+                        <p class="entry-title">Mapify</p>
                         <p class="entry-sub">Co-Founder</p>
                         <p class="entry-desc">
                             Travel-tech startup combining visual storytelling with interactive maps — building a global community of 250,000+ travelers in over 190 countries. Backed by Lakestar Ventures and Atlantic Labs, ultimately acquired by HomeToGo.
@@ -1385,10 +1252,7 @@
                         <span class="entry-time">2014 — 2021</span>
                     </div>
                     <div class="entry-body">
-                        <div class="entry-head-row">
-                            <p class="entry-title">Film, Photography, Motion Graphics &amp; 3D</p>
-                            <span class="entry-badge">Creative</span>
-                        </div>
+                        <p class="entry-title">Film, Photography, Motion Graphics &amp; 3D</p>
                         <p class="entry-sub">Freelance &amp; Personal Work</p>
                         <p class="entry-desc">
                             Cinematic work for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others. From the arctic of Svalbard to the coasts of Thailand. Complemented by surreal 3D renders and motion graphics.
@@ -1407,10 +1271,7 @@
                         <span class="entry-time">2016</span>
                     </div>
                     <div class="entry-body">
-                        <div class="entry-head-row">
-                            <p class="entry-title">B.Sc. Civil Engineering</p>
-                            <span class="entry-badge">B.Sc.</span>
-                        </div>
+                        <p class="entry-title">B.Sc. Civil Engineering</p>
                         <p class="entry-sub">Technical University of Munich</p>
                     </div>
                 </div>
@@ -1426,15 +1287,15 @@
                 <h2 class="section-title">Contact</h2>
             </div>
             <div class="contact-grid">
-                <div class="contact-card">
-                    <span class="contact-label">Business</span>
+                <div>
+                    <p class="contact-label">Business</p>
                     <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
-                    <span class="contact-note">Heinz Schnorpfeil Bau GmbH</span>
+                    <p class="contact-note">Heinz Schnorpfeil Bau GmbH</p>
                 </div>
-                <div class="contact-card">
-                    <span class="contact-label">Personal</span>
+                <div>
+                    <p class="contact-label">Personal</p>
                     <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
-                    <span class="contact-note">Direct line</span>
+                    <p class="contact-note">Everything else</p>
                 </div>
             </div>
         </div>
@@ -1445,11 +1306,10 @@
     <footer class="footer">
         <div class="wrap">
             <div class="footer-inner">
-                <span class="footer-sys">tschnorpfeil.com</span>
                 <span>© 2026 Tobias Schnorpfeil</span>
                 <div class="footer-links">
-                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener">LinkedIn ↗</a>
-                    <a href="mailto:tobias@schnorpfeil.com">Email ↗</a>
+                    <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener">LinkedIn</a>
+                    <a href="mailto:tobias@schnorpfeil.com">Email</a>
                 </div>
             </div>
         </div>
