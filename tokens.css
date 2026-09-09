@@ -21,11 +21,22 @@
   --space-xl: 3rem;     --space-2xl: 4.5rem; --space-3xl: 7rem;
 
   --measure: 40rem; --measure-wide: 48rem;
-  --radius-pill: 100px; --radius-card: 10px; --radius-tight: 6px;
 
-  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
-  --ease-in:  cubic-bezier(0.7, 0, 0.84, 0);
-  --dur-micro: 120ms; --dur-short: 220ms; --dur-long: 420ms;
+  /* Border radius — PRIME technical precision scale (0.3rem base) */
+  --radius:       0.3rem;
+  --radius-lg:    var(--radius);
+  --radius-md:    calc(var(--radius) - 2px);
+  --radius-sm:    calc(var(--radius) - 4px);
+  --radius-card:  var(--radius);
+  --radius-tight: var(--radius-md);
+  --radius-pill:  9999px;
+
+  /* PRIME motion & transitions */
+  --ease-out:   cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:    cubic-bezier(0.7, 0, 0.84, 0);
+  --dur-micro:  120ms;
+  --dur-short:  200ms;
+  --dur-long:   380ms;
 }
 
 /* Light — cool engineered near-white */
