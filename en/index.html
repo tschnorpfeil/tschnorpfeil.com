@@ -674,27 +674,6 @@
         }
         .anim .hero-desc { opacity: 0; animation: up 0.7s var(--ease-out) 1.3s forwards; }
 
-        .hero-spec {
-            font-family: var(--font-mono);
-            font-size: var(--text-xs);
-            color: var(--ink-3);
-            letter-spacing: 0.04em;
-            margin-bottom: var(--space-xs);
-            display: flex;
-            align-items: center;
-            gap: 0.45rem;
-            flex-wrap: wrap;
-            line-height: 1.5;
-        }
-        .anim .hero-spec { opacity: 0; animation: up 0.6s var(--ease-out) 0.9s forwards; }
-        .spec-tag {
-            color: var(--accent);
-            font-weight: 600;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-        [data-theme="dark"] .spec-tag { color: var(--accent-bright); }
-
         .hero-social {
             display: flex;
             gap: var(--space-xs);
@@ -816,48 +795,62 @@
         [data-theme="dark"] .rchar.is-ghost { color: var(--accent-bright); }
 
         /* ------------------------------------------
-           Journey — PRIME Instrument Panels
+           Journey — Connected Timeline
            ------------------------------------------ */
         .journey {
-            display: flex;
-            flex-direction: column;
-            gap: var(--space-md);
+            position: relative;
+            padding-left: 2rem;
         }
 
         .entry {
             position: relative;
-            display: flex;
-            flex-direction: column;
-            gap: 0.45rem;
-            padding: 1.25rem 1.5rem;
-            border: 1px solid var(--rule);
-            border-radius: var(--radius-card);
+            display: grid;
+            grid-template-columns: 8rem 1fr;
+            gap: var(--space-lg);
+            padding: var(--space-md) 0 var(--space-xl);
+        }
+
+        /* Continuous vertical timeline connector line */
+        .entry:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            left: calc(4.5px - 2rem);
+            top: calc(var(--space-md) + 0.65rem);
+            height: calc(100% - 0.2rem);
+            width: 1px;
+            background: var(--rule);
+            transform: translateX(-50%);
+        }
+
+        /* Timeline node */
+        .entry::after {
+            content: '';
+            position: absolute;
+            left: calc(4.5px - 2rem);
+            top: calc(var(--space-md) + 0.65rem - 4.5px);
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
             background: var(--paper);
-            transition: border-color var(--dur-short) var(--ease-out), box-shadow var(--dur-short) var(--ease-out), transform var(--dur-short) var(--ease-out);
+            border: 1.5px solid var(--rule-2);
+            transform: translateX(-50%);
+            transition: all var(--dur-short) var(--ease-out);
         }
 
-        .entry:hover {
-            border-color: var(--rule-2);
-            box-shadow: 0 4px 16px oklch(0% 0 0 / 0.04);
+        .entry--now::after {
+            background: var(--accent);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent) 18%, transparent);
         }
 
-        .entry--now {
-            border-left: 3px solid var(--accent);
-            background: color-mix(in oklch, var(--paper) 98%, var(--accent) 2%);
+        [data-theme="dark"] .entry--now::after {
+            background: var(--accent-bright);
+            border-color: var(--accent-bright);
+            box-shadow: 0 0 0 4px color-mix(in oklch, var(--accent-bright) 22%, transparent);
         }
 
-        [data-theme="dark"] .entry--now {
-            border-left-color: var(--accent-bright);
-            background: color-mix(in oklch, var(--paper) 95%, var(--accent-bright) 5%);
-        }
-
-        .entry-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: var(--space-xs);
-            margin-bottom: 0.15rem;
+        .entry-time-col {
+            padding-top: 0.15rem;
         }
 
         .entry-time {
@@ -867,23 +860,23 @@
             color: var(--ink-3);
             letter-spacing: 0.02em;
             font-variant-numeric: tabular-nums;
-            background: var(--paper-2);
-            padding: 0.15rem 0.5rem;
-            border-radius: var(--radius-sm);
-            border: 1px solid var(--rule);
         }
 
         .entry--now .entry-time {
             color: var(--accent);
-            border-color: color-mix(in oklch, var(--accent) 30%, transparent);
-            background: color-mix(in oklch, var(--accent) 6%, transparent);
             font-weight: 600;
         }
 
         [data-theme="dark"] .entry--now .entry-time {
             color: var(--accent-bright);
-            border-color: color-mix(in oklch, var(--accent-bright) 35%, transparent);
-            background: color-mix(in oklch, var(--accent-bright) 10%, transparent);
+        }
+
+        .entry-head-row {
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 0.2rem;
         }
 
         .entry-badge {
@@ -1217,8 +1210,24 @@
 
             .hero { padding-bottom: 12svh; }
 
+            .journey {
+                padding-left: 1.5rem;
+            }
             .entry {
-                padding: 1rem 1.15rem;
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+                padding: var(--space-sm) 0 var(--space-lg);
+            }
+            .entry:not(:last-child)::before {
+                left: calc(4.5px - 1.5rem);
+                top: calc(var(--space-sm) + 0.5rem);
+            }
+            .entry::after {
+                left: calc(4.5px - 1.5rem);
+                top: calc(var(--space-sm) + 0.5rem - 4.5px);
+            }
+            .entry-time-col {
+                margin-bottom: 0.15rem;
             }
 
             .contact-grid { grid-template-columns: 1fr; }
@@ -1267,7 +1276,6 @@
     <section class="hero" tabindex="-1">
         <div class="wrap">
             <div class="hero-inner">
-                <p class="hero-spec"><span class="spec-tag">SYS //</span> <span>50°19'N 7°10'E · CIVIL ENGINEERING &amp; DIGITAL INNOVATION</span></p>
                 <h1 class="hero-title">
                     <span class="hero-word"><span class="hero-char">T</span><span class="hero-char">o</span><span class="hero-char">b</span><span class="hero-char">i</span><span class="hero-char">a</span><span class="hero-char">s</span></span> <span class="hero-word"><span class="hero-char">S</span><span class="hero-char">c</span><span class="hero-char">h</span><span class="hero-char">n</span><span class="hero-char">o</span><span class="hero-char">r</span><span class="hero-char">p</span><span class="hero-char">f</span><span class="hero-char">e</span><span class="hero-char">i</span><span class="hero-char">l</span></span>
                 </h1>
@@ -1306,12 +1314,14 @@
             <div class="journey">
 
                 <div class="entry entry--now">
-                    <div class="entry-header">
+                    <div class="entry-time-col">
                         <span class="entry-time">2021 — Now</span>
-                        <span class="entry-badge badge--active"><span class="badge-pulse-dot" aria-hidden="true"></span> Active</span>
                     </div>
-                    <div>
-                        <p class="entry-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz Schnorpfeil Bau GmbH</a></p>
+                    <div class="entry-body">
+                        <div class="entry-head-row">
+                            <p class="entry-title"><a href="https://www.schnorpfeil.com" target="_blank" rel="noopener">Heinz Schnorpfeil Bau GmbH</a></p>
+                            <span class="entry-badge badge--active"><span class="badge-pulse-dot" aria-hidden="true"></span> Active</span>
+                        </div>
                         <p class="entry-sub">Shareholder, 3rd generation</p>
                         <p class="entry-desc">
                             Started on-site — four years as a construction manager in road and bridge building to understand the core of the business from the ground up. Now focused on management, digitalization, and group-wide initiatives across the Schnorpfeil group.
@@ -1325,12 +1335,14 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-header">
+                    <div class="entry-time-col">
                         <span class="entry-time">2021 — 2023</span>
-                        <span class="entry-badge">Advisor</span>
                     </div>
-                    <div>
-                        <p class="entry-title">HomeToGo</p>
+                    <div class="entry-body">
+                        <div class="entry-head-row">
+                            <p class="entry-title">HomeToGo</p>
+                            <span class="entry-badge">Advisor</span>
+                        </div>
                         <p class="entry-sub">Product &amp; Community Advisor</p>
                         <p class="entry-desc">
                             Following Mapify's acquisition, advised HomeToGo on product strategy and community growth — helping scale the platform's social reach and user engagement across international markets.
@@ -1344,12 +1356,14 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-header">
+                    <div class="entry-time-col">
                         <span class="entry-time">2017 — 2023</span>
-                        <span class="entry-badge badge--exit">Exit to HomeToGo</span>
                     </div>
-                    <div>
-                        <p class="entry-title">Mapify</p>
+                    <div class="entry-body">
+                        <div class="entry-head-row">
+                            <p class="entry-title">Mapify</p>
+                            <span class="entry-badge badge--exit">Exit to HomeToGo</span>
+                        </div>
                         <p class="entry-sub">Co-Founder</p>
                         <p class="entry-desc">
                             Travel-tech startup combining visual storytelling with interactive maps — building a global community of 250,000+ travelers in over 190 countries. Backed by Lakestar Ventures and Atlantic Labs, ultimately acquired by HomeToGo.
@@ -1367,12 +1381,14 @@
                 </div>
 
                 <div class="entry entry--muted">
-                    <div class="entry-header">
+                    <div class="entry-time-col">
                         <span class="entry-time">2014 — 2021</span>
-                        <span class="entry-badge">Creative</span>
                     </div>
-                    <div>
-                        <p class="entry-title">Film, Photography, Motion Graphics &amp; 3D</p>
+                    <div class="entry-body">
+                        <div class="entry-head-row">
+                            <p class="entry-title">Film, Photography, Motion Graphics &amp; 3D</p>
+                            <span class="entry-badge">Creative</span>
+                        </div>
                         <p class="entry-sub">Freelance &amp; Personal Work</p>
                         <p class="entry-desc">
                             Cinematic work for Porsche, Adidas, Jack Wolfskin, Munich Tourism, and others. From the arctic of Svalbard to the coasts of Thailand. Complemented by surreal 3D renders and motion graphics.
@@ -1387,12 +1403,14 @@
                 </div>
 
                 <div class="entry">
-                    <div class="entry-header">
+                    <div class="entry-time-col">
                         <span class="entry-time">2016</span>
-                        <span class="entry-badge">B.Sc.</span>
                     </div>
-                    <div>
-                        <p class="entry-title">B.Sc. Civil Engineering</p>
+                    <div class="entry-body">
+                        <div class="entry-head-row">
+                            <p class="entry-title">B.Sc. Civil Engineering</p>
+                            <span class="entry-badge">B.Sc.</span>
+                        </div>
                         <p class="entry-sub">Technical University of Munich</p>
                     </div>
                 </div>
@@ -1409,12 +1427,12 @@
             </div>
             <div class="contact-grid">
                 <div class="contact-card">
-                    <span class="contact-label">SYS // BUSINESS</span>
+                    <span class="contact-label">Business</span>
                     <a href="mailto:tobias@schnorpfeil.com" class="contact-email">tobias@schnorpfeil.com</a>
                     <span class="contact-note">Heinz Schnorpfeil Bau GmbH</span>
                 </div>
                 <div class="contact-card">
-                    <span class="contact-label">SYS // PERSONAL</span>
+                    <span class="contact-label">Personal</span>
                     <a href="mailto:tschnorpfeil@gmail.com" class="contact-email">tschnorpfeil@gmail.com</a>
                     <span class="contact-note">Direct line</span>
                 </div>
@@ -1423,11 +1441,11 @@
     </section>
     </main>
 
-    <!-- FOOTER — PRIME Status Bar -->
+    <!-- FOOTER -->
     <footer class="footer">
         <div class="wrap">
             <div class="footer-inner">
-                <span class="footer-sys">SYS // 50°19'N 7°10'E · TSCHNORPFEIL.COM</span>
+                <span class="footer-sys">tschnorpfeil.com</span>
                 <span>© 2026 Tobias Schnorpfeil</span>
                 <div class="footer-links">
                     <a href="https://www.linkedin.com/in/tobias-schnorpfeil-ab95178a/" target="_blank" rel="me noopener">LinkedIn ↗</a>
